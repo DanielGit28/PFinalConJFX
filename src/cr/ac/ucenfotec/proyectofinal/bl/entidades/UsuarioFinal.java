@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class UsuarioFinal extends Usuario{
-    private String fechaNacimientoUsuario;
+    private String fechaNacimientoUsuario; //cambiar por localDate
     private String paisProcedenciaUsuario;
     private String identificacionUsuario;
     private String nombreUsuario;
@@ -73,12 +73,12 @@ public class UsuarioFinal extends Usuario{
 
     public UsuarioFinal() {}
 
-    public UsuarioFinal(String avatarUsuario, String nombre, String apellidosUsuario,
+    public UsuarioFinal(String id, String avatarUsuario, String nombre, String apellidosUsuario,
                         String correoUsuario, String contrasennaUsuario,
                         String fechaNacimientoUsuario, String paisProcedenciaUsuario,
                         String identificacionUsuario, String nombreUsuario, int otp,
                         ArrayList<ListaReproduccion> listasReproduccion, ArrayList<Cancion> cancionesUsuario) {
-        super(avatarUsuario, nombre, apellidosUsuario, correoUsuario, contrasennaUsuario);
+        super(id,avatarUsuario, nombre, apellidosUsuario, correoUsuario, contrasennaUsuario);
         this.fechaNacimientoUsuario = fechaNacimientoUsuario;
         this.paisProcedenciaUsuario = paisProcedenciaUsuario;
         this.identificacionUsuario = identificacionUsuario;
@@ -95,10 +95,15 @@ public class UsuarioFinal extends Usuario{
                 ", paisProcedenciaUsuario='" + paisProcedenciaUsuario + '\'' +
                 ", identificacionUsuario='" + identificacionUsuario + '\'' +
                 ", nombreUsuario='" + nombreUsuario + '\'' +
-                ", otp='" + otp + '\'' +
-                ", listasReproduccion='" + listasReproduccion + '\'' +
-                ", cancionesUsuario='" + cancionesUsuario + '\'' +
-                "} " + super.toString();
+                ", otp=" + otp +
+                ", listasReproduccion=" + listasReproduccion +
+                ", cancionesUsuario=" + cancionesUsuario +
+                ", id='" + id + '\'' +
+                ", avatarUsuario='" + avatarUsuario + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellidosUsuario='" + apellidosUsuario + '\'' +
+                ", correoUsuario='" + correoUsuario + '\'' +
+                ", contrasennaUsuario='" + contrasennaUsuario + '\'' +
+                '}';
     }
-
 }

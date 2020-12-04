@@ -13,13 +13,13 @@ public class CancionCompra extends Cancion{
 
     public CancionCompra() {}
 
-    public CancionCompra(String nombreCancion, Artista artistaCancion, Compositor compositorCancion,
+    /*public CancionCompra(String nombreCancion, Artista artistaCancion, Compositor compositorCancion,
                          String fechaLanzamientoCancion, Genero generoCancion,
                          int cancionSimple, Album albumCancion, String recurso, int precioCancion) {
         super(nombreCancion, artistaCancion, compositorCancion, fechaLanzamientoCancion,
                 generoCancion, cancionSimple, albumCancion, recurso);
         this.precioCancion = precioCancion;
-    }
+    }*/
 
     @Override
     public String toString() {

@@ -3,10 +3,19 @@ package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 import java.util.ArrayList;
 
 public class ListaReproduccion {
+    private String id;
     private ArrayList<Cancion> cancionesListaReproduccion;
     private String fechaCreacionListaReproduccion;
     private String nombreListaReproduccion;
     private String calificacionReproduccion;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public ArrayList<Cancion> getCancionesListaReproduccion() {
         return cancionesListaReproduccion;
@@ -42,10 +51,11 @@ public class ListaReproduccion {
 
     public ListaReproduccion(){}
 
-    public ListaReproduccion(ArrayList<Cancion> cancionesListaReproduccion,
+    public ListaReproduccion(String id, ArrayList<Cancion> cancionesListaReproduccion,
                              String fechaCreacionListaReproduccion,
                              String nombreListaReproduccion,
                              String calificacionReproduccion) {
+        this.id = id;
         this.cancionesListaReproduccion = cancionesListaReproduccion;
         this.fechaCreacionListaReproduccion = fechaCreacionListaReproduccion;
         this.nombreListaReproduccion = nombreListaReproduccion;
@@ -55,10 +65,13 @@ public class ListaReproduccion {
     @Override
     public String toString() {
         return "ListaReproduccion{" +
-                "cancionesListaReproduccion=" + cancionesListaReproduccion +
+                "id=" + id +
+                ", cancionesListaReproduccion=" + cancionesListaReproduccion +
                 ", fechaCreacionListaReproduccion='" + fechaCreacionListaReproduccion + '\'' +
                 ", nombreListaReproduccion='" + nombreListaReproduccion + '\'' +
                 ", calificacionReproduccion='" + calificacionReproduccion + '\'' +
                 '}';
     }
+
+
 }

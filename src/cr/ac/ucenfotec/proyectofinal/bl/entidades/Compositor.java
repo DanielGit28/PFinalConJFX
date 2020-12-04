@@ -4,11 +4,20 @@ package cr.ac.ucenfotec.proyectofinal.bl.entidades;
  * @version 1.0
  */
 public class Compositor {
+    private String id;
     private String nombre;
     private String apellidos;
     private String paisNacimientoCompositor;
     private String fechaNacimientoCompositor;
     private int edadCompositor;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNombre() {
         return nombre;
@@ -52,8 +61,9 @@ public class Compositor {
 
     public Compositor() {}
 
-    public Compositor(String nombre, String apellidos, String paisNacimientoCompositor,
+    public Compositor(String id, String nombre, String apellidos, String paisNacimientoCompositor,
                       String fechaNacimientoCompositor, int edadCompositor) {
+        this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.paisNacimientoCompositor = paisNacimientoCompositor;
@@ -64,11 +74,14 @@ public class Compositor {
     @Override
     public String toString() {
         return "Compositores{" +
-                "nombre='" + nombre + '\'' +
+                "id='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
                 ", paisNacimientoCompositor='" + paisNacimientoCompositor + '\'' +
                 ", fechaNacimientoCompositor='" + fechaNacimientoCompositor + '\'' +
                 ", edadCompositor='" + edadCompositor + '\'' +
                 '}';
     }
+
+
 }

@@ -5,15 +5,24 @@ package cr.ac.ucenfotec.proyectofinal.bl.entidades;
  * @version 1.1
  */
 public class Cancion {
+    private String id;
     private String nombreCancion;
-    protected Artista artistaCancion;
-    protected Compositor compositorCancion;
-    protected String fechaLanzamientoCancion;
-    protected Genero generoCancion;
-    protected int cancionSimple; //1 si es un sencillo, 2 si es de un álbum
-    protected Album albumCancion;
+    private Artista artistaCancion;
+    private Compositor compositorCancion;
+    private String fechaLanzamientoCancion;
+    private Genero generoCancion;
+    private int cancionSimple;//1 si es un sencillo, 2 si es de un álbum
+    private int cancionCompra;//1 si es normal, 2 si es compra
+    private Album albumCancion;
     private String recurso;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Artista getArtistaCancion() {
         return artistaCancion;
@@ -55,6 +64,14 @@ public class Cancion {
         this.cancionSimple = cancionSimple;
     }
 
+    public int getCancionCompra() {
+        return cancionCompra;
+    }
+
+    public void setCancionCompra(int cancionCompra) {
+        this.cancionCompra = cancionCompra;
+    }
+
     public Album getAlbumCancion() {
         return albumCancion;
     }
@@ -81,15 +98,17 @@ public class Cancion {
 
     public Cancion() {}
 
-    public Cancion(String nombreCancion, Artista artistaCancion, Compositor compositorCancion,
+    public Cancion(String id, String nombreCancion, Artista artistaCancion, Compositor compositorCancion,
                    String fechaLanzamientoCancion, Genero generoCancion,
-                   int cancionSimple, Album albumCancion, String recurso) {
+                   int cancionSimple,int cancionCompra, Album albumCancion, String recurso) {
+        this.id = id;
         this.nombreCancion = nombreCancion;
         this.artistaCancion = artistaCancion;
         this.compositorCancion = compositorCancion;
         this.fechaLanzamientoCancion = fechaLanzamientoCancion;
         this.generoCancion = generoCancion;
         this.cancionSimple = cancionSimple;
+        this.cancionCompra = cancionCompra;
         this.albumCancion = albumCancion;
         this.recurso = recurso;
 
@@ -98,6 +117,7 @@ public class Cancion {
     @Override
     public String toString() {
         return "Cancion{" +
+                "id=" + id +
                 ", nombreCancion=" + nombreCancion +
                 ", artistaCancion=" + artistaCancion +
                 ", compositorCancion=" + compositorCancion +
@@ -108,7 +128,6 @@ public class Cancion {
                 ", recurso=" + recurso +
                 '}';
     }
-
 
 
 }

@@ -15,9 +15,9 @@ public class Admin extends Usuario{
     }
     public Admin() {}
 
-    public Admin(String avatarUsuario, String nombre, String apellidosUsuario,
+    public Admin(String id, String avatarUsuario, String nombre, String apellidosUsuario,
                  String correoUsuario, String contrasennaUsuario, String nombreUsuarioAdmin) {
-        super(avatarUsuario, nombre, apellidosUsuario, correoUsuario, contrasennaUsuario);
+        super(id, avatarUsuario, nombre, apellidosUsuario, correoUsuario, contrasennaUsuario);
         this.nombreUsuarioAdmin = nombreUsuarioAdmin;
     }
 
@@ -25,6 +25,12 @@ public class Admin extends Usuario{
     public String toString() {
         return "Admin{" +
                 "nombreUsuarioAdmin='" + nombreUsuarioAdmin + '\'' +
-                "} " + super.toString();
+                ", id='" + id + '\'' +
+                ", avatarUsuario='" + avatarUsuario + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellidosUsuario='" + apellidosUsuario + '\'' +
+                ", correoUsuario='" + correoUsuario + '\'' +
+                ", contrasennaUsuario='" + contrasennaUsuario + '\'' +
+                '}';
     }
 }

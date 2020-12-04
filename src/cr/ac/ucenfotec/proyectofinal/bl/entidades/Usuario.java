@@ -4,11 +4,20 @@ package cr.ac.ucenfotec.proyectofinal.bl.entidades;
  * @version 1.0
  */
 public class Usuario {
-    private String avatarUsuario;
-    private String nombre;
-    private String apellidosUsuario;
-    private String correoUsuario;
-    private String contrasennaUsuario;
+    protected String id;
+    protected String avatarUsuario;
+    protected String nombre;
+    protected String apellidosUsuario;
+    protected String correoUsuario;
+    protected String contrasennaUsuario;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getAvatarUsuario() {
         return avatarUsuario;
@@ -52,8 +61,9 @@ public class Usuario {
 
     public Usuario() {}
 
-    public Usuario(String avatarUsuario, String nombre, String apellidosUsuario,
+    public Usuario(String id,String avatarUsuario, String nombre, String apellidosUsuario,
                    String correoUsuario, String contrasennaUsuario) {
+        this.id = id;
         this.avatarUsuario = avatarUsuario;
         this.nombre = nombre;
         this.apellidosUsuario = apellidosUsuario;
@@ -64,11 +74,14 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario{" +
-                "avatarUsuario='" + avatarUsuario + '\'' +
+                "id='" + id + '\'' +
+                ", avatarUsuario='" + avatarUsuario + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", apellidosUsuario='" + apellidosUsuario + '\'' +
                 ", correoUsuario='" + correoUsuario + '\'' +
                 ", contrasennaUsuario='" + contrasennaUsuario + '\'' +
                 '}';
     }
+
+
 }

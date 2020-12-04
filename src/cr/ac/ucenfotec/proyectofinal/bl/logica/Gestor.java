@@ -1,11 +1,27 @@
 package cr.ac.ucenfotec.proyectofinal.bl.logica;
 
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.*;
+import cr.ac.ucenfotec.proyectofinal.bl.dao.*;
+import javafx.scene.control.Alert;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class Gestor {
+    Connection connection;
+
+    AdminDAO adminDAO;
+    AlbumDAO albumDAO;
+    ArtistaDAO artistaDAO;
+    CancionDAO cancionDAO;
+    CompositorDAO compositorDAO;
+    GeneroDAO generoDAO;
+    ListaReproduccionDAO listaReproduccionDAO;
+    UsuarioFinalDAO usuarioFinalDAO;
+
+
     public String[] locales = Locale.getISOCountries();
     Admin administrador = new Admin();
     ArrayList<UsuarioFinal> usuarios = new ArrayList<> ();
@@ -16,9 +32,82 @@ public class Gestor {
     ArrayList<Cancion> canciones = new ArrayList<>();
     ArrayList<ListaReproduccion> listas = new ArrayList<>();
 
+    public Gestor() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+            this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdbaulrecuerdos"
+                    , "root", "root");
+            this.adminDAO = new AdminDAO(this.connection);
+            this.albumDAO = new AlbumDAO(this.connection);
+            this.artistaDAO = new ArtistaDAO(this.connection);
+            this.cancionDAO = new CancionDAO(this.connection);
+            this.compositorDAO = new CompositorDAO(this.connection);
+            this.generoDAO = new GeneroDAO(this.connection);
+            this.listaReproduccionDAO = new ListaReproduccionDAO(this.connection);
+            this.usuarioFinalDAO = new UsuarioFinalDAO(this.connection);
+        } catch (Exception e) {
+            System.out.println("Cant connect to db");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     *
+     * @param contrasenna Recibe como parametro el string de la contraseña a evaluar
+     * @return boolean Devuelve un verdadero o falso según el resultado de la evaluacion del string de la contraseña
+     */
+    public boolean verificarContrasenna(String contrasenna) {
+        int len = contrasenna.length();
+        String formato = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W).*$";
+        String contra = null;
+        boolean verificacion = false;
+        if ((len <= 12) && (len >= 8)) {
+            boolean verif = Pattern.matches(formato, contrasenna);
+            if (verif == true) {
+                verificacion = true;
+            }
+        }
+        return verificacion;
+    }
+
     //------Bloque de agregar objetos a los ArrayList que los almacenan-------
-    public void agregarAdmin(Admin pAdmin) {
-        this.administrador = pAdmin;
+
+    /**
+     *
+     * @param avatar directorio del archivo del avatar
+     * @param nombre String del nombre del admin
+     * @param apellidos String de los apellidos del admin
+     * @param contrasenna String de la contraseña del admin
+     * @param correo String del correo del admin
+     * @param nombreUsuario String del usuario del admin
+     * @throws SQLException
+     */
+    public void agregarAdmin(String avatar, String nombre, String apellidos, String contrasenna, String correo, String nombreUsuario) throws SQLException {
+        Admin admin = new Admin("1",avatar,nombre,apellidos,contrasenna,correo,nombreUsuario);
+
+        Statement query = connection.createStatement();
+
+        ResultSet resultado = query.executeQuery("select * from admin");
+        if(resultado != null ) {
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setTitle("Error");
+            alert.setContentText("Ya existe un administrador registrado");
+            alert.showAndWait();
+        } else {
+            try {
+                adminDAO.guardarAdmin(admin);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText(null);
+                alert.setTitle("Registro");
+                alert.setContentText("Administrador registrado con éxito");
+                alert.showAndWait();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public Admin listarAdmin(){

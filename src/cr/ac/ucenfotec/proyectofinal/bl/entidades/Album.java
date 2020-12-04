@@ -7,11 +7,20 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Album {
+    private String id;
     private String nombreAlbum;
     private String fechaLanzamiento;
     private Artista artistaAlbum;
     private String imagenAlbum;
     private ArrayList<Cancion> cancionesAlbum;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNombreAlbum() {
         return nombreAlbum;
@@ -55,8 +64,9 @@ public class Album {
 
     public Album(){}
 
-    public Album(String nombreAlbum, String fechaLanzamiento, Artista artistaAlbum,
+    public Album(String id, String nombreAlbum, String fechaLanzamiento, Artista artistaAlbum,
                  String imagenAlbum, ArrayList<Cancion> cancionesAlbum) {
+        this.id = id;
         this.nombreAlbum = nombreAlbum;
         this.fechaLanzamiento = fechaLanzamiento;
         this.artistaAlbum = artistaAlbum;
@@ -67,11 +77,14 @@ public class Album {
     @Override
     public String toString() {
         return "Album{" +
-                "nombreAlbum='" + nombreAlbum + '\'' +
+                "id='" + id + '\'' +
+                ", nombreAlbum='" + nombreAlbum + '\'' +
                 ", fechaLanzamiento='" + fechaLanzamiento + '\'' +
                 ", artistaAlbum=" + artistaAlbum +
                 ", imagenAlbum='" + imagenAlbum + '\'' +
                 ", cancionesAlbum=" + cancionesAlbum +
                 '}';
     }
+
+
 }

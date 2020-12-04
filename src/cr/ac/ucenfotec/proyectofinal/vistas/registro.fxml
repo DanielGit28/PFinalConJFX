@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="ivImagen" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.CtrlRegistroAdmin">
+   <children>
+      <Label layoutX="61.0" layoutY="109.0" text="Avatar" />
+      <Label layoutX="55.0" layoutY="291.0" text="Nombre" />
+      <Label layoutX="58.0" layoutY="387.0" text="Apellidos" />
+      <Label layoutX="349.0" layoutY="109.0" text="Correo" />
+      <Label layoutX="349.0" layoutY="197.0" text="Contraseña" />
+      <Label layoutX="349.0" layoutY="291.0" text="Nombre de usuario" />
+      <Text layoutX="160.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registro del administrador">
+         <font>
+            <Font name="Serif Bold" size="24.0" />
+         </font>
+      </Text>
+      <TextField fx:id="lblCorreo" layoutX="349.0" layoutY="225.0" />
+      <TextField fx:id="lblApellidos" layoutX="55.0" layoutY="414.0" />
+      <TextField fx:id="lblNombre" layoutX="55.0" layoutY="319.0" />
+      <TextField fx:id="lblContrasenna" layoutX="349.0" layoutY="133.0" />
+      <TextField fx:id="lblUsuario" layoutX="349.0" layoutY="319.0" />
+      <Button fx:id="btnBuscar" layoutX="128.0" layoutY="104.0" mnemonicParsing="false" onAction="#cargarImagen" prefHeight="29.0" prefWidth="85.0" text="Seleccionar">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Button>
+      <ImageView id="ivImagen" fx:id="ivImagen" fitHeight="136.0" fitWidth="204.0" layoutX="58.0" layoutY="148.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="registrarAdmin" layoutX="353.0" layoutY="414.0" mnemonicParsing="false" onAction="#registrarDatosAdmin" prefHeight="29.0" prefWidth="112.0" text="Registrar" />
+      <Line endX="100.0" layoutX="156.0" layoutY="508.0" startX="-100.0" stroke="#ff8000" strokeMiterLimit="20.0" />
+      <Line endX="100.0" layoutX="414.0" layoutY="508.0" startX="-100.0" stroke="#ff8000" />
+      <Line endX="100.0" layoutX="288.0" layoutY="563.0" startX="-100.0" stroke="#ff8000" />
+      <Button fx:id="inicio" layoutX="235.0" layoutY="519.0" mnemonicParsing="false" onAction="#cambiarEscena" prefHeight="29.0" prefWidth="104.0" style="-fx-background-color: #26a8d4;" text="Volver al inicio" textFill="WHITE" />
+   </children>
+</AnchorPane>

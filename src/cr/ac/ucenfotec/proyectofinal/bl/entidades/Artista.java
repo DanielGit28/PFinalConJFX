@@ -4,6 +4,7 @@ package cr.ac.ucenfotec.proyectofinal.bl.entidades;
  * @version 1.0
  */
 public class Artista {
+    private String id;
     private String nombreArtista;
     private String apellidoArtista;
     private String nombreArtistico;
@@ -14,6 +15,13 @@ public class Artista {
     private int edadArtista;
     private String descripcionArtista;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNombreArtista() {
         return nombreArtista;
@@ -89,11 +97,13 @@ public class Artista {
 
     public Artista(){}
 
-    public Artista(String nombreArtista, String apellidoArtista,
+    public Artista(String id, String nombreArtista, String apellidoArtista,
                    String nombreArtistico, String fechaNacimientoArtista,
                    String fechaFallecimientoArtista, String paisNacimiento,
                    Genero generoMusicalArtista, int edadArtista,
                    String descripcionArtista) {
+
+        this.id = id;
         this.nombreArtista = nombreArtista;
         this.apellidoArtista = apellidoArtista;
         this.nombreArtistico = nombreArtistico;
@@ -108,7 +118,8 @@ public class Artista {
     @Override
     public String toString() {
         return "Artista{" +
-                "nombreArtista='" + nombreArtista + '\'' +
+                "id='" + id + '\'' +
+                ", nombreArtista='" + nombreArtista + '\'' +
                 ", apellidoArtista='" + apellidoArtista + '\'' +
                 ", nombreArtistico='" + nombreArtistico + '\'' +
                 ", fechaNacimientoArtista='" + fechaNacimientoArtista + '\'' +
@@ -119,4 +130,6 @@ public class Artista {
                 ", descripcionArtista='" + descripcionArtista + '\'' +
                 '}';
     }
+
+
 }
