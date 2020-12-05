@@ -57,15 +57,38 @@ public class Gestor {
      * @return boolean Devuelve un verdadero o falso según el resultado de la evaluacion del string de la contraseña
      */
     public boolean verificarContrasenna(String contrasenna) {
+
         int len = contrasenna.length();
-        String formato = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W).*$";
-        String contra = null;
         boolean verificacion = false;
-        if ((len <= 12) && (len >= 8)) {
-            boolean verif = Pattern.matches(formato, contrasenna);
-            if (verif == true) {
-                verificacion = true;
-            }
+
+        //String formato = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W).*$";
+        //String formato = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/";
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,12}";
+        String pattern2 = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,12}$";
+
+        if (contrasenna.matches(pattern2)) {
+            verificacion = true;
+        } else {
+            verificacion = false;
+        }
+        return verificacion;
+    }
+
+    /**
+     *
+     * @param query query que evalúa si existe la información
+     * @return true or false según valide si hay información o no
+     * @throws SQLException
+     */
+    public boolean siExiste(String query) throws SQLException {
+        boolean verificacion = false;
+        Statement stm = connection.createStatement();
+        ResultSet rs = stm.executeQuery(query);
+        if(rs.next()){
+            verificacion = true;
+        }
+        else{
+            verificacion = false;
         }
         return verificacion;
     }
@@ -82,20 +105,9 @@ public class Gestor {
      * @param nombreUsuario String del usuario del admin
      * @throws SQLException
      */
-    public void agregarAdmin(String avatar, String nombre, String apellidos, String contrasenna, String correo, String nombreUsuario) throws SQLException {
-        Admin admin = new Admin("1",avatar,nombre,apellidos,contrasenna,correo,nombreUsuario);
-
-        Statement query = connection.createStatement();
-
-        ResultSet resultado = query.executeQuery("select * from admin");
-        if(resultado != null ) {
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setTitle("Error");
-            alert.setContentText("Ya existe un administrador registrado");
-            alert.showAndWait();
-        } else {
+    public void agregarAdmin(String avatar, String nombre, String apellidos, String correo,String contrasenna, String nombreUsuario) throws SQLException {
+        Admin admin = new Admin("1",avatar,nombre,apellidos,correo,contrasenna,nombreUsuario);
+        if(siExiste("select 1 from admin") == false) {
             try {
                 adminDAO.guardarAdmin(admin);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -106,8 +118,65 @@ public class Gestor {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setTitle("Error");
+            alert.setContentText("Ya existe un administrador registrado");
+            alert.showAndWait();
+        }
+    }
+
+    /**
+     *
+     * @param correo String del correo para verificar sesión
+     * @param contrasenna String de contraseña para verificar sesión
+     * @return true or false según valide si la información corresponde al administrador
+     * @throws SQLException
+     */
+    public boolean verificarSesionAdmin(String correo, String contrasenna) throws SQLException {
+        boolean validacion = false;
+        Statement query = connection.createStatement();
+        ResultSet resultadoAdmin = query.executeQuery("select * from admin where correo = '"+correo+"'");
+        //ResultSet resultadoUsuario = query.executeQuery("select * from usuario_final");
+        if(correo != null && contrasenna != null) {
+            System.out.println(correo + ", "+contrasenna);
+            if(resultadoAdmin.next()){
+                System.out.println(resultadoAdmin.getString("correo"));
+                System.out.println(resultadoAdmin.getString("contrasenna"));
+                if(resultadoAdmin.getString("correo") == correo && resultadoAdmin.getString("contrasenna") == contrasenna) {
+                    validacion = true;
+                    System.out.println("Aqui si");
+                }/* else {
+                    System.out.println("Aqui no");
+                    validacion = false;
+                }*/
+            }
         }
 
+        return validacion;
+    }
+
+    /**
+     *
+     * @param correo String del correo de usuario para verificar sesión
+     * @param contrasenna String de la contraseña del usuario para verificar sesión
+     * @return true or false según valide si la información corresponde a un  usuario registrado
+     * @throws SQLException
+     */
+    public Boolean verificarSesionUsuario(String correo, String contrasenna) throws SQLException {
+        Boolean validacion = true;
+        Statement query = connection.createStatement();
+        ResultSet resultadoUsuario = query.executeQuery("select * from admin where correo = '"+correo+"'");
+        //ResultSet resultadoUsuario = query.executeQuery("select * from usuario_final");
+        if(resultadoUsuario.next()){
+            if(resultadoUsuario.getString("correo") == correo && resultadoUsuario.getString("contrasenna") == contrasenna) {
+                validacion = true;
+            }
+        } else {
+            validacion = false;
+        }
+        return validacion;
     }
 
     public Admin listarAdmin(){

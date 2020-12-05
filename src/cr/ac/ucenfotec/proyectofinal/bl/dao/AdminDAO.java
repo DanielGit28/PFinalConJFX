@@ -39,7 +39,7 @@ public class AdminDAO {
         Statement query = cnx.createStatement();
 
         ResultSet resultado = query.executeQuery("select * from admin");
-        if(resultado != null) {
+        if(resultado.getRow() != 0) {
             System.out.println("Admin ya registrado");
         } else {
             String insertar = "insert into admin(idAdmin,avatar,nombre,apellidos,correo,contrasenna,nombreUsuario) values ('";

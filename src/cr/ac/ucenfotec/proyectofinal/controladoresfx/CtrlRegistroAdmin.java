@@ -71,19 +71,7 @@ public class CtrlRegistroAdmin implements Initializable {
         stageRegistro.setScene(escenaRegistro);
     }
 
-    /*
-    @FXML
-    private void login(javafx.event.ActionEvent event) throws IOException {
-        if (pwf1.getText().equals("dolphin")) {
-            Parent blah = FXMLLoader.load(getClass().getResource("Home.fxml"));
-            Scene scene = new Scene(blah);
-            Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            appStage.setScene(scene);
-            appStage.show();
-        } else {
-            label1.setText("Password is incorrect. Please Try Again");
-        }
-    }*/
+
 
     public void cambiarEscena(ActionEvent event) throws IOException {
         Parent login = FXMLLoader.load(getClass().getResource("../vistas/inicio.fxml"));
@@ -134,7 +122,16 @@ public class CtrlRegistroAdmin implements Initializable {
             alert.setContentText("Contraseña con el formato incorrecto. Debe incluir mayúscula, minúscula, caracteres especiales y números.");
             alert.showAndWait();
         } else {
-            gestor.agregarAdmin(avatar,nombre,apellidos,correo,contrasenna,nombreUsuario);
+            if(avatar != null && nombre != null && apellidos != null && correo != null && contrasenna != null && nombreUsuario != null) {
+                gestor.agregarAdmin(avatar,nombre,apellidos,correo,contrasenna,nombreUsuario);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(null);
+                alert.setTitle("Error");
+                alert.setContentText("Todos los campos deben estar rellenos");
+                alert.showAndWait();
+            }
+
         }
 
     }
