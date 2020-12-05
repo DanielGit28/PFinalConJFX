@@ -13,6 +13,10 @@ import java.util.List;
 public class ListaReproduccionDAO {
     Connection cnx;
 
+    /**
+     *
+     * @param conexion conexión de la clase con la base de datos
+     */
     public ListaReproduccionDAO(Connection conexion){
         this.cnx = conexion;
     }
@@ -35,12 +39,18 @@ public class ListaReproduccionDAO {
         return listaClientes;
     }
 
+    /**
+     *
+     *
+     * @param nuevo objeto ListaReproduccion que se va a guardar en la base de datos
+     * @throws SQLException
+     */
     public void guardarListaReproduccion(ListaReproduccion nuevo) throws SQLException{
         Statement insert = cnx.createStatement();
         //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)
         String insertar = "insert into lista_reproduccion_usuario" +
                 "(idLista,fechaCreacion,nombreLista) values ('";
-        insertar += "1";
+        insertar += nuevo.getId();
         insertar += ",";
         insertar += nuevo.getFechaCreacionListaReproduccion();
         insertar += "','";

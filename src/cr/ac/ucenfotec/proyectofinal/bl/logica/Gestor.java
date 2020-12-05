@@ -144,7 +144,7 @@ public class Gestor {
             if(resultadoAdmin.next()){
                 System.out.println(resultadoAdmin.getString("correo"));
                 System.out.println(resultadoAdmin.getString("contrasenna"));
-                if(resultadoAdmin.getString("correo") == correo && resultadoAdmin.getString("contrasenna") == contrasenna) {
+                if(resultadoAdmin.getString("correo").equals(correo) && resultadoAdmin.getString("contrasenna").equals(contrasenna) ) {
                     validacion = true;
                     System.out.println("Aqui si");
                 }/* else {
@@ -170,7 +170,7 @@ public class Gestor {
         ResultSet resultadoUsuario = query.executeQuery("select * from admin where correo = '"+correo+"'");
         //ResultSet resultadoUsuario = query.executeQuery("select * from usuario_final");
         if(resultadoUsuario.next()){
-            if(resultadoUsuario.getString("correo") == correo && resultadoUsuario.getString("contrasenna") == contrasenna) {
+            if(resultadoUsuario.getString("correo").equals(correo)  && resultadoUsuario.getString("contrasenna").equals(contrasenna) ) {
                 validacion = true;
             }
         } else {

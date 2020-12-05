@@ -10,10 +10,14 @@ import java.sql.Statement;
 public class AdminDAO {
     Connection cnx;
 
+    /**
+     *
+     * @param conexion realiza la conexión de la clase con la base
+     */
     public AdminDAO(Connection conexion){
         this.cnx = conexion;
     }
-
+/*
     public Admin encontrarPorId(String cedula){
         return null;
     }
@@ -32,8 +36,13 @@ public class AdminDAO {
             //leido.setPuntos(resultado.getInt("puntos"));
 
         return leido;
-    }
+    }*/
 
+    /**
+     *
+     * @param nuevo administrador que se va a guardar
+     * @throws SQLException
+     */
     public void guardarAdmin(Admin nuevo) throws SQLException{
         Statement insert = cnx.createStatement();
         Statement query = cnx.createStatement();

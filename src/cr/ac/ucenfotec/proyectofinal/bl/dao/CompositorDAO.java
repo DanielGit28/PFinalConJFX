@@ -1,6 +1,7 @@
 package cr.ac.ucenfotec.proyectofinal.bl.dao;
 
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.Album;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Compositor;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.ListaReproduccion;
 
@@ -14,6 +15,10 @@ import java.util.List;
 public class CompositorDAO {
     Connection cnx;
 
+    /**
+     *
+     * @param conexion  conexión de la clase con la base de datos
+     */
     public CompositorDAO(Connection conexion){
         this.cnx = conexion;
     }
@@ -36,18 +41,27 @@ public class CompositorDAO {
         return listaCompositores;
     }
 
-    public void guardarListaReproduccion(ListaReproduccion nuevo) throws SQLException{
+    /**
+     *
+     * @param nuevo objeto Album que se va a guardar en la base de datos
+     * @throws SQLException
+     */
+    public void guardarAlbum(Album nuevo) throws SQLException{
         Statement insert = cnx.createStatement();
         //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)
-        String insertar = "insert into lista_reproduccion_usuario" +
-                "(idLista,fechaCreacion,nombreLista) values ('";
+        String insertar = "insert into album" +
+                "(id,nombreAlbum,fechaLanzamiento,artistaAlbum,imagenAlbum,canciones) values ('";
         insertar += "1";
         insertar += ",";
-        insertar += nuevo.getFechaCreacionListaReproduccion();
+        insertar += nuevo.getId();
         insertar += "','";
-        insertar += nuevo.getNombreListaReproduccion();
+        insertar += nuevo.getNombreAlbum();
         insertar += "',";
-        insertar += nuevo.getCalificacionReproduccion();
+        insertar += nuevo.getArtistaAlbum();
+        insertar += "',";
+        insertar += nuevo.getImagenAlbum();
+        insertar += "',";
+        insertar += nuevo.getCancionesAlbum();
         insertar += ")";
         insert.execute(insertar);
     }

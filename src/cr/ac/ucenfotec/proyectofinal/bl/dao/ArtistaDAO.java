@@ -13,6 +13,10 @@ import java.util.List;
 public class ArtistaDAO {
     Connection cnx;
 
+    /**
+     *
+     * @param conexion conexión de la clase con la base de datos
+     */
     public ArtistaDAO(Connection conexion){
         this.cnx = conexion;
     }
@@ -43,6 +47,11 @@ public class ArtistaDAO {
         return listaArtistas;
     }
 
+    /**
+     *
+     * @param nuevo objeto artista que se va a guardar en la base de datos
+     * @throws SQLException
+     */
     public void guardarArtista(Artista nuevo) throws SQLException{
         Statement insert = cnx.createStatement();
         //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)

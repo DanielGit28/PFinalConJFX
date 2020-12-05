@@ -13,6 +13,10 @@ import java.util.List;
 public class AlbumDAO {
     Connection cnx;
 
+    /**
+     *
+     * @param conexion conexión de la clase con la base de datos
+     */
     public AlbumDAO(Connection conexion){
         this.cnx = conexion;
     }
@@ -35,6 +39,11 @@ public class AlbumDAO {
         return listaClientes;
     }
 
+    /**
+     *
+     * @param nuevo objeto album que se va a guardar en la base de datos
+     * @throws SQLException
+     */
     public void guardarAlbum(Album nuevo) throws SQLException{
         Statement insert = cnx.createStatement();
         //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)

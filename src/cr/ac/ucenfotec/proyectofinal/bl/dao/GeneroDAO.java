@@ -13,6 +13,10 @@ import java.util.List;
 public class GeneroDAO {
     Connection cnx;
 
+    /**
+     *
+     * @param conexion conexión de la clase con la base de datos
+     */
     public GeneroDAO(Connection conexion){
         this.cnx = conexion;
     }
@@ -35,6 +39,11 @@ public class GeneroDAO {
         return listaGeneros;
     }
 
+    /**
+     *
+     * @param nuevo objeto Genero que se va a guardar en la base de datos
+     * @throws SQLException
+     */
     public void guardarGenero(Genero nuevo) throws SQLException{
         Statement insert = cnx.createStatement();
         //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)
