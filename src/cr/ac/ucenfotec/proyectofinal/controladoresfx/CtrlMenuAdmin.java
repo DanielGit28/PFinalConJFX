@@ -23,6 +23,11 @@ public class CtrlMenuAdmin {
     @FXML
     private Button cerrarSesion;
 
+    /**
+     * Este método devuelve al escenario inicial
+     * @param event evento que se genera cuando se aprieta el botón de cerrarSesion
+     * @throws IOException
+     */
     public void cerrarSesion(ActionEvent event) throws IOException {
         Parent login = FXMLLoader.load(getClass().getResource("../vistas/inicio.fxml"));
         Scene vistaLogin = new Scene(login);

@@ -2,6 +2,11 @@ package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 
 import java.util.ArrayList;
 
+/**
+ * @author Daniel
+ * @version 1.1
+ */
+
 public class ListaReproduccion {
     private String id;
     private ArrayList<Cancion> cancionesListaReproduccion;
@@ -62,6 +67,10 @@ public class ListaReproduccion {
         this.calificacionReproduccion = calificacionReproduccion;
     }
 
+    /**
+     *
+     * @return devuelve los atributos del objeto en orden, separados por coma y en formato String
+     */
     @Override
     public String toString() {
         return "ListaReproduccion{" +

@@ -114,6 +114,10 @@ public class Cancion {
 
     }
 
+    /**
+     *
+     * @return devuelve los atributos del objeto en orden, separados por coma y en formato String
+     */
     @Override
     public String toString() {
         return "Cancion{" +

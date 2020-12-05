@@ -1,7 +1,7 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.0
+ * @version 1.1
  */
 public class Artista {
     private String id;

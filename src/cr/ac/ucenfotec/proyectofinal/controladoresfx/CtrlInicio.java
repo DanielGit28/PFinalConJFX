@@ -1,7 +1,5 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx;
 
-import cr.ac.ucenfotec.proyectofinal.bl.entidades.*;
-import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,10 +32,10 @@ public class CtrlInicio implements Initializable {
 
     /**
      * Cuando este metodo se llame, cambiara la escena
-     * @param event
+     * @param event cuando se presiona el boton de registroAdmin
      */
     public void cambiarEscena(ActionEvent event) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../vistas/registro.fxml"));
+        Parent login = FXMLLoader.load(getClass().getResource("../vistas/registroAdmin.fxml"));
         Scene vistaLogin = new Scene(login);
 
         //Esta linea agarra la informacion del escenario (stage o window)
@@ -46,6 +44,11 @@ public class CtrlInicio implements Initializable {
         window.setMaxHeight(600);
         window.show();
     }
+
+    /**
+     * Cuando este metodo se llame, cambiara la escena
+     * @param event cuando se presiona el boton de inicioSesion
+     */
     public void cambiarEscenaLogin(ActionEvent event) throws IOException {
         Parent login = FXMLLoader.load(getClass().getResource("../vistas/login.fxml"));
         Scene vistaLogin = new Scene(login);
@@ -60,8 +63,12 @@ public class CtrlInicio implements Initializable {
 
     public void setEscenaRegistro(Scene scene) {
         escenaInicio = scene;
-    } 
+    }
 
+    /**
+     *
+     * @param actionEvent evento que genera la escena dentro del escenario
+     */
     public void abrirEscenaRegistro(ActionEvent actionEvent) {
         Stage stageInicio = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         stageInicio.setScene(escenaInicio);

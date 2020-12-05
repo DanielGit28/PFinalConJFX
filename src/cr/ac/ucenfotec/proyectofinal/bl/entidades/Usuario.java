@@ -1,7 +1,7 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.0
+ * @version 1.1
  */
 public class Usuario {
     protected String id;
@@ -71,6 +71,10 @@ public class Usuario {
         this.contrasennaUsuario = contrasennaUsuario;
     }
 
+    /**
+     *
+     * @return devuelve los atributos del objeto en orden, separados por coma y en formato String
+     */
     @Override
     public String toString() {
         return "Usuario{" +

@@ -1,7 +1,7 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.0
+ * @version 1.1
  */
 public class Admin extends Usuario{
     private String nombreUsuarioAdmin;
@@ -21,6 +21,10 @@ public class Admin extends Usuario{
         this.nombreUsuarioAdmin = nombreUsuarioAdmin;
     }
 
+    /**
+     *
+     * @return devuelve los atributos del objeto en orden, separados por coma y en formato String
+     */
     @Override
     public String toString() {
         return "Admin{" +

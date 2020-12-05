@@ -7,6 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * @author Daniel
+ * @version 1.0
+ */
+
 public class AdminDAO {
     Connection cnx;
 

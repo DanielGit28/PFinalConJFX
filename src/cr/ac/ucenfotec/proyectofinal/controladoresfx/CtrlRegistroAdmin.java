@@ -29,10 +29,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class CtrlRegistroAdmin implements Initializable {
     Gestor gestor = new Gestor();
-    Connection cnx;
+    private Connection cnx;
 
-    Scene escenaRegistro;
-    Stage window;
+    private Scene escenaRegistro;
+    private Stage window;
     private String pathImg;
 
     @FXML
@@ -66,13 +66,20 @@ public class CtrlRegistroAdmin implements Initializable {
          escenaRegistro = scene;
     }
 
+    /**
+     *
+     * @param actionEvent abre la escena del registro del administrador
+     */
     public void abrirEscenaRegistro(ActionEvent actionEvent) {
         Stage stageRegistro = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         stageRegistro.setScene(escenaRegistro);
     }
 
-
-
+    /**
+     *
+     * @param event cuando se hace click en el botón de iniciar sesión, se activa el evento
+     * @throws IOException
+     */
     public void cambiarEscena(ActionEvent event) throws IOException {
         Parent login = FXMLLoader.load(getClass().getResource("../vistas/inicio.fxml"));
         Scene vistaLogin = new Scene(login);
@@ -83,6 +90,9 @@ public class CtrlRegistroAdmin implements Initializable {
         window.show();
     }
 
+    /**
+     * Este método carga la imagen que se selecciona en el registro
+     */
     public void cargarImagen() {
         btnBuscar.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
@@ -108,6 +118,10 @@ public class CtrlRegistroAdmin implements Initializable {
         });
     }
 
+    /**
+     * Este método registra al administrador
+     * @throws SQLException
+     */
     public void registrarDatosAdmin() throws SQLException {
         String avatar = pathImg;
         String nombre = lblNombre.getText();

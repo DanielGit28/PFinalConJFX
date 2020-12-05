@@ -1,5 +1,7 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 
+
+
 public class CancionCompra extends Cancion{
     private int precioCancion;
 
@@ -21,6 +23,10 @@ public class CancionCompra extends Cancion{
         this.precioCancion = precioCancion;
     }*/
 
+    /**
+     *
+     * @return devuelve los atributos del objeto en orden, separados por coma y en formato String
+     */
     @Override
     public String toString() {
         return super.toString() +

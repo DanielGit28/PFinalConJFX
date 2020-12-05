@@ -12,6 +12,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Daniel
+ * @version 1.0
+ */
+
 public class CompositorDAO {
     Connection cnx;
 

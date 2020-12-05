@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.0
+ * @version 1.1
  */
 public class UsuarioFinal extends Usuario{
     private String fechaNacimientoUsuario; //cambiar por localDate
@@ -88,6 +88,10 @@ public class UsuarioFinal extends Usuario{
         this.cancionesUsuario = cancionesUsuario;
     }
 
+    /**
+     *
+     * @return devuelve los atributos del objeto en orden, separados por coma y en formato String
+     */
     @Override
     public String toString() {
         return "UsuarioFinal{" +

@@ -32,7 +32,7 @@ public class Main extends Application {
         //cargar segunda escena
         /*
         Stage registro = primaryStage;
-        Parent rootRegistro = FXMLLoader.load(getClass().getResource("registro.fxml"));
+        Parent rootRegistro = FXMLLoader.load(getClass().getResource("registroAdmin.fxml"));
         registro.setTitle("Registro");
         registro.setScene(new Scene(rootRegistro, 800, 800));
         registro.setResizable(false);

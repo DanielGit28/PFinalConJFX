@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+/**
+ * @author Daniel
+ * @version 1.1
+ */
+
 public class Gestor {
     Connection connection;
 
@@ -21,7 +26,7 @@ public class Gestor {
     ListaReproduccionDAO listaReproduccionDAO;
     UsuarioFinalDAO usuarioFinalDAO;
 
-
+//VARIABLES QUE PROXIMAMENTE SE ELIMINARAN
     public String[] locales = Locale.getISOCountries();
     Admin administrador = new Admin();
     ArrayList<UsuarioFinal> usuarios = new ArrayList<> ();
@@ -179,6 +184,8 @@ public class Gestor {
         return validacion;
     }
 
+
+    //FUNCIONES AUN NO TRABAJADAS
     public Admin listarAdmin(){
         return this.administrador;
     }
