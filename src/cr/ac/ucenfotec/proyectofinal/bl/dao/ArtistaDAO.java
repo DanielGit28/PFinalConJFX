@@ -3,20 +3,24 @@ package cr.ac.ucenfotec.proyectofinal.bl.dao;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Artista;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Daniel
- * @version 1.0
+ * @version 1.1
  */
 
 public class ArtistaDAO {
     Connection cnx;
+    private PreparedStatement cmdInsertar;
+    private PreparedStatement queryArtista;
+
+    private final String TEMPLATE_CMD_INSERTAR = "insert into album (nombre,apellido,nombreArtistico,fechaNacimiento,fechaFallecimiento,paisNacimiento,generoMusical,edadArtista,descripcion)" +
+            " values (?,?,?,?,?,?,?,?,?)";
+    private final String TEMPLATE_QRY_BUSCARARTISTAS = "select * from artista";
 
     /**
      *
@@ -24,6 +28,12 @@ public class ArtistaDAO {
      */
     public ArtistaDAO(Connection conexion){
         this.cnx = conexion;
+        try {
+            this.cmdInsertar = cnx.prepareStatement(TEMPLATE_CMD_INSERTAR);
+            this.queryArtista = cnx.prepareStatement(TEMPLATE_QRY_BUSCARARTISTAS);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public Admin encontrarPorId(String cedula){
@@ -39,8 +49,8 @@ public class ArtistaDAO {
             leido.setNombreArtista(resultado.getString("nombre"));
             leido.setApellidoArtista(resultado.getString("apellido"));
             leido.setNombreArtistico(resultado.getString("nombreArtistico"));
-            leido.setFechaNacimientoArtista(resultado.getString("fechaNacimiento"));
-            leido.setFechaFallecimientoArtista(resultado.getString("fechaFallecimiento"));
+            leido.setFechaNacimientoArtista(resultado.getDate("fechaNacimiento").toLocalDate());
+            leido.setFechaFallecimientoArtista(resultado.getDate("fechaFallecimiento").toLocalDate());
             leido.setPaisNacimiento(resultado.getString("paisNacimiento"));
             //leido.setGeneroMusicalArtista(resultado.getString("generoMusical"));
             leido.setEdadArtista(resultado.getInt("edadArtista"));
@@ -58,18 +68,22 @@ public class ArtistaDAO {
      * @throws SQLException
      */
     public void guardarArtista(Artista nuevo) throws SQLException{
-        Statement insert = cnx.createStatement();
-        //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)
-        String insertar = "insert into album" +
-                "(nombre,apellido,nombreArtistico,fechaNacimiento,fechaFallecimiento,paisNacimiento,generoMusical,edadArtista,descripcion) values ('";
-        insertar += "1";
-        insertar += ",";
-        //insertar += nuevo.getFechaCreacionListaReproduccion();
-        insertar += "','";
-        //insertar += nuevo.getNombreListaReproduccion();
-        insertar += "',";
-        //insertar += nuevo.getCalificacionReproduccion();
-        insertar += ")";
-        insert.execute(insertar);
+        if(this.cmdInsertar != null) {
+            this.cmdInsertar.setString(1,nuevo.getNombreArtista());
+            this.cmdInsertar.setString(2,nuevo.getApellidoArtista());
+            this.cmdInsertar.setString(3, nuevo.getNombreArtistico());
+            this.cmdInsertar.setDate(4, Date.valueOf(nuevo.getFechaNacimientoArtista()));
+            this.cmdInsertar.setDate(5, Date.valueOf(nuevo.getFechaFallecimientoArtista()));
+            this.cmdInsertar.setString(6, nuevo.getPaisNacimiento());
+            this.cmdInsertar.setString(7, nuevo.getGeneroMusicalArtista().getNombreGenero());
+            /*
+            *HACER CAMBIO EN LA BASE DE DATOS CON LAS RELACIONES ENTRE OBJETOS, DEBERIA IR EL ID DEL GENERO DE LA BASE DE DATOS, NO EL NOMBRE
+             */
+            this.cmdInsertar.setInt(8, nuevo.getEdadArtista());
+            this.cmdInsertar.setString(9, nuevo.getDescripcionArtista());
+            this.cmdInsertar.execute();
+        } else {
+            System.out.println("No se pudo guardar el artista");
+        }
     }
 }

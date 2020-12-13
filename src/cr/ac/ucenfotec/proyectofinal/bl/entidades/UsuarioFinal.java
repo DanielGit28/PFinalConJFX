@@ -1,14 +1,15 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.1
+ * @version 1.3
  */
 public class UsuarioFinal extends Usuario{
-    private String fechaNacimientoUsuario; //cambiar por localDate
-    private String paisProcedenciaUsuario;
+    private LocalDate fechaNacimientoUsuario;
+    private Pais paisProcedenciaUsuario;
     private String identificacionUsuario;
     private String nombreUsuario;
     private int otp;
@@ -16,19 +17,19 @@ public class UsuarioFinal extends Usuario{
     private ArrayList<Cancion> cancionesUsuario;
     //private int edadUsuario;
 
-    public String getFechaNacimientoUsuario() {
+    public LocalDate getFechaNacimientoUsuario() {
         return fechaNacimientoUsuario;
     }
 
-    public void setFechaNacimientoUsuario(String fechaNacimientoUsuario) {
+    public void setFechaNacimientoUsuario(LocalDate fechaNacimientoUsuario) {
         this.fechaNacimientoUsuario = fechaNacimientoUsuario;
     }
 
-    public String getPaisProcedenciaUsuario() {
+    public Pais getPaisProcedenciaUsuario() {
         return paisProcedenciaUsuario;
     }
 
-    public void setPaisProcedenciaUsuario(String paisProcedenciaUsuario) {
+    public void setPaisProcedenciaUsuario(Pais paisProcedenciaUsuario) {
         this.paisProcedenciaUsuario = paisProcedenciaUsuario;
     }
 
@@ -73,9 +74,9 @@ public class UsuarioFinal extends Usuario{
 
     public UsuarioFinal() {}
 
-    public UsuarioFinal(String id, String avatarUsuario, String nombre, String apellidosUsuario,
+    public UsuarioFinal(int id, String avatarUsuario, String nombre, String apellidosUsuario,
                         String correoUsuario, String contrasennaUsuario,
-                        String fechaNacimientoUsuario, String paisProcedenciaUsuario,
+                        LocalDate fechaNacimientoUsuario, Pais paisProcedenciaUsuario,
                         String identificacionUsuario, String nombreUsuario, int otp,
                         ArrayList<ListaReproduccion> listasReproduccion, ArrayList<Cancion> cancionesUsuario) {
         super(id,avatarUsuario, nombre, apellidosUsuario, correoUsuario, contrasennaUsuario);

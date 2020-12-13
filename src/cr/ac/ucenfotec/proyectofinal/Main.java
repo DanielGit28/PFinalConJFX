@@ -24,7 +24,7 @@ public class Main extends Application {
         Stage inicio = primaryStage;
         Parent rootInicio = FXMLLoader.load(getClass().getResource("vistas/inicio.fxml"));
         inicio.setTitle("Baúl de los recuerdos");
-        inicio.setScene(new Scene(rootInicio, 590, 590));
+        inicio.setScene(new Scene(rootInicio, 790, 790));
         inicio.setResizable(false);
         //inicio.setResizable(false);
         inicio.show();
@@ -77,7 +77,6 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws IOException, SQLException {
-
         launch(args);
     }
 

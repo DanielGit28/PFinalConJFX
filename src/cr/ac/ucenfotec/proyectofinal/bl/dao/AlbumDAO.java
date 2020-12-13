@@ -3,20 +3,23 @@ package cr.ac.ucenfotec.proyectofinal.bl.dao;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Album;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Daniel
- * @version 1.0
+ * @version 1.1
  */
 
 public class AlbumDAO {
     Connection cnx;
+    private PreparedStatement cmdInsertar;
+    private PreparedStatement queryAlbum;
+
+    private final String TEMPLATE_CMD_INSERTAR = "insert into usuario_final (avatar,nombre,apellidos,correo,contrasenna,fechaNacimiento,pais,nombreUsuario)" +
+            " values (?,?,?,?,?,?,?,?)";
+    private final String TEMPLATE_QRY_TODOSLOSALBUMES = "select * from album";
 
     /**
      *
@@ -24,24 +27,30 @@ public class AlbumDAO {
      */
     public AlbumDAO(Connection conexion){
         this.cnx = conexion;
+        try {
+            this.cmdInsertar = cnx.prepareStatement(TEMPLATE_CMD_INSERTAR);
+            this.queryAlbum = cnx.prepareStatement(TEMPLATE_QRY_TODOSLOSALBUMES);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public Admin encontrarPorId(String cedula){
         return null;
     }
 
-    public List<Admin> obtenerTodosLosClientes() throws SQLException {
-        Statement query = cnx.createStatement();
-        ResultSet resultado = query.executeQuery("select * from tcliente");
-        ArrayList<Admin> listaClientes = new ArrayList<>();
+    public ArrayList<Album> obtenerAlbumes() throws SQLException {
+
+        ResultSet resultado = queryAlbum.executeQuery();
+        ArrayList<Album> listaAlbumes = new ArrayList<>();
         while (resultado.next()){
-            Admin leido = new Admin();
-            leido.setAvatarUsuario(resultado.getString("avatar"));
-            leido.setNombre(resultado.getString("nombre"));
+            Album leido = new Album();
+            //leido.setAvatarUsuario(resultado.getString("avatar"));
+            //leido.setNombre(resultado.getString("nombre"));
             //leido.setPuntos(resultado.getInt("puntos"));
-            listaClientes.add(leido);
+            listaAlbumes.add(leido);
         }
-        return listaClientes;
+        return listaAlbumes;
     }
 
     /**
@@ -50,20 +59,16 @@ public class AlbumDAO {
      * @throws SQLException
      */
     public void guardarAlbum(Album nuevo) throws SQLException{
-        Statement insert = cnx.createStatement();
-        //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)
-        String insertar = "insert into lista_reproduccion_usuario" +
-                "(idLista,nombreAlbum,fechaLanzamiento,artista,imagenAlbum,idAlbumCanciones) values ('";
-        insertar += "1";
-        insertar += ",";
-        insertar += nuevo.getNombreAlbum();
-        insertar += "','";
-        insertar += nuevo.getFechaLanzamiento();
-        insertar += "',";
-        insertar += nuevo.getArtistaAlbum();
-        insertar += "',";
-        insertar += nuevo.getImagenAlbum();
-        insertar += ")";
-        insert.execute(insertar);
+        if(this.cmdInsertar != null) {
+            this.cmdInsertar.setString(1,nuevo.getNombreAlbum());
+            this.cmdInsertar.setDate(2, Date.valueOf(nuevo.getFechaLanzamiento()));
+            this.cmdInsertar.setString(3, nuevo.getArtistaAlbum().getNombreArtistico());
+            this.cmdInsertar.setString(4, nuevo.getImagenAlbum());
+            this.cmdInsertar.setString(5, nuevo.getNombreAlbum());//SOLUCIONAR RELACION ENTRE TABLAS PARA GUARDAR CANCIONES
+            //SE DEBERÍA ENVIAR EL ID DE LA BIBLIOTECA QUE TIENE LAS CANCIONES DEL ALBUM
+            this.cmdInsertar.execute();
+        } else {
+            System.out.println("No se pudo guardar el album");
+        }
     }
 }

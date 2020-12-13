@@ -26,6 +26,8 @@ public class CtrlInicio implements Initializable {
     @FXML
     private Button botonRegistrarAdmin;
     @FXML
+    private Button btnRegistrarUsuario;
+    @FXML
     private Button btnSesion;
 
     Scene escenaInicio;
@@ -41,7 +43,15 @@ public class CtrlInicio implements Initializable {
         //Esta linea agarra la informacion del escenario (stage o window)
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
-        window.setMaxHeight(600);
+        window.show();
+    }
+    public void cambiarEscenaUsuario(ActionEvent event) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../vistas/registroUsuario.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
         window.show();
     }
 
@@ -56,7 +66,6 @@ public class CtrlInicio implements Initializable {
         //Esta linea agarra la informacion del escenario (stage o window)
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
-        window.setMaxHeight(600);
         window.show();
     }
 

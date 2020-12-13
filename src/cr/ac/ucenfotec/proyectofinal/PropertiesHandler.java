@@ -9,7 +9,7 @@ public class PropertiesHandler {
     Properties props = new Properties();
 
     public void loadProperties() throws IOException {
-        props.load(new FileInputStream("cr/ac/ucenfotec/proyectofinal/application.properties"));
+        props.load(new FileInputStream("application.properties"));
         values[0] = props.getProperty("driver");
         values[1] = props.getProperty("cnxStr");
         values[2] = props.getProperty("usr");

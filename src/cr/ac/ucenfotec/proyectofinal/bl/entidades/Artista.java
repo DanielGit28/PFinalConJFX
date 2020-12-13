@@ -1,15 +1,18 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
+
+import java.time.LocalDate;
+
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.1
+ * @version 1.2
  */
 public class Artista {
     private String id;
     private String nombreArtista;
     private String apellidoArtista;
     private String nombreArtistico;
-    private String fechaNacimientoArtista;
-    private String fechaFallecimientoArtista;
+    private LocalDate fechaNacimientoArtista;
+    private LocalDate fechaFallecimientoArtista;
     private String paisNacimiento;
     private Genero generoMusicalArtista;
     private int edadArtista;
@@ -47,19 +50,19 @@ public class Artista {
         this.nombreArtistico = nombreArtistico;
     }
 
-    public String getFechaNacimientoArtista() {
+    public LocalDate getFechaNacimientoArtista() {
         return fechaNacimientoArtista;
     }
 
-    public void setFechaNacimientoArtista(String fechaNacimientoArtista) {
+    public void setFechaNacimientoArtista(LocalDate fechaNacimientoArtista) {
         this.fechaNacimientoArtista = fechaNacimientoArtista;
     }
 
-    public String getFechaFallecimientoArtista() {
+    public LocalDate getFechaFallecimientoArtista() {
         return fechaFallecimientoArtista;
     }
 
-    public void setFechaFallecimientoArtista(String fechaFallecimientoArtista) {
+    public void setFechaFallecimientoArtista(LocalDate fechaFallecimientoArtista) {
         this.fechaFallecimientoArtista = fechaFallecimientoArtista;
     }
 
@@ -98,8 +101,8 @@ public class Artista {
     public Artista(){}
 
     public Artista(String id, String nombreArtista, String apellidoArtista,
-                   String nombreArtistico, String fechaNacimientoArtista,
-                   String fechaFallecimientoArtista, String paisNacimiento,
+                   String nombreArtistico, LocalDate fechaNacimientoArtista,
+                   LocalDate fechaFallecimientoArtista, String paisNacimiento,
                    Genero generoMusicalArtista, int edadArtista,
                    String descripcionArtista) {
 

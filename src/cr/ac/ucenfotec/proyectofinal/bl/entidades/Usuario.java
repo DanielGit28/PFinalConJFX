@@ -3,19 +3,19 @@ package cr.ac.ucenfotec.proyectofinal.bl.entidades;
  * @author Daniel Zúñiga Rojas
  * @version 1.1
  */
-public class Usuario {
-    protected String id;
+public abstract class Usuario {
+    protected int id;
     protected String avatarUsuario;
     protected String nombre;
     protected String apellidosUsuario;
     protected String correoUsuario;
     protected String contrasennaUsuario;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -61,7 +61,7 @@ public class Usuario {
 
     public Usuario() {}
 
-    public Usuario(String id,String avatarUsuario, String nombre, String apellidosUsuario,
+    public Usuario(int id,String avatarUsuario, String nombre, String apellidosUsuario,
                    String correoUsuario, String contrasennaUsuario) {
         this.id = id;
         this.avatarUsuario = avatarUsuario;

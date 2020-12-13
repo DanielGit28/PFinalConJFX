@@ -15,24 +15,24 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.CtrlInicio">
    <children>
-      <ImageView fitHeight="600.0" fitWidth="600.0" pickOnBounds="true">
+      <ImageView fitHeight="800.0" fitWidth="800.0" pickOnBounds="true">
          <image>
             <Image url="@../imagenes/FondoNaranja.jpg" />
          </image>
       </ImageView>
-      <Text id="descripcionInicio" layoutX="149.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Para poder hacer uso de la aplicación es necesario registrar un usuario administrador primero para poder gestionar a los artistas, canciones, géneros, listas, etc." textAlignment="CENTER" wrappingWidth="323.13671875">
+      <Text id="descripcionInicio" layoutX="238.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Para poder hacer uso de la aplicación es necesario registrar un usuario administrador primero para poder gestionar a los artistas, canciones, géneros, listas, etc." textAlignment="CENTER" wrappingWidth="323.13671875">
          <font>
-            <Font name="Serif Bold" size="18.0" />
+            <Font name="Serif Bold" size="24.0" />
          </font>
       </Text>
-      <Button fx:id="botonRegistrarAdmin" contentDisplay="CENTER" layoutX="247.0" layoutY="337.0" mnemonicParsing="false" onAction="#cambiarEscena" prefHeight="30.0" prefWidth="127.0" style="-fx-background-color: white;" text="Registrar admin">
+      <Button fx:id="botonRegistrarAdmin" contentDisplay="CENTER" layoutX="304.0" layoutY="421.0" mnemonicParsing="false" onAction="#cambiarEscena" prefHeight="39.0" prefWidth="187.0" style="-fx-background-color: white;" text="Registrar admin">
          <font>
-            <Font name="System Bold" size="14.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
       </Button>
-      <Text layoutX="120.0" layoutY="87.0" smooth="false" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenido al Baúl de los Recuerdos" textAlignment="CENTER">
+      <Text layoutX="114.0" layoutY="119.0" smooth="false" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenido al Baúl de los Recuerdos" textAlignment="CENTER">
          <font>
-            <Font size="24.0" />
+            <Font size="36.0" />
          </font>
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startX="1.0">
@@ -43,9 +43,14 @@
             </LinearGradient>
          </fill>
       </Text>
-      <Button id="botonRegistrarAdmin" fx:id="btnSesion" contentDisplay="CENTER" layoutX="247.0" layoutY="392.0" mnemonicParsing="false" onAction="#cambiarEscenaLogin" prefHeight="30.0" prefWidth="127.0" style="-fx-background-color: white;" text="Iniciar sesión">
+      <Button id="botonRegistrarAdmin" fx:id="btnSesion" contentDisplay="CENTER" layoutX="306.0" layoutY="594.0" mnemonicParsing="false" onAction="#cambiarEscenaLogin" prefHeight="39.0" prefWidth="187.0" style="-fx-background-color: white;" text="Iniciar sesión">
          <font>
-            <Font name="System Bold" size="14.0" />
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnRegistrarUsuario" contentDisplay="CENTER" layoutX="307.0" layoutY="506.0" mnemonicParsing="false" onAction="#cambiarEscenaUsuario" prefHeight="39.0" prefWidth="187.0" style="-fx-background-color: white;" text="Registrar Usuario">
+         <font>
+            <Font name="System Bold" size="18.0" />
          </font>
       </Button>
    </children>

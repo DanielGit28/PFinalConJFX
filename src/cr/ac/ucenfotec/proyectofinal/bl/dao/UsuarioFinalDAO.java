@@ -3,20 +3,23 @@ package cr.ac.ucenfotec.proyectofinal.bl.dao;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioFinal;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Daniel
- * @version 1.0
+ * @version 1.1
  */
 
 public class UsuarioFinalDAO {
     Connection cnx;
+    private PreparedStatement cmdInsertar;
+    private PreparedStatement queryClientes;
+
+    private final String TEMPLATE_CMD_INSERTAR = "insert into usuario_final (avatar,nombre,apellidos,correo,contrasenna,fechaNacimiento,idPais,identificacion,nombreUsuario)" +
+            " values (?,?,?,?,?,?,?,?,?)";
+    private final String TEMPLATE_QRY_TODOSLOSUSUARIOS = "select * from usuario_final";
 
     /**
      *
@@ -24,6 +27,12 @@ public class UsuarioFinalDAO {
      */
     public UsuarioFinalDAO(Connection conexion){
         this.cnx = conexion;
+        try {
+            this.cmdInsertar = cnx.prepareStatement(TEMPLATE_CMD_INSERTAR);
+            this.queryClientes = cnx.prepareStatement(TEMPLATE_QRY_TODOSLOSUSUARIOS);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public Admin encontrarPorId(String cedula){
@@ -50,26 +59,20 @@ public class UsuarioFinalDAO {
      * @throws SQLException
      */
     public void guardarUsuario(UsuarioFinal nuevo) throws SQLException{
-        Statement insert = cnx.createStatement();
-        //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)
-        String insertar = "insert into usuario_final" +
-                "(avatar,nombre,apellidos,correo,contrasenna,fechaNacimiento,pais,nombreUsuario) values ('";
-        insertar += "1";
-        insertar += ",";
-        insertar += nuevo.getAvatarUsuario();
-        insertar += "','";
-        insertar += nuevo.getApellidosUsuario();
-        insertar += "',";
-        insertar += nuevo.getCorreoUsuario();
-        insertar += "',";
-        insertar += nuevo.getContrasennaUsuario();
-        insertar += "',";
-        insertar += nuevo.getFechaNacimientoUsuario();
-        insertar += "',";
-        insertar += nuevo.getPaisProcedenciaUsuario();
-        insertar += "',";
-        insertar += nuevo.getNombreUsuario();
-        insertar += ")";
-        insert.execute(insertar);
+        if(this.cmdInsertar != null) {
+            String pathImg = nuevo.getAvatarUsuario().replace("\\", "\\\\");
+            this.cmdInsertar.setString(1,pathImg);
+            this.cmdInsertar.setString(2,nuevo.getNombreUsuario());
+            this.cmdInsertar.setString(3, nuevo.getApellidosUsuario());
+            this.cmdInsertar.setString(4, nuevo.getCorreoUsuario());
+            this.cmdInsertar.setString(5, nuevo.getContrasennaUsuario());
+            this.cmdInsertar.setDate(6, Date.valueOf(nuevo.getFechaNacimientoUsuario()));
+            this.cmdInsertar.setInt(7, nuevo.getPaisProcedenciaUsuario().getIdPais());
+            this.cmdInsertar.setString(8, nuevo.getIdentificacionUsuario());
+            this.cmdInsertar.setString(9, nuevo.getNombreUsuario());
+            this.cmdInsertar.execute();
+        } else {
+            System.out.println("No se pudo guardar el cliente");
+        }
     }
 }

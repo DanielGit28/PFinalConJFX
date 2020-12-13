@@ -8,7 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -77,16 +76,15 @@ public class CtrlLogin implements Initializable {
         String correo = fiedlCorreo.getText();
         String contrasenna = fiedlContrasenna.getText();
         Parent login = null;
-        boolean sesion = gestor.verificarSesionAdmin(correo,contrasenna);
-        System.out.println(sesion);
-        if(sesion == true) {
-            login = FXMLLoader.load(getClass().getResource("../vistas/menuAdmin.fxml"));
+        boolean sesionAdmin = gestor.verificarSesionAdmin(correo,contrasenna);
+        boolean sesionUsuario = gestor.verificarSesionUsuario(correo,contrasenna);
+
+        if(sesionAdmin == true) {
+            login = FXMLLoader.load(getClass().getResource("../vistas/vistas_admin/menuAdmin.fxml"));
+        } else if(sesionUsuario == true) {
+            login = FXMLLoader.load(getClass().getResource("../vistas/vistas_usuario/menuUsuario.fxml"));
         } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-            alert.setTitle("Sesión");
-            alert.setContentText("Datos incorrectos. Correo y/o contraseña incorrectos");
-            alert.showAndWait();
+            gestor.creacionAlertas("Datos incorrectos. Correo y/o contraseña incorrectos");
         }
         /*
         if(gestor.verificarSesionUsuario(correo,contrasenna) == true) {

@@ -1,15 +1,17 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 
+import java.time.LocalDate;
+
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.1
+ * @version 1.2
  */
 public class Cancion {
     private String id;
     private String nombreCancion;
     private Artista artistaCancion;
     private Compositor compositorCancion;
-    private String fechaLanzamientoCancion;
+    private LocalDate fechaLanzamientoCancion;
     private Genero generoCancion;
     private int cancionSimple;//1 si es un sencillo, 2 si es de un álbum
     private int cancionCompra;//1 si es normal, 2 si es compra
@@ -40,11 +42,11 @@ public class Cancion {
         this.compositorCancion = compositorCancion;
     }
 
-    public String getFechaLanzamientoCancion() {
+    public LocalDate getFechaLanzamientoCancion() {
         return fechaLanzamientoCancion;
     }
 
-    public void setFechaLanzamientoCancion(String fechaLanzamientoCancion) {
+    public void setFechaLanzamientoCancion(LocalDate fechaLanzamientoCancion) {
         this.fechaLanzamientoCancion = fechaLanzamientoCancion;
     }
 
@@ -99,7 +101,7 @@ public class Cancion {
     public Cancion() {}
 
     public Cancion(String id, String nombreCancion, Artista artistaCancion, Compositor compositorCancion,
-                   String fechaLanzamientoCancion, Genero generoCancion,
+                   LocalDate fechaLanzamientoCancion, Genero generoCancion,
                    int cancionSimple,int cancionCompra, Album albumCancion, String recurso) {
         this.id = id;
         this.nombreCancion = nombreCancion;

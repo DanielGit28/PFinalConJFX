@@ -27,6 +27,11 @@ import java.sql.Statement;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * @author Daniel
+ * @version 1.1
+ */
+
 public class CtrlRegistroAdmin implements Initializable {
     Gestor gestor = new Gestor();
     private Connection cnx;
@@ -123,7 +128,6 @@ public class CtrlRegistroAdmin implements Initializable {
      * @throws SQLException
      */
     public void registrarDatosAdmin() throws SQLException {
-        String avatar = pathImg;
         String nombre = lblNombre.getText();
         String apellidos = lblApellidos.getText();
         String contrasenna = lblContrasenna.getText();
@@ -136,8 +140,8 @@ public class CtrlRegistroAdmin implements Initializable {
             alert.setContentText("Contraseña con el formato incorrecto. Debe incluir mayúscula, minúscula, caracteres especiales y números.");
             alert.showAndWait();
         } else {
-            if(avatar != null && nombre != null && apellidos != null && correo != null && contrasenna != null && nombreUsuario != null) {
-                gestor.agregarAdmin(avatar,nombre,apellidos,correo,contrasenna,nombreUsuario);
+            if(pathImg != null && nombre != null && apellidos != null && correo != null && contrasenna != null && nombreUsuario != null) {
+                gestor.agregarAdmin(pathImg,nombre,apellidos,correo,contrasenna,nombreUsuario);
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText(null);

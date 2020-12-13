@@ -1,14 +1,17 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
+
+import java.time.LocalDate;
+
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.1
+ * @version 1.2
  */
 public class Compositor {
     private String id;
     private String nombre;
     private String apellidos;
     private String paisNacimientoCompositor;
-    private String fechaNacimientoCompositor;
+    private LocalDate fechaNacimientoCompositor;
     private int edadCompositor;
 
     public String getId() {
@@ -43,11 +46,11 @@ public class Compositor {
         this.paisNacimientoCompositor = paisNacimientoCompositor;
     }
 
-    public String getFechaNacimientoCompositor() {
+    public LocalDate getFechaNacimientoCompositor() {
         return fechaNacimientoCompositor;
     }
 
-    public void setFechaNacimientoCompositor(String fechaNacimientoCompositor) {
+    public void setFechaNacimientoCompositor(LocalDate fechaNacimientoCompositor) {
         this.fechaNacimientoCompositor = fechaNacimientoCompositor;
     }
 
@@ -62,7 +65,7 @@ public class Compositor {
     public Compositor() {}
 
     public Compositor(String id, String nombre, String apellidos, String paisNacimientoCompositor,
-                      String fechaNacimientoCompositor, int edadCompositor) {
+                      LocalDate fechaNacimientoCompositor, int edadCompositor) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;

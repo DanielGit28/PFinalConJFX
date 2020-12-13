@@ -1,15 +1,16 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.1
+ * @version 1.2
  */
 public class Album {
     private String id;
     private String nombreAlbum;
-    private String fechaLanzamiento;
+    private LocalDate fechaLanzamiento;
     private Artista artistaAlbum;
     private String imagenAlbum;
     private ArrayList<Cancion> cancionesAlbum;
@@ -30,11 +31,11 @@ public class Album {
         this.nombreAlbum = nombreAlbum;
     }
 
-    public String getFechaLanzamiento() {
+    public LocalDate getFechaLanzamiento() {
         return fechaLanzamiento;
     }
 
-    public void setFechaLanzamiento(String fechaLanzamiento) {
+    public void setFechaLanzamiento(LocalDate fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
     }
 
@@ -64,7 +65,7 @@ public class Album {
 
     public Album(){}
 
-    public Album(String id, String nombreAlbum, String fechaLanzamiento, Artista artistaAlbum,
+    public Album(String id, String nombreAlbum, LocalDate fechaLanzamiento, Artista artistaAlbum,
                  String imagenAlbum, ArrayList<Cancion> cancionesAlbum) {
         this.id = id;
         this.nombreAlbum = nombreAlbum;

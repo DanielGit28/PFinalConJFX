@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="ivImagen" prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.CtrlRegistroUsuario">
+    <children>
+        <Label layoutX="59.0" layoutY="84.0" text="Avatar" />
+        <Label layoutX="53.0" layoutY="266.0" text="Nombre" />
+        <Label layoutX="58.0" layoutY="352.0" text="Apellidos" />
+        <Label layoutX="53.0" layoutY="442.0" text="Correo" />
+        <Label layoutX="333.0" layoutY="84.0" text="Contraseña" />
+        <Label layoutX="333.0" layoutY="352.0" text="Identificación" />
+        <Text layoutX="244.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registro">
+            <font>
+                <Font name="Serif Bold" size="24.0" />
+            </font>
+        </Text>
+        <TextField fx:id="fieldApellidos" layoutX="53.0" layoutY="383.0" />
+        <TextField fx:id="fiedlNombre" layoutX="53.0" layoutY="294.0" />
+        <TextField fx:id="fieldCorreo" layoutX="53.0" layoutY="475.0" />
+        <TextField fx:id="fieldIdentificacion" layoutX="333.0" layoutY="383.0" />
+        <Button fx:id="btnBuscar" layoutX="126.0" layoutY="79.0" mnemonicParsing="false" onAction="#cargarImagen" prefHeight="29.0" prefWidth="85.0" text="Seleccionar">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Button>
+        <ImageView id="ivImagen" fx:id="ivImagen" fitHeight="136.0" fitWidth="204.0" layoutX="56.0" layoutY="123.0" pickOnBounds="true" preserveRatio="true" />
+        <Button fx:id="registrarUsuario" layoutX="331.0" layoutY="544.0" mnemonicParsing="false" onAction="#registrarDatosUsuario" prefHeight="29.0" prefWidth="112.0" text="Registrar" />
+        <Line endX="100.0" layoutX="156.0" layoutY="622.0" startX="-100.0" stroke="#ff8000" strokeMiterLimit="20.0" />
+        <Line endX="100.0" layoutX="414.0" layoutY="622.0" startX="-100.0" stroke="#ff8000" />
+        <Line endX="100.0" layoutX="287.0" layoutY="677.0" startX="-100.0" stroke="#ff8000" />
+        <Button fx:id="inicio" layoutX="235.0" layoutY="634.0" mnemonicParsing="false" onAction="#cambiarEscenaInicio" prefHeight="29.0" prefWidth="104.0" style="-fx-background-color: #26a8d4;" text="Volver al inicio" textFill="WHITE" />
+      <Label layoutX="333.0" layoutY="266.0" text="País de nacimiento" />
+      <Label layoutX="333.0" layoutY="173.0" text="Fecha de nacimiento" />
+      <TextField fx:id="fieldUsuario" layoutX="331.0" layoutY="476.0" />
+      <Label layoutX="331.0" layoutY="445.0" text="Nombre de usuario" />
+      <DatePicker fx:id="fechaNacimiento" layoutX="333.0" layoutY="200.0" prefHeight="29.0" prefWidth="162.0" />
+      <PasswordField fx:id="fieldContrasenna" layoutX="335.0" layoutY="109.0" />
+      <ComboBox fx:id="paisNacimiento" layoutX="335.0" layoutY="309.0" onAction="#cargarPaises" onMouseClicked="#cargarPaises" prefWidth="150.0" />
+    </children>
+</AnchorPane>

@@ -1,4 +1,4 @@
-package cr.ac.ucenfotec.proyectofinal.controladoresfx;
+package cr.ac.ucenfotec.proyectofinal.controladoresfx.contraladores_usuario;
 
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
 import javafx.event.ActionEvent;
@@ -13,7 +13,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.Connection;
 
-public class CtrlMenuAdmin {
+/**
+ * @author Daniel Zúñiga Rojas
+ * @version 1.1
+ */
+
+public class CtrlMenuUsuario {
     Gestor gestor = new Gestor();
     Connection cnx;
 

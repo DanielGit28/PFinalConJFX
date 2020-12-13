@@ -1,16 +1,17 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
  * @author Daniel
- * @version 1.1
+ * @version 1.2
  */
 
 public class ListaReproduccion {
     private String id;
     private ArrayList<Cancion> cancionesListaReproduccion;
-    private String fechaCreacionListaReproduccion;
+    private LocalDate fechaCreacionListaReproduccion;
     private String nombreListaReproduccion;
     private String calificacionReproduccion;
 
@@ -30,11 +31,11 @@ public class ListaReproduccion {
         this.cancionesListaReproduccion = cancionesListaReproduccion;
     }
 
-    public String getFechaCreacionListaReproduccion() {
+    public LocalDate getFechaCreacionListaReproduccion() {
         return fechaCreacionListaReproduccion;
     }
 
-    public void setFechaCreacionListaReproduccion(String fechaCreacionListaReproduccion) {
+    public void setFechaCreacionListaReproduccion(LocalDate fechaCreacionListaReproduccion) {
         this.fechaCreacionListaReproduccion = fechaCreacionListaReproduccion;
     }
 
@@ -57,7 +58,7 @@ public class ListaReproduccion {
     public ListaReproduccion(){}
 
     public ListaReproduccion(String id, ArrayList<Cancion> cancionesListaReproduccion,
-                             String fechaCreacionListaReproduccion,
+                             LocalDate fechaCreacionListaReproduccion,
                              String nombreListaReproduccion,
                              String calificacionReproduccion) {
         this.id = id;
