@@ -15,6 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -48,7 +49,9 @@ public class CtrlAdminGeneros implements Initializable {
 
     @FXML
     private TableColumn<Genero, String> columnDescripcion;
-    
+
+    @FXML
+    private TableColumn<Genero, String> columnId;
 
     @FXML
     private Button btnCanciones;
@@ -71,8 +74,11 @@ public class CtrlAdminGeneros implements Initializable {
     @FXML
     private TextField fieldBusqueda;
 
+    @FXML
+    private Button btnEliminar;
 
-
+    @FXML
+    private Button btnActualizar;
 
 
     /**
@@ -155,6 +161,7 @@ public class CtrlAdminGeneros implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        /*
         TableColumn<Genero, String> colNom = new TableColumn<>("Nombre");
         colNom.setMinWidth(170);
         colNom.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -162,15 +169,20 @@ public class CtrlAdminGeneros implements Initializable {
         TableColumn<Genero, String> colDesc = new TableColumn<>("Descripción");
         colNom.setMinWidth(330);
         colDesc.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        */
+        columnId.setCellValueFactory(new PropertyValueFactory<Genero, String>("id"));
+        columnNombre.setCellValueFactory(new PropertyValueFactory<Genero, String>("nombreGenero"));
+        columnNombre.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnDescripcion.setCellValueFactory(new PropertyValueFactory<Genero, String>("descripcionGenero"));
+        columnDescripcion.setCellFactory(TextFieldTableCell.forTableColumn());
+
         ObservableList<Genero> datos = null;
         try {
             datos = gestor.generosObservable();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        tablaGeneros = new TableView<>();
-        tablaGeneros.getColumns().add(columnNombre);
-        tablaGeneros.getColumns().addAll(columnDescripcion);
+        System.out.println(datos);
         tablaGeneros.setItems(datos);
 
     }

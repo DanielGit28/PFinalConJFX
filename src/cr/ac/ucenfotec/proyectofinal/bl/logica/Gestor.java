@@ -204,10 +204,10 @@ public class Gestor {
             leido.setId(resultadoGeneros.getInt("idGenero"));
             leido.setNombreGenero(resultadoGeneros.getString("nombre"));
             leido.setDescripcionGenero(resultadoGeneros.getString("descripcion"));
-            System.out.println(leido.toString());
+            //System.out.println(leido.toString());
             generos.add(leido);
         }
-        System.out.println(generos);
+        //System.out.println(generos);
         return generos;
     }
 
