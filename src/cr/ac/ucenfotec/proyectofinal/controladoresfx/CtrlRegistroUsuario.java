@@ -74,7 +74,6 @@ public class CtrlRegistroUsuario {
     @FXML
     private Button btnBuscar;
 
-    private ObservableList<String> obPaises;
 
     public void setEscenaRegistro(Scene scene) {
         escenaRegistro = scene;
@@ -164,20 +163,12 @@ public class CtrlRegistroUsuario {
 
         if (avatar != null && nombre != null && apellidos != null && correo != null && contrasenna != null && fechaNac != null && pais != null && identificacion != null && nombreUsuario != null) {
             if (gestor.verificarContrasenna(contrasenna) == false) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(null);
-                alert.setTitle("Error");
-                alert.setContentText("Contraseña con el formato incorrecto. Debe incluir mayúscula, minúscula, caracteres especiales y números.");
-                alert.showAndWait();
+                gestor.creacionAlertas("Contraseña con el formato incorrecto. Debe incluir mayúscula, minúscula, caracteres especiales y números.");
             } else {
                 gestor.agregarUsuario(avatar, nombre, apellidos, correo, contrasenna, fechaNac, pais, identificacion,nombreUsuario);
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setTitle("Error");
-            alert.setContentText("Todos los campos deben estar rellenos");
-            alert.showAndWait();
+            gestor.creacionAlertas("Todos los campos deben estar rellenos");
         }
 
         }

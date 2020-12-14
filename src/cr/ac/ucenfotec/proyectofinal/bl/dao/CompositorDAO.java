@@ -5,20 +5,23 @@ import cr.ac.ucenfotec.proyectofinal.bl.entidades.Album;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Compositor;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.ListaReproduccion;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Daniel
- * @version 1.0
+ * @version 1.1
  */
 
 public class CompositorDAO {
     Connection cnx;
+    private PreparedStatement cmdInsertar;
+    private PreparedStatement queryCompositores;
+
+    private final String TEMPLATE_CMD_INSERTAR = "insert into compositor (nombre,apellidos,idPaisCompositor,fechaNacimiento,edad)" +
+            " values (?,?,?,?,?)";
+    private final String TEMPLATE_QRY_TODOSLOSCOMPOSITORES = "select * from compositor";
 
     /**
      *
@@ -26,6 +29,12 @@ public class CompositorDAO {
      */
     public CompositorDAO(Connection conexion){
         this.cnx = conexion;
+        try {
+            this.cmdInsertar = cnx.prepareStatement(TEMPLATE_CMD_INSERTAR);
+            this.queryCompositores = cnx.prepareStatement(TEMPLATE_QRY_TODOSLOSCOMPOSITORES);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public Admin encontrarPorId(String cedula){
@@ -51,23 +60,16 @@ public class CompositorDAO {
      * @param nuevo objeto Album que se va a guardar en la base de datos
      * @throws SQLException
      */
-    public void guardarAlbum(Album nuevo) throws SQLException{
-        Statement insert = cnx.createStatement();
-        //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)
-        String insertar = "insert into album" +
-                "(id,nombreAlbum,fechaLanzamiento,artistaAlbum,imagenAlbum,canciones) values ('";
-        insertar += "1";
-        insertar += ",";
-        insertar += nuevo.getId();
-        insertar += "','";
-        insertar += nuevo.getNombreAlbum();
-        insertar += "',";
-        insertar += nuevo.getArtistaAlbum();
-        insertar += "',";
-        insertar += nuevo.getImagenAlbum();
-        insertar += "',";
-        insertar += nuevo.getCancionesAlbum();
-        insertar += ")";
-        insert.execute(insertar);
+    public void guardarCompositor(Compositor nuevo) throws SQLException{
+        if(this.cmdInsertar != null) {
+            this.cmdInsertar.setString(1, nuevo.getNombre());
+            this.cmdInsertar.setString(2,nuevo.getApellidos());
+            this.cmdInsertar.setInt(3, nuevo.getPaisNacimientoCompositor().getIdPais());
+            this.cmdInsertar.setDate(4, Date.valueOf(nuevo.getFechaNacimientoCompositor()));
+            this.cmdInsertar.setInt(5, nuevo.getEdadCompositor());
+            this.cmdInsertar.execute();
+        } else {
+            System.out.println("No se pudo guardar el compositor");
+        }
     }
 }

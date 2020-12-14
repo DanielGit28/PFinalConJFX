@@ -7,22 +7,22 @@ import java.time.LocalDate;
  * @version 1.2
  */
 public class Artista {
-    private String id;
+    private int id;
     private String nombreArtista;
     private String apellidoArtista;
     private String nombreArtistico;
     private LocalDate fechaNacimientoArtista;
     private LocalDate fechaFallecimientoArtista;
-    private String paisNacimiento;
+    private Pais paisNacimiento;
     private Genero generoMusicalArtista;
     private int edadArtista;
     private String descripcionArtista;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -66,11 +66,11 @@ public class Artista {
         this.fechaFallecimientoArtista = fechaFallecimientoArtista;
     }
 
-    public String getPaisNacimiento() {
+    public Pais getPaisNacimiento() {
         return paisNacimiento;
     }
 
-    public void setPaisNacimiento(String paisNacimiento) {
+    public void setPaisNacimiento(Pais paisNacimiento) {
         this.paisNacimiento = paisNacimiento;
     }
 
@@ -100,9 +100,9 @@ public class Artista {
 
     public Artista(){}
 
-    public Artista(String id, String nombreArtista, String apellidoArtista,
+    public Artista(int id, String nombreArtista, String apellidoArtista,
                    String nombreArtistico, LocalDate fechaNacimientoArtista,
-                   LocalDate fechaFallecimientoArtista, String paisNacimiento,
+                   LocalDate fechaFallecimientoArtista, Pais paisNacimiento,
                    Genero generoMusicalArtista, int edadArtista,
                    String descripcionArtista) {
 

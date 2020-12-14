@@ -15,7 +15,7 @@ import java.util.List;
 public class UsuarioFinalDAO {
     Connection cnx;
     private PreparedStatement cmdInsertar;
-    private PreparedStatement queryClientes;
+    private PreparedStatement queryUsuarios;
 
     private final String TEMPLATE_CMD_INSERTAR = "insert into usuario_final (avatar,nombre,apellidos,correo,contrasenna,fechaNacimiento,idPais,identificacion,nombreUsuario)" +
             " values (?,?,?,?,?,?,?,?,?)";
@@ -29,7 +29,7 @@ public class UsuarioFinalDAO {
         this.cnx = conexion;
         try {
             this.cmdInsertar = cnx.prepareStatement(TEMPLATE_CMD_INSERTAR);
-            this.queryClientes = cnx.prepareStatement(TEMPLATE_QRY_TODOSLOSUSUARIOS);
+            this.queryUsuarios = cnx.prepareStatement(TEMPLATE_QRY_TODOSLOSUSUARIOS);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

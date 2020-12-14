@@ -7,18 +7,18 @@ import java.time.LocalDate;
  * @version 1.2
  */
 public class Compositor {
-    private String id;
+    private int id;
     private String nombre;
     private String apellidos;
-    private String paisNacimientoCompositor;
+    private Pais paisNacimientoCompositor;
     private LocalDate fechaNacimientoCompositor;
     private int edadCompositor;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -38,11 +38,11 @@ public class Compositor {
         this.apellidos = apellidos;
     }
 
-    public String getPaisNacimientoCompositor() {
+    public Pais getPaisNacimientoCompositor() {
         return paisNacimientoCompositor;
     }
 
-    public void setPaisNacimientoCompositor(String paisNacimientoCompositor) {
+    public void setPaisNacimientoCompositor(Pais paisNacimientoCompositor) {
         this.paisNacimientoCompositor = paisNacimientoCompositor;
     }
 
@@ -64,7 +64,7 @@ public class Compositor {
 
     public Compositor() {}
 
-    public Compositor(String id, String nombre, String apellidos, String paisNacimientoCompositor,
+    public Compositor(int id, String nombre, String apellidos, Pais paisNacimientoCompositor,
                       LocalDate fechaNacimientoCompositor, int edadCompositor) {
         this.id = id;
         this.nombre = nombre;

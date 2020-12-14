@@ -18,7 +18,7 @@ public class ArtistaDAO {
     private PreparedStatement cmdInsertar;
     private PreparedStatement queryArtista;
 
-    private final String TEMPLATE_CMD_INSERTAR = "insert into album (nombre,apellido,nombreArtistico,fechaNacimiento,fechaFallecimiento,paisNacimiento,generoMusical,edadArtista,descripcion)" +
+    private final String TEMPLATE_CMD_INSERTAR = "insert into artista (nombre,apellido,nombreArtistico,fechaNacimiento,fechaFallecimiento,idPaisArtista,idGeneroArtista,edadArtista,descripcion)" +
             " values (?,?,?,?,?,?,?,?,?)";
     private final String TEMPLATE_QRY_BUSCARARTISTAS = "select * from artista";
 
@@ -51,7 +51,7 @@ public class ArtistaDAO {
             leido.setNombreArtistico(resultado.getString("nombreArtistico"));
             leido.setFechaNacimientoArtista(resultado.getDate("fechaNacimiento").toLocalDate());
             leido.setFechaFallecimientoArtista(resultado.getDate("fechaFallecimiento").toLocalDate());
-            leido.setPaisNacimiento(resultado.getString("paisNacimiento"));
+            //leido.setPaisNacimiento(resultado.getString("paisNacimiento"));
             //leido.setGeneroMusicalArtista(resultado.getString("generoMusical"));
             leido.setEdadArtista(resultado.getInt("edadArtista"));
             leido.setDescripcionArtista(resultado.getString("descripcion"));
@@ -69,16 +69,18 @@ public class ArtistaDAO {
      */
     public void guardarArtista(Artista nuevo) throws SQLException{
         if(this.cmdInsertar != null) {
+            Date date = null;
             this.cmdInsertar.setString(1,nuevo.getNombreArtista());
             this.cmdInsertar.setString(2,nuevo.getApellidoArtista());
             this.cmdInsertar.setString(3, nuevo.getNombreArtistico());
             this.cmdInsertar.setDate(4, Date.valueOf(nuevo.getFechaNacimientoArtista()));
-            this.cmdInsertar.setDate(5, Date.valueOf(nuevo.getFechaFallecimientoArtista()));
-            this.cmdInsertar.setString(6, nuevo.getPaisNacimiento());
-            this.cmdInsertar.setString(7, nuevo.getGeneroMusicalArtista().getNombreGenero());
-            /*
-            *HACER CAMBIO EN LA BASE DE DATOS CON LAS RELACIONES ENTRE OBJETOS, DEBERIA IR EL ID DEL GENERO DE LA BASE DE DATOS, NO EL NOMBRE
-             */
+            if(nuevo.getFechaFallecimientoArtista() == null) {
+                this.cmdInsertar.setDate(5, date);
+            } else {
+                this.cmdInsertar.setDate(5, Date.valueOf(nuevo.getFechaFallecimientoArtista()));
+            }
+            this.cmdInsertar.setInt(6, nuevo.getPaisNacimiento().getIdPais());
+            this.cmdInsertar.setInt(7, nuevo.getGeneroMusicalArtista().getId());
             this.cmdInsertar.setInt(8, nuevo.getEdadArtista());
             this.cmdInsertar.setString(9, nuevo.getDescripcionArtista());
             this.cmdInsertar.execute();

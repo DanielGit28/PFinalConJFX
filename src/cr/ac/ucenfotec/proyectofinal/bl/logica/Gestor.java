@@ -5,14 +5,24 @@ import cr.ac.ucenfotec.proyectofinal.bl.entidades.*;
 import cr.ac.ucenfotec.proyectofinal.bl.dao.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 /**
  * @author Daniel
@@ -26,12 +36,14 @@ public class Gestor {
     private PreparedStatement cmdInsertarPaises;
     private PreparedStatement queryPaises;
     private PreparedStatement queryAdmin;
+    private PreparedStatement queryGeneros;
     private final String TEMPLATE_CMD_INSERTAR = "insert into pais (nombrePais, codigoPais) values (?,?)";
     private final String TEMPLATE_QRY_TODOSLOSPAISES = "select * from pais";
     private final String TEMPLATE_QRY_ADMIN = "select * from admin";
+    private final String TEMPLATE_QRY_GENEROS = "select * from genero";
     private String[] locales = Locale.getISOCountries();
     private ObservableList<String> listaPaises;
-    private String [] listPais;
+    private String[] listPais;
 
     AdminDAO adminDAO;
     AlbumDAO albumDAO;
@@ -42,13 +54,13 @@ public class Gestor {
     ListaReproduccionDAO listaReproduccionDAO;
     UsuarioFinalDAO usuarioFinalDAO;
 
-//VARIABLES QUE PROXIMAMENTE SE ELIMINARAN
+    //VARIABLES QUE PROXIMAMENTE SE ELIMINARAN
     Admin administrador = new Admin();
-    ArrayList<UsuarioFinal> usuarios = new ArrayList<> ();
-    ArrayList<Artista> artistas = new ArrayList<> ();
-    ArrayList<Compositor> compositores = new ArrayList<> ();
-    ArrayList<Genero> generos = new ArrayList<> ();
-    ArrayList<Album> albumes = new ArrayList<> ();
+    ArrayList<UsuarioFinal> usuarios = new ArrayList<>();
+    ArrayList<Artista> artistas = new ArrayList<>();
+    ArrayList<Compositor> compositores = new ArrayList<>();
+    ArrayList<Genero> generos = new ArrayList<>();
+    ArrayList<Album> albumes = new ArrayList<>();
     ArrayList<Cancion> canciones = new ArrayList<>();
     ArrayList<ListaReproduccion> listas = new ArrayList<>();
 
@@ -57,7 +69,7 @@ public class Gestor {
             propertiesHandler.loadProperties();
             String driver = propertiesHandler.getDriver();
             Class.forName(driver).newInstance();
-            String url= propertiesHandler.getCnxStr();
+            String url = propertiesHandler.getCnxStr();
             connection = DriverManager.getConnection(url, propertiesHandler.getUser(), propertiesHandler.getPassword());
 
             this.adminDAO = new AdminDAO(this.connection);
@@ -73,15 +85,17 @@ public class Gestor {
             this.cmdInsertarPaises = connection.prepareStatement(TEMPLATE_CMD_INSERTAR);
             this.queryPaises = connection.prepareStatement(TEMPLATE_QRY_TODOSLOSPAISES);
             this.queryAdmin = connection.prepareStatement(TEMPLATE_QRY_ADMIN);
+            this.queryGeneros = connection.prepareStatement(TEMPLATE_QRY_GENEROS);
+
             ResultSet resultadoPaises = queryPaises.executeQuery();
-            if(resultadoPaises.next()) {
+            if (resultadoPaises.next()) {
                 System.out.println("Paises cargados");
             } else {
                 for (String countryCode : locales) {
                     Locale paises = new Locale("", countryCode);
-                    if(this.cmdInsertarPaises != null) {
-                        this.cmdInsertarPaises.setString(1,paises.getDisplayCountry());
-                        this.cmdInsertarPaises.setString(2,paises.getCountry());
+                    if (this.cmdInsertarPaises != null) {
+                        this.cmdInsertarPaises.setString(1, paises.getDisplayCountry());
+                        this.cmdInsertarPaises.setString(2, paises.getCountry());
                         this.cmdInsertarPaises.execute();
                     } else {
                         System.out.println("No se pudieron insertar los paises");
@@ -102,13 +116,26 @@ public class Gestor {
      */
     public void cargarPaisesComboBox(ComboBox<String> combo) throws SQLException {
         ResultSet resultadoPaises = queryPaises.executeQuery();
-        while(resultadoPaises.next()) {
+        while (resultadoPaises.next()) {
             combo.getItems().add(resultadoPaises.getString("nombrePais"));
         }
     }
 
     /**
+     * Esta función carga, con los géneros de la BD, cualquier ComboBox que reciba como parámetro
+     * @param combo ComboBox que se desea cargar de géneros musicales
+     * @throws SQLException
+     */
+    public void cargarGenerosComboBox(ComboBox<String> combo) throws SQLException {
+        ResultSet resultadoGeneros = queryGeneros.executeQuery();
+        while (resultadoGeneros.next()) {
+            combo.getItems().add(resultadoGeneros.getString("nombre"));
+        }
+    }
+
+    /**
      * Busca el pais según el nombre en la BD y devuelve el id del pais
+     *
      * @param nombrePais nombre del país que se desea buscar
      * @return pais objeto pais
      * @throws SQLException
@@ -116,8 +143,8 @@ public class Gestor {
     public int idPais(String nombrePais) throws SQLException {
         int resultado = 0;
         Statement query = connection.createStatement();
-        ResultSet result = query.executeQuery("select * from pais where nombrePais = '"+nombrePais+"'");
-        if(result.next()) {
+        ResultSet result = query.executeQuery("select * from pais where nombrePais = '" + nombrePais + "'");
+        if (result.next()) {
             resultado = result.getInt("idPais");
         } else {
             System.out.println("No se encontró ningún país con ese nombre");
@@ -135,8 +162,8 @@ public class Gestor {
     public Pais pais(String nombrePais) throws SQLException {
         Pais pais = new Pais();
         Statement query = connection.createStatement();
-        ResultSet result = query.executeQuery("select * from pais where nombrePais = '"+nombrePais+"'");
-        if(result.next()) {
+        ResultSet result = query.executeQuery("select * from pais where nombrePais = '" + nombrePais + "'");
+        if (result.next()) {
             pais.setIdPais(result.getInt("idPais"));
             pais.setNombrePais(result.getString("nombrePais"));
             pais.setCodigoPais(result.getString("codigoPais"));
@@ -148,7 +175,60 @@ public class Gestor {
     }
 
     /**
-     *
+     * Busca y devuelve un género musical de la base de datos
+     * @param nomGenero recibe un String del nombre del género para buscar en la BD
+     * @return genero Objeto Genero con los datos de la BD
+     * @throws SQLException
+     */
+    public Genero getGenero(String nomGenero) throws SQLException {
+        Genero genero = new Genero();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from genero where nombre = '" + nomGenero + "'");
+        if (result.next()) {
+            genero.setId(result.getInt("idGenero"));
+            genero.setNombreGenero(result.getString("nombre"));
+            genero.setDescripcionGenero(result.getString("descripcion"));
+        } else {
+            System.out.println("No se encontró ningún género con ese nombre");
+        }
+
+        return genero;
+    }
+
+    public ObservableList<Genero> generosObservable() throws SQLException {
+        ResultSet resultadoGeneros = queryGeneros.executeQuery();
+        ObservableList<Genero> generos = FXCollections.observableArrayList();
+        while(resultadoGeneros.next()) {
+            Genero leido = new Genero();
+
+            leido.setId(resultadoGeneros.getInt("idGenero"));
+            leido.setNombreGenero(resultadoGeneros.getString("nombre"));
+            leido.setDescripcionGenero(resultadoGeneros.getString("descripcion"));
+            System.out.println(leido.toString());
+            generos.add(leido);
+        }
+        System.out.println(generos);
+        return generos;
+    }
+
+    /**
+     * Carga los géneros de la base de datos en una tabla
+     * @param tabla recibe un tableview para rellenar
+     * @param nombre columna de nombre de género
+     * @param descripcion columna de descripción de género
+     * @throws SQLException
+     */
+    public void cargarGenerosTabla(TableView<Genero> tabla, TableColumn<Genero, String> nombre, TableColumn<Genero, String> descripcion) throws SQLException {
+        nombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        descripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        ObservableList<Genero> datos = generosObservable();
+        tabla = new TableView<>();
+        tabla.setItems(datos);
+        tabla.getColumns().addAll(nombre,descripcion);
+    }
+
+
+    /**
      * @param contrasenna Recibe como parametro el string de la contraseña a evaluar
      * @return boolean Devuelve un verdadero o falso según el resultado de la evaluacion del string de la contraseña
      */
@@ -171,7 +251,6 @@ public class Gestor {
     }
 
     /**
-     *
      * @param query query que evalúa si existe la información
      * @return true or false según valide si hay información o no
      * @throws SQLException
@@ -180,10 +259,9 @@ public class Gestor {
         boolean verificacion = false;
         Statement stm = connection.createStatement();
         ResultSet rs = stm.executeQuery(query);
-        if(rs.next()){
+        if (rs.next()) {
             verificacion = true;
-        }
-        else{
+        } else {
             verificacion = false;
         }
         return verificacion;
@@ -192,40 +270,30 @@ public class Gestor {
     //------Bloque de agregar objetos a los ArrayList que los almacenan-------
 
     /**
-     *
-     * @param avatar directorio del archivo del avatar
-     * @param nombre String del nombre del admin
-     * @param apellidos String de los apellidos del admin
-     * @param contrasenna String de la contraseña del admin
-     * @param correo String del correo del admin
+     * @param avatar        directorio del archivo del avatar
+     * @param nombre        String del nombre del admin
+     * @param apellidos     String de los apellidos del admin
+     * @param contrasenna   String de la contraseña del admin
+     * @param correo        String del correo del admin
      * @param nombreUsuario String del usuario del admin
      * @throws SQLException
      */
-    public void agregarAdmin(String avatar, String nombre, String apellidos, String correo,String contrasenna, String nombreUsuario) throws SQLException {
-        Admin admin = new Admin(1,avatar,nombre,apellidos,correo,contrasenna,nombreUsuario);
-        if(siExiste("select 1 from admin") == false) {
+    public void agregarAdmin(String avatar, String nombre, String apellidos, String correo, String contrasenna, String nombreUsuario) throws SQLException {
+        Admin admin = new Admin(1, avatar, nombre, apellidos, correo, contrasenna, nombreUsuario);
+        if (siExiste("select 1 from admin") == false) {
             try {
                 adminDAO.guardarAdmin(admin);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText(null);
-                alert.setTitle("Registro");
-                alert.setContentText("Administrador registrado con éxito");
-                alert.showAndWait();
+                alertasInformacion("Registro","Administrador registrado con éxito");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setTitle("Error");
-            alert.setContentText("Ya existe un administrador registrado");
-            alert.showAndWait();
+            creacionAlertas("Ya existe un administrador registrado");
         }
     }
 
     /**
-     *
-     * @param correo String del correo para verificar sesión
+     * @param correo      String del correo para verificar sesión
      * @param contrasenna String de contraseña para verificar sesión
      * @return true or false según valide si la información corresponde al administrador
      * @throws SQLException
@@ -233,12 +301,12 @@ public class Gestor {
     public boolean verificarSesionAdmin(String correo, String contrasenna) throws SQLException {
         boolean validacion = false;
         Statement query = connection.createStatement();
-        ResultSet resultadoAdmin = query.executeQuery("select * from admin where correo = '"+correo+"'");
+        ResultSet resultadoAdmin = query.executeQuery("select * from admin where correo = '" + correo + "'");
         //ResultSet resultadoUsuario = query.executeQuery("select * from usuario_final");
-        if(correo != null && contrasenna != null) {
+        if (correo != null && contrasenna != null) {
             //System.out.println(correo + ", "+contrasenna);
-            if(resultadoAdmin.next()){
-                if(resultadoAdmin.getString("correo").equals(correo) && resultadoAdmin.getString("contrasenna").equals(contrasenna) ) {
+            if (resultadoAdmin.next()) {
+                if (resultadoAdmin.getString("correo").equals(correo) && resultadoAdmin.getString("contrasenna").equals(contrasenna)) {
                     validacion = true;
                 }
             }
@@ -247,17 +315,28 @@ public class Gestor {
         return validacion;
     }
 
-
-
+    /**
+     * Guarda un usuario en la base de datos
+     * @param avatar directorio de la imagen del avatar
+     * @param nombre nombre del usuario
+     * @param apellidos apellidos del usuario
+     * @param correo correo del usuario
+     * @param contrasenna contraseña del usuario
+     * @param fechaNac fecha de nacimiento del usuario
+     * @param nombrePais país de nacimiento del usuario
+     * @param id identificación del usuario
+     * @param nombreUsuario nombre de usuario de la app
+     * @throws SQLException
+     */
     public void agregarUsuario(String avatar, String nombre, String apellidos, String correo, String contrasenna, LocalDate fechaNac, String nombrePais, String id, String nombreUsuario) throws SQLException {
         int otp = 0;
         ArrayList<ListaReproduccion> listasRep = new ArrayList<>();
         ArrayList<Cancion> canciones = new ArrayList<>();
         Pais pais = pais(nombrePais);
 
-        UsuarioFinal usuario = new UsuarioFinal(1,avatar,nombre,apellidos,correo,contrasenna,fechaNac,pais,id,nombreUsuario,otp,listasRep,canciones);
-        String query = "select * from usuario_final where identificacion = '"+id+"'";
-        if(siExiste(query) == false) {
+        UsuarioFinal usuario = new UsuarioFinal(1, avatar, nombre, apellidos, correo, contrasenna, fechaNac, pais, id, nombreUsuario, otp, listasRep, canciones);
+        String query = "select * from usuario_final where identificacion = '" + id + "'";
+        if (siExiste(query) == false) {
             try {
                 usuarioFinalDAO.guardarUsuario(usuario);
                 alertasInformacion("Registro", "Usuario registrado con éxito");
@@ -271,8 +350,7 @@ public class Gestor {
 
 
     /**
-     *
-     * @param correo String del correo de usuario para verificar sesión
+     * @param correo      String del correo de usuario para verificar sesión
      * @param contrasenna String de la contraseña del usuario para verificar sesión
      * @return true or false según valide si la información corresponde a un  usuario registrado
      * @throws SQLException
@@ -280,10 +358,10 @@ public class Gestor {
     public Boolean verificarSesionUsuario(String correo, String contrasenna) throws SQLException {
         boolean validacion = false;
         Statement query = connection.createStatement();
-        ResultSet resultado = query.executeQuery("select * from usuario_final where correo = '"+correo+"'");
-        if(correo != null && contrasenna != null) {
-            if(resultado.next()){
-                if(resultado.getString("correo").equals(correo) && resultado.getString("contrasenna").equals(contrasenna) ) {
+        ResultSet resultado = query.executeQuery("select * from usuario_final where correo = '" + correo + "'");
+        if (correo != null && contrasenna != null) {
+            if (resultado.next()) {
+                if (resultado.getString("correo").equals(correo) && resultado.getString("contrasenna").equals(contrasenna)) {
                     validacion = true;
                 }
             }
@@ -294,6 +372,7 @@ public class Gestor {
 
     /**
      * Esta función crea una alerta de erorr JavaFx
+     *
      * @param x String que describe la alerta
      */
     public void creacionAlertas(String x) {
@@ -306,8 +385,9 @@ public class Gestor {
 
     /**
      * Esta función crea alertas de información JavaFx
+     *
      * @param titulo String del titulo de la alerta
-     * @param info String que describe la información de la alerta
+     * @param info   String que describe la información de la alerta
      */
     public void alertasInformacion(String titulo, String info) {
 
@@ -319,10 +399,36 @@ public class Gestor {
     }
 
     /**
+     * Calcula la edad según una fecha localDate
+     * @param fecha recibe un localDate para calcular la fecha
+     * @return
+     */
+    public int calcEdad(LocalDate fecha) {
+        Calendar c1 = Calendar.getInstance();
+        int dia = c1.get(Calendar.DATE);
+        int mes = c1.get(Calendar.MONTH);
+        int annio = c1.get(Calendar.YEAR);
+        int edad = 0;
+
+        if (fecha.getMonthValue() < mes) { // si el mes de nacimiento ya pasó, ya cumplió años
+            edad = annio - fecha.getYear();
+        } else if (fecha.getDayOfMonth() < dia && fecha.getMonthValue() == mes) { // si el dia de nacimiento ya pasó, ya cumplió años
+            edad = annio - fecha.getYear();
+        } else if (fecha.getDayOfMonth() > dia && fecha.getMonthValue() == mes) { //si el mes de nacimiento es igual al actual y el dia de nacimiento es mayor al dia actual, aún no ha cumplido años este año
+            edad = (annio - fecha.getYear()) - 1;
+        } else if (fecha.getMonthValue() > mes) { //si el mes de nacimiento es mayor al actual, aún no ha cumplido años este año
+            edad = (annio - fecha.getYear()) - 1;
+        }
+
+        return edad;
+    }
+
+
+    /**
      * Actualiza los datos del administrador
-     * @param avatar Path del avatar
-     * @param nombre Nombre actualizado del admin
-     * @param apellidos Apellidos actualizados del admin
+     * @param avatar        Path del avatar
+     * @param nombre        Nombre actualizado del admin
+     * @param apellidos     Apellidos actualizados del admin
      * @param nombreUsuario nombre de usuario actualizado del admin
      * @throws SQLException
      */
@@ -332,13 +438,14 @@ public class Gestor {
 
     /**
      * Devuelve el administrador de la base de datos
+     *
      * @return nuevo Objeto Admin de la BD
      * @throws SQLException
      */
     public Admin getAdmin() throws SQLException {
         ResultSet resultado = queryAdmin.executeQuery();
         Admin nuevo = new Admin();
-        if(resultado.next()) {
+        if (resultado.next()) {
             nuevo.setAvatarUsuario(resultado.getString("avatar"));
             nuevo.setNombre(resultado.getString("nombre"));
             nuevo.setApellidosUsuario(resultado.getString("apellidos"));
@@ -350,177 +457,221 @@ public class Gestor {
         return nuevo;
     }
 
-    //FUNCIONES AUN NO TRABAJADAS
-    public Admin listarAdmin(){
-        return this.administrador;
-    }
-
-    public void agregarUsuario(UsuarioFinal pUsuario) {
-        this.usuarios.add(pUsuario);
-    }
-
-    public ArrayList<UsuarioFinal> getUsuarios() {
-        return usuarios;
-    }
-
-    public void agregarArtista(Artista pArtista) {
-        this.artistas.add(pArtista);
-    }
-
-    public ArrayList<Artista> getArtistas() {
-        return artistas;
-    }
-
-    public Artista getArtista(String nombreArt) {
-        for (int i = 0; i < artistas.size(); i++) {
-            Artista temp = artistas.get(i);
-            if(temp.getNombreArtistico().equals(nombreArt)) {
-                return temp;
+    /**
+     * Guarda los datos del compositor en la base de datos
+     * @param nombre nombre del compositor
+     * @param apellidos apellidos del compositor
+     * @param paisNacimiento pais de nacimiento del compositor
+     * @param fechaNacimiento fecha de nacimiento del compositor
+     * @throws SQLException
+     */
+    public void guardarCompositor(String nombre, String apellidos, String paisNacimiento, LocalDate fechaNacimiento) throws SQLException {
+            Pais paisNac = pais(paisNacimiento);
+            int edadCompositor = calcEdad(fechaNacimiento);
+            Compositor compositor = new Compositor(1,nombre,apellidos,paisNac,fechaNacimiento,edadCompositor);
+            if(siExiste("select * from compositor where nombre '"+nombre+"' and apellidos = '"+apellidos+"'") == false) {
+                compositorDAO.guardarCompositor(compositor);
+            } else {
+                creacionAlertas("Compositor ya existente");
             }
+
+    }
+
+    /**
+     * Guarda un artista en la base de datos
+     * @param nombre nombre del artista
+     * @param apellidos apellidos del artista
+     * @param nombreArtistico nombre artístico
+     * @param fechaNacimiento fecha nacimiento del artista
+     * @param fechaFallecimiento fecha fallecimiento del artista, si aplica
+     * @param paisNacimiento país nacimiento del artista
+     * @param generoMusical género musical del artista
+     * @param descripcion descripción del artista
+     * @throws SQLException
+     */
+    public void guardarArtista(String nombre, String apellidos, String nombreArtistico,LocalDate fechaNacimiento, LocalDate fechaFallecimiento, String paisNacimiento, String generoMusical, String descripcion) throws SQLException {
+        Pais paisNac = pais(paisNacimiento);
+        int edadArtista = calcEdad(fechaNacimiento);
+        Genero generoArt = getGenero(generoMusical);
+        Artista artista = new Artista(1,nombre,apellidos,nombreArtistico,fechaNacimiento,fechaFallecimiento,paisNac,generoArt,edadArtista,descripcion);
+        if(siExiste("select * from artista where nombreArtistico = '"+nombreArtistico+"'") == false) {
+            
+            artistaDAO.guardarArtista(artista);
+        } else {
+            creacionAlertas("Artista ya existente");
         }
-        return null;
+
     }
-    public String getNomArtistico(String nombreArt) {
-        for (int i = 0; i < artistas.size(); i++) {
-            Artista temp = artistas.get(i);
-            if(temp.getNombreArtistico().equals(nombreArt)) {
-                return temp.getNombreArtistico();
-            }
+
+    /**
+     * Guarda un género musical en la base de datos
+     * @param nombre nombre del género
+     * @param descripcion descripción del género
+     * @throws SQLException
+     */
+    public void guardarGenero(String nombre, String descripcion) throws SQLException {
+        Genero genero = new Genero(1,nombre,descripcion);
+        if(siExiste("select * from genero where nombre = '"+nombre+"'") == false) {
+            generoDAO.guardarGenero(genero);
         }
-        return null;
     }
 
-    public void agregarCompositor(Compositor pCompositor) {
-        this.compositores.add(pCompositor);
+    //--CARGA DE ESCENAS ADMIN--
+    /**
+     * Este método carga el escenario de canciones
+     * @param event evento que se genera cuando se aprieta el botón de canciones
+     * @throws IOException
+     */
+    public void escenarioCanciones(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/menuAdminCanciones.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
     }
 
-    public ArrayList<Compositor> getCompositores() {
-        return compositores;
+    /**
+     * Este método carga el escenario de guardar canciones
+     * @param event evento que se genera cuando se aprieta el botón de registrar canciones
+     * @throws IOException
+     */
+    public void escenarioGuardarCanciones(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/agregarCanciones.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
     }
-    public Compositor getCompositor(String nombreComp) {
-        for (int i = 0; i < compositores.size(); i++) {
-            Compositor temp = compositores.get(i);
-            if(temp.getNombre().equals(nombreComp)) {
-                return temp;
-            }
-        }
-        return null;
-    }
-    public String getNomCompositor(String nombreComp) {
-        for (int i = 0; i < compositores.size(); i++) {
-            Compositor temp = compositores.get(i);
-            if(temp.getNombre().equals(nombreComp)) {
-                return temp.getNombre();
-            }
-        }
-        return null;
+    
+    /**
+     * Este método carga el escenario de compositores
+     * @param event evento que se genera cuando se aprieta el botón de compositores
+     * @throws IOException
+     */
+    public void escenarioCompositores(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/menuAdminCompositores.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
     }
 
-    public void agregarGeneros(Genero pGenero) {
-        this.generos.add(pGenero);
+    /**
+     * Este método carga el escenario de agregar compositores
+     * @param event evento que se genera cuando se aprieta el botón de crear compositor
+     * @throws IOException
+     */
+    public void escenarioCrearCompositores(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/crearCompositores.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
+    }
+    
+
+    /**
+     * Este método carga el escenario de inicio de admin
+     * @param event evento que se genera cuando se aprieta el botón de inicio
+     * @throws IOException
+     */
+    public void escenarioInicioAdmin(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/menuAdmin.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
     }
 
-    public ArrayList<Genero> getGeneros() {
-        return generos;
-    }
-    public Genero getGenero(String nombreGen) {
-        for (int i = 0; i < generos.size(); i++) {
-            Genero temp = generos.get(i);
-            if(temp.getNombreGenero().equals(nombreGen)) {
-                return temp;
-            }
-        }
-        return null;
-    }
-    public String getNomGenero(String nombreGen) {
-        for (int i = 0; i < generos.size(); i++) {
-            Genero temp = generos.get(i);
-            if(temp.getNombreGenero().equals(nombreGen)) {
-                return temp.getNombreGenero();
-            }
-        }
-        return null;
+    /**
+     * Este método carga el escenario de artistas
+     * @param event evento que se genera cuando se aprieta el botón de artistas
+     * @throws IOException
+     */
+    public void escenarioArtistas(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/menuAdminArtistas.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
     }
 
-    public void agregarAlbumes(Album pAlbum) {
-        this.albumes.add(pAlbum);
+    /**
+     * Este método carga el escenario de agregar artistas
+     * @param event evento que se genera cuando se aprieta el botón de crear artista
+     * @throws IOException
+     */
+    public void escenarioCrearArtistas(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/crearArtistas.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
     }
 
-    public ArrayList<Album> getAlbumes() {
-        return albumes;
-    }
-    public String getNomAlbum(String album) {
-        for (int i = 0; i < albumes.size(); i++) {
-            Album temp = albumes.get(i);
-            if(temp.getNombreAlbum().equals(album)) {
-                return temp.getNombreAlbum();
-            }
-        }
-        return null;
-    }
-    public Album getAlbum(String album) {
-        for (int i = 0; i < albumes.size(); i++) {
-            Album temp = albumes.get(i);
-            if(temp.getNombreAlbum().equals(album)) {
-                return temp;
-            }
-        }
-        return null;
+    /**
+     * Este método carga el escenario de géneros
+     * @param event evento que se genera cuando se aprieta el botón de géneros
+     * @throws IOException
+     */
+    public void escenarioGeneros(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/menuAdminGeneros.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
     }
 
+    /**
+     * Este método carga el escenario de crear géneros
+     * @param event evento que se genera cuando se aprieta el botón de registrar géneros
+     * @throws IOException
+     */
+    public void escenarioCrearGeneros(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/crearGeneros.fxml"));
+        Scene vistaLogin = new Scene(login);
 
-    public void agregarCancion(Cancion pCancion) {
-        this.canciones.add(pCancion);
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
     }
 
-    public ArrayList<Cancion> getCanciones() {
-        return canciones;
+    /**
+     * Este método carga el escenario de álbumes
+     * @param event evento que se genera cuando se aprieta el botón de álbumes
+     * @throws IOException
+     */
+    public void escenarioAlbumes(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/menuAdminAlbumes.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
     }
-    public String getNomCancion(String cancion) {
-        for (int i = 0; i < canciones.size(); i++) {
-            Cancion temp = canciones.get(i);
-            if(temp.getNombreCancion().equals(cancion)) {
-                return temp.getNombreCancion();
-            }
-        }
-        return null;
-    }
-    public Cancion getCancion(String cancion) {
-        for (int i = 0; i < canciones.size(); i++) {
-            Cancion temp = canciones.get(i);
-            if(temp.getNombreCancion().equals(cancion)) {
-                return temp;
-            }
-        }
-        return null;
-    }
-
-
-    public void agregarLista(ListaReproduccion pLista) { this.listas.add(pLista); }
-
-    public ArrayList<ListaReproduccion> getListas() {
-        return listas;
-    }
-
-
-
-    //----FIN BLOQUE ARRAYLISTS-----
-
-    public void getPaises() {
-        int contador = 1;
-        for (String countryCode : locales) {
-
-            Locale paises = new Locale("", countryCode);
-
-            System.out.println("Código del país = " + paises.getCountry()
-                    + ", nombre del país = " + paises.getDisplayCountry() + ", " +
-                    "país número = " + contador);
-            contador += 1;
-        }
-        System.out.println(contador);
-        System.out.println("Done");
-    }
-    public String[] paises() {
-        return this.locales;
-    }
+    
+    
+    //--FIN CARGA DE ESCENAS ADMIN--
+    
 }
+
+
+

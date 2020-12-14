@@ -5,26 +5,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="anchorMenuAdmin" prefHeight="800.0" prefWidth="800.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin.CtrlAdminCompositores">
+<AnchorPane id="anchorMenuAdmin" prefHeight="800.0" prefWidth="800.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin.CtrlAdminGeneros">
    <children>
       <Button fx:id="cerrarSesion" layoutX="685.0" layoutY="28.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión">
          <font>
             <Font size="14.0" />
          </font></Button>
-      <TableView fx:id="tablaCompositores" layoutX="229.0" layoutY="192.0" prefHeight="415.0" prefWidth="486.0" style="-fx-background-color: black;">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="74.0" text="C2" />
-            <TableColumn prefWidth="69.0" text="Column X" />
-            <TableColumn prefWidth="82.0" text="Column X" />
-        </columns>
-      </TableView>
-      <Text layoutX="399.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Compositores">
+      <TableView fx:id="tablaGeneros" layoutX="230.0" layoutY="172.0" prefHeight="420.0" prefWidth="500.0" style="-fx-background-color: black;" />
+      <Text fill="WHITE" layoutX="429.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Géneros">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
-      <Pane prefHeight="800.0" prefWidth="157.0" style="-fx-background-color: black;">
+      <Pane prefHeight="800.0" prefWidth="166.0" style="-fx-background-color: black;">
          <children>
             <Button fx:id="inicio" mnemonicParsing="false" onAction="#inicio" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
                <font>
@@ -53,7 +46,7 @@
                </font></Button>
          </children></Pane>
       <TextField fx:id="fieldBusqueda" layoutX="365.0" layoutY="100.0" prefHeight="29.0" prefWidth="215.0" promptText="Buscar" />
-      <Button fx:id="btnCrearCompositor" layoutX="394.0" layoutY="666.0" mnemonicParsing="false" onAction="#escenaCrearCompositor" prefHeight="39.0" prefWidth="157.0" text="Crear compositor">
+      <Button fx:id="btnCrearGenero" layoutX="394.0" layoutY="666.0" mnemonicParsing="false" onAction="#escenaCrearGenero" prefHeight="39.0" prefWidth="157.0" text="Crear género">
          <font>
             <Font size="14.0" />
          </font>

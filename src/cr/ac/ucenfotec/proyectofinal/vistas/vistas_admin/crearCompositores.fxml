@@ -6,12 +6,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="anchorMenuAdmin" prefHeight="800.0" prefWidth="800.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin.CtrlMenuAdmin">
+<AnchorPane id="anchorMenuAdmin" prefHeight="800.0" prefWidth="800.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin.CtrlCrearCompositores">
    <children>
       <Button fx:id="cerrarSesion" layoutX="685.0" layoutY="28.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión" />
       <Pane prefHeight="800.0" prefWidth="160.0" style="-fx-background-color: black;">
          <children>
-            <Button fx:id="btnInicio" mnemonicParsing="false" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
+            <Button fx:id="btnInicio" mnemonicParsing="false" onAction="#inicio" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font>
@@ -37,46 +37,39 @@
                   <Font size="18.0" />
                </font></Button>
          </children></Pane>
-      <Text fill="WHITE" layoutX="400.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cuenta">
+      <Text fill="WHITE" layoutX="284.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registro Compositor">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
       </Text>
-      <ImageView id="ctnAvatar" fx:id="ctnAvatar" fitHeight="204.0" fitWidth="297.0" layoutX="311.0" layoutY="173.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="320.0" layoutY="131.0" text="Avatar" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <TextField fx:id="lblNombre" layoutX="239.0" layoutY="441.0" />
-      <Label layoutX="239.0" layoutY="400.0" text="Nombre" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="239.0" layoutY="511.0" text="Apellidos" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <TextField fx:id="lblApellidos" layoutX="239.0" layoutY="552.0" />
-      <Label layoutX="520.0" layoutY="511.0" text="Nombre de usuario" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <TextField fx:id="lblNombreUsuario" layoutX="520.0" layoutY="552.0" />
-      <Label layoutX="516.0" layoutY="400.0" text="Correo" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <TextField fx:id="lblCorreo" editable="false" layoutX="516.0" layoutY="441.0" />
-      <Button fx:id="btnActualizar" layoutX="406.0" layoutY="663.0" mnemonicParsing="false" onAction="#actualizarAdmin" prefHeight="37.0" prefWidth="110.0" text="Actualizar">
+      <Button fx:id="btnGuardar" layoutX="384.0" layoutY="451.0" mnemonicParsing="false" onAction="#guardarCompositor" prefHeight="41.0" prefWidth="150.0" text="Guardar compositor">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="btnSeleccionar" layoutX="520.0" layoutY="130.0" mnemonicParsing="false" onAction="#cargarImagen" prefHeight="29.0" prefWidth="83.0" text="Seleccionar" />
+      <ComboBox fx:id="paisNacimiento" layoutX="521.0" layoutY="350.0" onAction="#cargarPaises" onMouseClicked="#cargarPaises" prefHeight="29.0" prefWidth="162.0" />
+      <DatePicker fx:id="fechaNacimiento" layoutX="525.0" layoutY="261.0" prefHeight="29.0" prefWidth="162.0" />
+      <Label layoutX="525.0" layoutY="233.0" text="Fecha de nacimiento" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="525.0" layoutY="319.0" text="País de nacimiento" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="fiedlNombre" layoutX="240.0" layoutY="261.0" />
+      <TextField fx:id="fieldApellidos" layoutX="240.0" layoutY="350.0" />
+      <Label layoutX="245.0" layoutY="319.0" text="Apellidos" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="240.0" layoutY="233.0" text="Nombre" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

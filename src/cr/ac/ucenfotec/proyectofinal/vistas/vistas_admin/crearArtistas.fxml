@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="anchorMenuAdmin" prefHeight="800.0" prefWidth="800.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin.CtrlCrearArtistas">
+   <children>
+      <Button fx:id="cerrarSesion" layoutX="685.0" layoutY="28.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión" />
+      <Pane prefHeight="800.0" prefWidth="160.0" style="-fx-background-color: black;">
+         <children>
+            <Button fx:id="btnInicio" mnemonicParsing="false" onAction="#inicio" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnCanciones" layoutY="186.0" mnemonicParsing="false" onAction="#canciones" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Canciones" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+            <Button fx:id="btnCompositor" layoutY="283.0" mnemonicParsing="false" onAction="#compositores" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Compositores" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+            <Button fx:id="btnArtista" layoutY="375.0" mnemonicParsing="false" onAction="#artistas" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Artistas" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+            <Button fx:id="btnGenero" layoutY="477.0" mnemonicParsing="false" onAction="#generos" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Géneros" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+            <Button fx:id="btnAlbum" layoutX="-1.0" layoutY="563.0" mnemonicParsing="false" onAction="#albumes" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Álbumes" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+         </children></Pane>
+      <Text fill="WHITE" layoutX="327.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registro Artista">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Text>
+      <Button fx:id="btnGuardar" layoutX="384.0" layoutY="649.0" mnemonicParsing="false" onAction="#guardarArtista" prefHeight="41.0" prefWidth="150.0" text="Guardar artista">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <ComboBox fx:id="paisNacimiento" layoutX="529.0" layoutY="262.0" onAction="#cargarPaises" onMouseClicked="#cargarPaises" prefHeight="29.0" prefWidth="180.0" />
+      <DatePicker fx:id="fechaFallecimiento" layoutX="529.0" layoutY="182.0" prefHeight="29.0" prefWidth="180.0" />
+      <Label layoutX="529.0" layoutY="154.0" text="Fecha de fallecimiento" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="530.0" layoutY="231.0" text="País de nacimiento" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="fiedlNombre" layoutX="220.0" layoutY="182.0" prefWidth="180.0" />
+      <TextField fx:id="fieldApellidos" layoutX="220.0" layoutY="262.0" prefWidth="180.0" />
+      <Label layoutX="225.0" layoutY="231.0" text="Apellidos" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="220.0" layoutY="154.0" text="Nombre" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="220.0" layoutY="493.0" text="Fecha de nacimiento" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <DatePicker fx:id="fechaNacimiento" layoutX="220.0" layoutY="521.0" prefHeight="29.0" prefWidth="180.0" />
+      <Label layoutX="220.0" layoutY="322.0" text="Nombre artístico" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="fiedlNombreArtistico" layoutX="220.0" layoutY="350.0" prefWidth="180.0" />
+      <Label layoutX="220.0" layoutY="406.0" text="Género musical" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="530.0" layoutY="322.0" text="Descripción del artista" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="areaDescripcion" layoutX="529.0" layoutY="354.0" prefHeight="190.0" prefWidth="180.0" />
+      <ComboBox fx:id="generoArtista" layoutX="220.0" layoutY="435.0" onAction="#cargarGeneros" onMouseClicked="#cargarGeneros" prefHeight="29.0" prefWidth="180.0" />
+   </children>
+</AnchorPane>

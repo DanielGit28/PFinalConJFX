@@ -1,18 +1,18 @@
 package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 /**
  * @author Daniel Zúñiga Rojas
- * @version 1.1
+ * @version 1.2
 **/
 public class Genero {
-    private String id;
+    private int id;
     private String nombreGenero;
     private String descripcionGenero;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -34,7 +34,7 @@ public class Genero {
 
     public Genero() {}
 
-    public Genero(String id, String nombreGenero, String descripcionGenero) {
+    public Genero(int id, String nombreGenero, String descripcionGenero) {
         this.id = id;
         this.nombreGenero = nombreGenero;
         this.descripcionGenero = descripcionGenero;
