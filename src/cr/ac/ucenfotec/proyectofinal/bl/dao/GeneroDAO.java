@@ -55,6 +55,26 @@ public class GeneroDAO {
     }
 
     /**
+     * Actualiza el género recibido en la BD
+     * @param genero Objeto género que se actualizara
+     * @throws SQLException
+     */
+    public void actualizarGenero(Genero genero) throws SQLException {
+        Statement query = cnx.createStatement();
+        query.executeUpdate("update genero  set nombre = '"+genero.getNombreGenero() +"', descripcion = '"+ genero.getDescripcionGenero()+"'  where idGenero = " + genero.getId());
+    }
+
+    /**
+     * Elimina el género recibido como parámetro
+     * @param genero Objeto género que se eliminara
+     * @throws SQLException
+     */
+    public void eliminarGenero(Genero genero) throws SQLException {
+        Statement query = cnx.createStatement();
+        query.execute("delete from genero where idGenero = "+genero.getId());
+    }
+
+    /**
      * Guarda un género en la base de datos
      * @param nuevo objeto Genero que se va a guardar en la base de datos
      * @throws SQLException

@@ -5,6 +5,7 @@ import cr.ac.ucenfotec.proyectofinal.bl.entidades.*;
 import cr.ac.ucenfotec.proyectofinal.bl.dao.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -37,10 +38,18 @@ public class Gestor {
     private PreparedStatement queryPaises;
     private PreparedStatement queryAdmin;
     private PreparedStatement queryGeneros;
+    private PreparedStatement queryArtistas;
+    private PreparedStatement queryAlbumes;
+    private PreparedStatement queryCanciones;
+
     private final String TEMPLATE_CMD_INSERTAR = "insert into pais (nombrePais, codigoPais) values (?,?)";
     private final String TEMPLATE_QRY_TODOSLOSPAISES = "select * from pais";
     private final String TEMPLATE_QRY_ADMIN = "select * from admin";
     private final String TEMPLATE_QRY_GENEROS = "select * from genero";
+    private final String TEMPLATE_QRY_ARTISTAS = "select * from artista";
+    private final String TEMPLATE_QRY_ALBUMES = "select * from album";
+    private final String TEMPLATE_QRY_CANCIONES = "select * from cancion";
+
     private String[] locales = Locale.getISOCountries();
     private ObservableList<String> listaPaises;
     private String[] listPais;
@@ -86,6 +95,9 @@ public class Gestor {
             this.queryPaises = connection.prepareStatement(TEMPLATE_QRY_TODOSLOSPAISES);
             this.queryAdmin = connection.prepareStatement(TEMPLATE_QRY_ADMIN);
             this.queryGeneros = connection.prepareStatement(TEMPLATE_QRY_GENEROS);
+            this.queryArtistas = connection.prepareStatement(TEMPLATE_QRY_ARTISTAS);
+            this.queryAlbumes = connection.prepareStatement(TEMPLATE_QRY_ALBUMES);
+            this.queryCanciones = connection.prepareStatement(TEMPLATE_QRY_CANCIONES);
 
             ResultSet resultadoPaises = queryPaises.executeQuery();
             if (resultadoPaises.next()) {
@@ -175,6 +187,27 @@ public class Gestor {
     }
 
     /**
+     * Busca el pais según el id en la BD y devuelve un objeto Pais
+     * @param idPais id del país que se desea buscar
+     * @return pais objeto pais
+     * @throws SQLException
+     */
+    public Pais getPaisById(int idPais) throws SQLException {
+        Pais pais = new Pais();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from pais where idPais = " + idPais);
+        if (result.next()) {
+            pais.setIdPais(result.getInt("idPais"));
+            pais.setNombrePais(result.getString("nombrePais"));
+            pais.setCodigoPais(result.getString("codigoPais"));
+        } else {
+            System.out.println("No se encontró ningún país con ese nombre");
+        }
+
+        return pais;
+    }
+
+    /**
      * Busca y devuelve un género musical de la base de datos
      * @param nomGenero recibe un String del nombre del género para buscar en la BD
      * @return genero Objeto Genero con los datos de la BD
@@ -195,7 +228,33 @@ public class Gestor {
         return genero;
     }
 
-    public ObservableList<Genero> generosObservable() throws SQLException {
+    /**
+     * Busca y devuelve un género musical de la base de datos
+     * @param idGenero id del género para buscar en la BD
+     * @return genero Objeto Genero con los datos de la BD
+     * @throws SQLException
+     */
+    public Genero getGeneroById(int idGenero) throws SQLException {
+        Genero genero = new Genero();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from genero where idGenero = " + idGenero);
+        if (result.next()) {
+            genero.setId(result.getInt("idGenero"));
+            genero.setNombreGenero(result.getString("nombre"));
+            genero.setDescripcionGenero(result.getString("descripcion"));
+        } else {
+            System.out.println("No se encontró ningún género con ese nombre");
+        }
+
+        return genero;
+    }
+
+    /**
+     * Devuelve un Observable list del tipo de objeto género para cargar una tabla
+     * @return ObservableList del tipo de objeto Genero
+     * @throws SQLException
+     */
+    public FilteredList<Genero> cargaGeneros() throws SQLException {
         ResultSet resultadoGeneros = queryGeneros.executeQuery();
         ObservableList<Genero> generos = FXCollections.observableArrayList();
         while(resultadoGeneros.next()) {
@@ -207,24 +266,59 @@ public class Gestor {
             //System.out.println(leido.toString());
             generos.add(leido);
         }
+        FilteredList<Genero> generosFiltrado = new FilteredList<>(FXCollections.observableList(generos));
         //System.out.println(generos);
-        return generos;
+        return generosFiltrado;
     }
 
     /**
-     * Carga los géneros de la base de datos en una tabla
-     * @param tabla recibe un tableview para rellenar
-     * @param nombre columna de nombre de género
-     * @param descripcion columna de descripción de género
+     * Devuelve un Observable list del tipo de objeto Artista para cargar una tabla
+     * @return ObservableList del tipo de objeto Artista
      * @throws SQLException
      */
-    public void cargarGenerosTabla(TableView<Genero> tabla, TableColumn<Genero, String> nombre, TableColumn<Genero, String> descripcion) throws SQLException {
-        nombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        descripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        ObservableList<Genero> datos = generosObservable();
-        tabla = new TableView<>();
-        tabla.setItems(datos);
-        tabla.getColumns().addAll(nombre,descripcion);
+    public FilteredList<Artista> cargaArtistas() throws SQLException {
+        ResultSet resultadoArtistas = queryArtistas.executeQuery();
+        ObservableList<Artista> artistas = FXCollections.observableArrayList();
+        while(resultadoArtistas.next()) {
+            Artista leido = new Artista();
+
+            leido.setId(resultadoArtistas.getInt("idGenero"));
+            leido.setNombreArtista(resultadoArtistas.getString("nombre"));
+            leido.setApellidoArtista(resultadoArtistas.getString("apellido"));
+            leido.setNombreArtistico(resultadoArtistas.getString("nombreArtistico"));
+            leido.setFechaNacimientoArtista(resultadoArtistas.getDate("fechaNacimiento").toLocalDate());
+            leido.setFechaFallecimientoArtista(resultadoArtistas.getDate("fechaFallecimiento").toLocalDate());
+            leido.setPaisNacimiento(getPaisById(resultadoArtistas.getInt("idPaisArtista")));
+            leido.setGeneroMusicalArtista(getGeneroById(resultadoArtistas.getInt("idGeneroArtista")));
+            leido.setEdadArtista(resultadoArtistas.getInt("edadArtista"));
+            leido.setDescripcionArtista(resultadoArtistas.getString("descripcion"));
+            //System.out.println(leido.toString());
+            artistas.add(leido);
+        }
+        FilteredList<Artista> generosFiltrado = new FilteredList<>(FXCollections.observableList(artistas));
+        //System.out.println(generos);
+        return generosFiltrado;
+    }
+
+    /**
+     * Actualiza el género recibido en la BD
+     * @param genero Objeto género que se actualizara
+     * @throws SQLException
+     */
+    public void actualizarGenero(Genero genero) throws SQLException {
+        generoDAO.actualizarGenero(genero);
+        //System.out.println(genero.toString());
+        alertasInformacion("Género", "Género actualizado exitosamente");
+    }
+
+    /**
+     * Elimina el genero recibido en la BD
+     * @param genero Objeto Genero que se eliminara
+     * @throws SQLException
+     */
+    public void eliminarGenero(Genero genero) throws SQLException {
+        generoDAO.eliminarGenero(genero);
+        alertasInformacion("Género","Género eliminado exitosamente");
     }
 
 
@@ -513,6 +607,8 @@ public class Gestor {
         Genero genero = new Genero(1,nombre,descripcion);
         if(siExiste("select * from genero where nombre = '"+nombre+"'") == false) {
             generoDAO.guardarGenero(genero);
+        } else {
+            creacionAlertas("Género existente");
         }
     }
 

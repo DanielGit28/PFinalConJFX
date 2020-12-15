@@ -1,8 +1,11 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Genero;
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,10 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * @author Daniel Zúñiga Rojas
@@ -80,6 +83,24 @@ public class CtrlAdminGeneros implements Initializable {
     @FXML
     private Button btnActualizar;
 
+    @FXML
+    private TextField fieldNomActualizar;
+
+    @FXML
+    private TextField fieldDescActualizar;
+
+    @FXML
+    private TextField fieldId;
+
+    private FilteredList<Genero> generosFilt;
+
+    {
+        try {
+            generosFilt = gestor.cargaGeneros();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 
     /**
      * Este método devuelve al escenario inicial del admin
@@ -159,31 +180,103 @@ public class CtrlAdminGeneros implements Initializable {
         gestor.escenarioCrearGeneros(event,window);
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        /*
-        TableColumn<Genero, String> colNom = new TableColumn<>("Nombre");
-        colNom.setMinWidth(170);
-        colNom.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+    public boolean buscadorGenero(Genero genero, String textoBuscado){
+        return genero.getNombreGenero().toLowerCase().contains(textoBuscado.toLowerCase());
+    }
 
-        TableColumn<Genero, String> colDesc = new TableColumn<>("Descripción");
-        colNom.setMinWidth(330);
-        colDesc.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        */
-        columnId.setCellValueFactory(new PropertyValueFactory<Genero, String>("id"));
-        columnNombre.setCellValueFactory(new PropertyValueFactory<Genero, String>("nombreGenero"));
-        columnNombre.setCellFactory(TextFieldTableCell.forTableColumn());
-        columnDescripcion.setCellValueFactory(new PropertyValueFactory<Genero, String>("descripcionGenero"));
-        columnDescripcion.setCellFactory(TextFieldTableCell.forTableColumn());
+    private Predicate<Genero> crearPredicate(String textoBuscado){
+        return genero -> {
+            if (textoBuscado == null || textoBuscado.isEmpty()) return true;
+            return buscadorGenero(genero, textoBuscado);
+        };
+    }
 
-        ObservableList<Genero> datos = null;
+
+
+    /**
+     * Llama al gestor para actualizar el género seleccionado
+     */
+    public void actualizarGenero() {
+        Genero genero = new Genero(Integer.parseInt(fieldId.getText()),fieldNomActualizar.getText(),fieldDescActualizar.getText() );
         try {
-            datos = gestor.generosObservable();
+            gestor.actualizarGenero(genero);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        System.out.println(datos);
-        tablaGeneros.setItems(datos);
+        /*ObservableList<Genero> datos = null;
+        try {
+            datos = gestor.cargaGeneros();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+         */
 
+        tablaGeneros.setItems(generosFilt);
+
+    }
+
+    /**
+     * Llama al gestor para eliminar el género seleccionado
+     */
+    public void eliminarGenero() {
+        Genero genero = new Genero(Integer.parseInt(fieldId.getText()),fieldNomActualizar.getText(),fieldDescActualizar.getText() );
+        try {
+            gestor.eliminarGenero(genero);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        /*
+        ObservableList<Genero> datos = null;
+        try {
+            datos = gestor.cargaGeneros();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+         */
+
+        tablaGeneros.setItems(generosFilt);
+    }
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        columnId.setCellValueFactory(new PropertyValueFactory<Genero, String>("id"));
+        columnNombre.setCellValueFactory(new PropertyValueFactory<Genero, String>("nombreGenero"));
+        //columnNombre.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnDescripcion.setCellValueFactory(new PropertyValueFactory<Genero, String>("descripcionGenero"));
+        //columnDescripcion.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        /*
+        ObservableList<Genero> datos = null;
+        try {
+            datos = gestor.cargaGeneros();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+         */
+        //System.out.println(datos);
+        //columnNombre.setEditable(true);
+        //columnDescripcion.setEditable(true);
+
+        //tablaGeneros.setEditable(true);
+        tablaGeneros.setItems(generosFilt);
+
+        tablaGeneros.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                TablePosition pos = tablaGeneros.getSelectionModel().getSelectedCells().get(0);
+                int row = pos.getRow();
+
+                Genero gen = tablaGeneros.getItems().get(row);
+                fieldId.setText(String.valueOf(gen.getId()));
+                fieldNomActualizar.setText(gen.getNombreGenero());
+                fieldDescActualizar.setText(gen.getDescripcionGenero());
+            }
+        });
+
+        fieldBusqueda.textProperty().addListener((observable, oldValue, newValue) ->
+                generosFilt.setPredicate(crearPredicate(newValue))
+        );
     }
 }
