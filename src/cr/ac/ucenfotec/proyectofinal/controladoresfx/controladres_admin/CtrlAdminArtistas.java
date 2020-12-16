@@ -2,7 +2,6 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin;
 
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Artista;
-import cr.ac.ucenfotec.proyectofinal.bl.entidades.Genero;
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -56,7 +55,7 @@ public class CtrlAdminArtistas implements Initializable {
     private Button btnArtista;
 
     @FXML
-    private Button btnCrearGenero;
+    private Button btnCrearArtista;
 
     @FXML
     private TableView<Artista> tablaArtistas;
@@ -85,11 +84,7 @@ public class CtrlAdminArtistas implements Initializable {
     @FXML
     private TableColumn<Artista, String> columnNomArtistico;
 
-    @FXML
-    private TextField fieldDescActualizar;
 
-    @FXML
-    private Button btnCompositor;
 
     @FXML
     private TableColumn<Artista, String> columnNombre;
@@ -112,7 +107,24 @@ public class CtrlAdminArtistas implements Initializable {
     @FXML
     private TableColumn<Artista, LocalDate> columnFechaNac;
 
+    @FXML
+    private TextField fieldDescripcion;
+
+    @FXML
+    private DatePicker fieldFallecimiento;
+
+    @FXML
+    private ComboBox<String> fieldPais;
+
+    @FXML
+    private TextField fieldApellido;
+
+    @FXML
+    private TextField fieldNomArtistico;
+
+
     private FilteredList<Artista> artistasFilt;
+
 
     {
         try {
@@ -200,14 +212,18 @@ public class CtrlAdminArtistas implements Initializable {
         gestor.escenarioCrearArtistas(event,window);
     }
 
-    public boolean buscadorGenero(Artista artista, String textoBuscado){
-        return artista.getNombreArtistico().toLowerCase().equals(textoBuscado.toLowerCase());
+    public boolean buscadorArtista(Artista artista, String textoBuscado){
+        return artista.getNombreArtistico().toLowerCase().contains(textoBuscado.toLowerCase()) ||
+                artista.getNombreArtista().toLowerCase().contains(textoBuscado.toLowerCase()) ||
+                artista.getApellidoArtista().toLowerCase().contains(textoBuscado.toLowerCase()) ||
+                artista.getGeneroMusicalArtista().getNombreGenero().toLowerCase().contains(textoBuscado.toLowerCase()) ||
+                artista.getPaisNacimiento().getNombrePais().toLowerCase().contains(textoBuscado.toLowerCase()) ;
     }
 
     private Predicate<Artista> crearPredicate(String textoBuscado){
         return artista -> {
             if (textoBuscado == null || textoBuscado.isEmpty()) return true;
-            return buscadorGenero(artista, textoBuscado);
+            return buscadorArtista(artista, textoBuscado);
         };
     }
 
@@ -217,70 +233,68 @@ public class CtrlAdminArtistas implements Initializable {
      * Llama al gestor para actualizar el artista seleccionado
      */
     public void actualizarArtista() {
-        Genero genero = new Genero(parseInt(fieldId.getText()),fieldNomActualizar.getText(),fieldDescActualizar.getText() );
         try {
-            gestor.actualizarGenero(genero);
+            gestor.actualizarArtista(Integer.parseInt(fieldId.getText()), fieldNomActualizar.getText(), fieldApellido.getText(), fieldNomArtistico.getText(), fieldFallecimiento.getValue(), fieldPais.getValue(), fieldDescripcion.getText());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        /*ObservableList<Genero> datos = null;
         try {
-            datos = gestor.cargaGeneros();
+                artistasFilt = gestor.cargaArtistas();
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+                throwables.printStackTrace();
         }
-         */
 
         tablaArtistas.setItems(artistasFilt);
-
     }
 
     /**
      * Llama al gestor para eliminar el artista seleccionado
      */
     public void eliminarArtista() {
-        Genero genero = new Genero(parseInt(fieldId.getText()),fieldNomActualizar.getText(),fieldDescActualizar.getText() );
         try {
-            gestor.eliminarGenero(genero);
+            gestor.eliminarArtista(Integer.parseInt(fieldId.getText()));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        /*
-        ObservableList<Genero> datos = null;
         try {
-            datos = gestor.cargaGeneros();
+                artistasFilt = gestor.cargaArtistas();
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+                throwables.printStackTrace();
         }
-
-         */
-
         tablaArtistas.setItems(artistasFilt);
     }
 
+    /**
+     * Esta función carga los paises de la BD en el ComboBox paisNacimiento
+     * @throws SQLException
+     */
+    public void cargarPaises() throws SQLException {
+        if(fieldPais.getItems().size() == 0) {
+            gestor.cargarPaisesComboBox(fieldPais);
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        columnId.setCellValueFactory(new PropertyValueFactory<Artista, Integer>("idGenero"));
-        columnNombre.setCellValueFactory(new PropertyValueFactory<Artista, String>("nombreGenero"));
-
-        //columnDescripcion.setCellValueFactory(new PropertyValueFactory<Genero, String>("descripcionGenero"));
-
-
-        /*
-        ObservableList<Genero> datos = null;
         try {
-            datos = gestor.cargaGeneros();
+            artistasFilt = gestor.cargaArtistas();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        columnId.setCellValueFactory(new PropertyValueFactory<Artista, Integer>("id"));
+        columnNombre.setCellValueFactory(new PropertyValueFactory<Artista, String>("nombreArtista"));
+        columnApellido.setCellValueFactory(new PropertyValueFactory<Artista, String>("apellidoArtista"));
+        columnNomArtistico.setCellValueFactory(new PropertyValueFactory<Artista, String>("nombreArtistico"));
+        columnFechaNac.setCellValueFactory(new PropertyValueFactory<Artista, LocalDate>("fechaNacimientoArtista"));
+        columnFechaFallecimiento.setCellValueFactory(new PropertyValueFactory<Artista, LocalDate>("fechaFallecimientoArtista"));
 
-         */
-        //System.out.println(datos);
-        //columnNombre.setEditable(true);
-        //columnDescripcion.setEditable(true);
+        //FALTA AVERIGUAR COMO OBTENER SOLO UN ATRIBUTO DEL OBJETO PAIS QUE VIENE EN EL OBSERVABLE LIST
+        columnPais.setCellValueFactory(new PropertyValueFactory<Artista, String>("getNombrePais"));
+        columnGenero.setCellValueFactory(new PropertyValueFactory<Artista, String>("getNombreGenero"));
 
-        //tablaGeneros.setEditable(true);
+        columnEdad.setCellValueFactory(new PropertyValueFactory<Artista, Integer>("edadArtista"));
+        columnDescripcion.setCellValueFactory(new PropertyValueFactory<Artista, String>("descripcionArtista"));
+
         tablaArtistas.setItems(artistasFilt);
 
         tablaArtistas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -289,9 +303,13 @@ public class CtrlAdminArtistas implements Initializable {
                 int row = pos.getRow();
 
                 Artista artista = tablaArtistas.getItems().get(row);
-                fieldId.setText(String.valueOf(gen.getId()));
-                fieldNomActualizar.setText(gen.getNombreGenero());
-                fieldDescActualizar.setText(gen.getDescripcionGenero());
+                fieldId.setText(String.valueOf(artista.getId()));
+                fieldNomActualizar.setText(artista.getNombreArtista());
+                fieldApellido.setText(artista.getApellidoArtista());
+                fieldNomArtistico.setText(artista.getNombreArtistico());
+                fieldFallecimiento.setValue(artista.getFechaFallecimientoArtista());
+                fieldPais.setValue(artista.getPaisNacimiento().getNombrePais());
+                fieldDescripcion.setText(artista.getDescripcionArtista());
             }
         });
 

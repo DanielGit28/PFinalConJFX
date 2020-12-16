@@ -1,6 +1,5 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin;
 
-import com.mysql.cj.x.protobuf.MysqlxCrud;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Genero;
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
@@ -241,6 +240,7 @@ public class CtrlAdminGeneros implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         columnId.setCellValueFactory(new PropertyValueFactory<Genero, String>("id"));
         columnNombre.setCellValueFactory(new PropertyValueFactory<Genero, String>("nombreGenero"));
         //columnNombre.setCellFactory(TextFieldTableCell.forTableColumn());

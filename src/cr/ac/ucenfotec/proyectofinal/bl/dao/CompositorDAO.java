@@ -6,6 +6,7 @@ import cr.ac.ucenfotec.proyectofinal.bl.entidades.Compositor;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.ListaReproduccion;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,30 @@ public class CompositorDAO {
         }
         return listaCompositores;
     }
+
+    /**
+     * Actualiza un Compositor en la BD
+     * @param id id del compositor que se va a actualizar
+     * @param nombre nombre del compositor actualizado
+     * @param apellidos apellidos del compositor actualizados
+     * @param idPais id del país de nacimiento del compositor actualizado
+     * @throws SQLException
+     */
+    public void actualizarCompositor(int id, String nombre, String apellidos, int idPais) throws SQLException {
+        Statement query = cnx.createStatement();
+        query.executeUpdate("update compositor  set nombre = '"+nombre +"', apellidos = '"+apellidos+"', idPaisCompositor = "+idPais +"  where idCompositor = " + id);
+    }
+
+    /**
+     * Elimina un Compositor en la BD
+     * @param idCompositor id del compositor que se va a eliminar
+     * @throws SQLException
+     */
+    public void eliminarCompositor(int idCompositor) throws SQLException {
+        Statement query = cnx.createStatement();
+        query.execute("delete from compositor where idCompositor = "+idCompositor);
+    }
+
 
     /**
      *

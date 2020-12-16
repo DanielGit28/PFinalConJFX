@@ -2,6 +2,7 @@ package cr.ac.ucenfotec.proyectofinal.bl.dao;
 
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Artista;
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.Genero;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -61,6 +62,33 @@ public class ArtistaDAO {
         }
         return listaArtistas;
     }
+
+    /**
+     * Actualiza solo ciertos atributos del artista en la BD
+     * @param id idArtista
+     * @param nombre nombre Artista
+     * @param apellidos apellidos Artista
+     * @param nomArt nombre artístico del Artista
+     * @param fechaFall fecha fallecimiento del Artista
+     * @param idPais id del país de nacimiento
+     * @param descripcion descripción del artista
+     * @throws SQLException
+     */
+    public void actualizarArtista(int id, String nombre, String apellidos, String nomArt, LocalDate fechaFall, int idPais, String descripcion) throws SQLException {
+        Statement query = cnx.createStatement();
+        query.executeUpdate("update artista  set nombre = '"+nombre +"', apellido = '"+apellidos+"', nombreArtistico = '"+nomArt +"', fechaFallecimiento = "+Date.valueOf(fechaFall)+"', idPaisArtista = "+idPais +"', descripcion = '"+descripcion+"'  where idArtista = " + id);
+    }
+
+    /**
+     * Elimina el artista recibido en la BD
+     * @param idArtista id del Artista que se eliminara
+     * @throws SQLException
+     */
+    public void eliminarArtista(int idArtista) throws SQLException {
+        Statement query = cnx.createStatement();
+        query.execute("delete from artista where idArtista = "+idArtista);
+    }
+
 
     /**
      *

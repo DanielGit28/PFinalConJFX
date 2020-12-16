@@ -41,6 +41,7 @@ public class Gestor {
     private PreparedStatement queryArtistas;
     private PreparedStatement queryAlbumes;
     private PreparedStatement queryCanciones;
+    private PreparedStatement queryCompositores;
 
     private final String TEMPLATE_CMD_INSERTAR = "insert into pais (nombrePais, codigoPais) values (?,?)";
     private final String TEMPLATE_QRY_TODOSLOSPAISES = "select * from pais";
@@ -49,6 +50,7 @@ public class Gestor {
     private final String TEMPLATE_QRY_ARTISTAS = "select * from artista";
     private final String TEMPLATE_QRY_ALBUMES = "select * from album";
     private final String TEMPLATE_QRY_CANCIONES = "select * from cancion";
+    private final String TEMPLATE_QRY_COMPOSITORES = "select * from compositor";
 
     private String[] locales = Locale.getISOCountries();
     private ObservableList<String> listaPaises;
@@ -98,6 +100,7 @@ public class Gestor {
             this.queryArtistas = connection.prepareStatement(TEMPLATE_QRY_ARTISTAS);
             this.queryAlbumes = connection.prepareStatement(TEMPLATE_QRY_ALBUMES);
             this.queryCanciones = connection.prepareStatement(TEMPLATE_QRY_CANCIONES);
+            this.queryCompositores = connection.prepareStatement(TEMPLATE_QRY_COMPOSITORES);
 
             ResultSet resultadoPaises = queryPaises.executeQuery();
             if (resultadoPaises.next()) {
@@ -282,12 +285,16 @@ public class Gestor {
         while(resultadoArtistas.next()) {
             Artista leido = new Artista();
 
-            leido.setId(resultadoArtistas.getInt("idGenero"));
+            leido.setId(resultadoArtistas.getInt("idArtista"));
             leido.setNombreArtista(resultadoArtistas.getString("nombre"));
             leido.setApellidoArtista(resultadoArtistas.getString("apellido"));
             leido.setNombreArtistico(resultadoArtistas.getString("nombreArtistico"));
             leido.setFechaNacimientoArtista(resultadoArtistas.getDate("fechaNacimiento").toLocalDate());
-            leido.setFechaFallecimientoArtista(resultadoArtistas.getDate("fechaFallecimiento").toLocalDate());
+            if(resultadoArtistas.getDate("fechaFallecimiento") == null) {
+                leido.setFechaFallecimientoArtista(LocalDate.now());
+            } else {
+                leido.setFechaFallecimientoArtista(resultadoArtistas.getDate("fechaFallecimiento").toLocalDate());
+            }
             leido.setPaisNacimiento(getPaisById(resultadoArtistas.getInt("idPaisArtista")));
             leido.setGeneroMusicalArtista(getGeneroById(resultadoArtistas.getInt("idGeneroArtista")));
             leido.setEdadArtista(resultadoArtistas.getInt("edadArtista"));
@@ -296,8 +303,35 @@ public class Gestor {
             artistas.add(leido);
         }
         FilteredList<Artista> generosFiltrado = new FilteredList<>(FXCollections.observableList(artistas));
-        //System.out.println(generos);
+        //System.out.println(generosFiltrado);
         return generosFiltrado;
+    }
+
+
+    /**
+     * Devuelve un Observable list del tipo de objeto Artista para cargar una tabla
+     * @return ObservableList del tipo de objeto Compositor
+     * @throws SQLException
+     */
+
+    public FilteredList<Compositor> cargaCompositores() throws SQLException {
+        ResultSet resultadoCompositor = queryCompositores.executeQuery();
+        ObservableList<Compositor> compositores = FXCollections.observableArrayList();
+        while(resultadoCompositor.next()) {
+            Compositor leido = new Compositor();
+
+            leido.setId(resultadoCompositor.getInt("idCompositor"));
+            leido.setNombre(resultadoCompositor.getString("nombre"));
+            leido.setApellidos(resultadoCompositor.getString("apellidos"));
+            leido.setPaisNacimientoCompositor(getPaisById(resultadoCompositor.getInt("idPaisCompositor")));
+            leido.setFechaNacimientoCompositor(resultadoCompositor.getDate("fechaNacimiento").toLocalDate());
+            leido.setEdadCompositor(resultadoCompositor.getInt("edad"));
+            //System.out.println(leido.toString());
+            compositores.add(leido);
+        }
+        FilteredList<Compositor> compositoresFiltrado = new FilteredList<>(FXCollections.observableList(compositores));
+        //System.out.println(generosFiltrado);
+        return compositoresFiltrado;
     }
 
     /**
@@ -312,6 +346,37 @@ public class Gestor {
     }
 
     /**
+     * Actualiza solo ciertos atributos del artista en la BD
+     * @param id idArtista
+     * @param nombre nombre Artista
+     * @param apellidos apellidos Artista
+     * @param nomArt nombre artístico del Artista
+     * @param fechaFall fecha fallecimiento del Artista
+     * @param nomPais nombre del país de nacimiento
+     * @param descripcion descripción del artista
+     * @throws SQLException
+     */
+    public void actualizarArtista(int id, String nombre, String apellidos, String nomArt, LocalDate fechaFall, String nomPais, String descripcion) throws SQLException {
+        artistaDAO.actualizarArtista(id, nombre, apellidos, nomArt, fechaFall, idPais(nomPais),descripcion);
+        //System.out.println(genero.toString());
+        alertasInformacion("Artista", "Artista actualizado exitosamente");
+    }
+
+    /**
+     * Actualiza un Compositor en la BD
+     * @param id id del compositor
+     * @param nombre nombre del compositor
+     * @param apellidos apellidos del compositor
+     * @param nomPais país nacimiento del compositor
+     * @throws SQLException
+     */
+    public void actualizarCompositor(int id, String nombre, String apellidos, String nomPais) throws SQLException {
+        compositorDAO.actualizarCompositor(id, nombre, apellidos, idPais(nomPais));
+        //System.out.println(genero.toString());
+        alertasInformacion("Compositor", "Compositor actualizado exitosamente");
+    }
+
+    /**
      * Elimina el genero recibido en la BD
      * @param genero Objeto Genero que se eliminara
      * @throws SQLException
@@ -320,6 +385,27 @@ public class Gestor {
         generoDAO.eliminarGenero(genero);
         alertasInformacion("Género","Género eliminado exitosamente");
     }
+
+    /**
+     * Elimina el artista recibido en la BD
+     * @param id id del Artista que se eliminara
+     * @throws SQLException
+     */
+    public void eliminarArtista(int id) throws SQLException {
+        artistaDAO.eliminarArtista(id);
+        alertasInformacion("Artista","Artista eliminado exitosamente");
+    }
+
+    /**
+     * Elimina un Compositor en la BD
+     * @param id id del compositor necesario para la eliminación
+     * @throws SQLException
+     */
+    public void eliminarCompositor(int id) throws SQLException {
+        compositorDAO.eliminarCompositor(id);
+        alertasInformacion("Compositor","Compositor eliminado exitosamente");
+    }
+
 
 
     /**
@@ -563,7 +649,7 @@ public class Gestor {
             Pais paisNac = pais(paisNacimiento);
             int edadCompositor = calcEdad(fechaNacimiento);
             Compositor compositor = new Compositor(1,nombre,apellidos,paisNac,fechaNacimiento,edadCompositor);
-            if(siExiste("select * from compositor where nombre '"+nombre+"' and apellidos = '"+apellidos+"'") == false) {
+            if(siExiste("select * from compositor where nombre = '"+nombre+"' and apellidos = '"+apellidos+"'") == false) {
                 compositorDAO.guardarCompositor(compositor);
             } else {
                 creacionAlertas("Compositor ya existente");
