@@ -91,5 +91,8 @@ public class Album {
                 '}';
     }
 
+    public String getNombreArtista() {
+        return artistaAlbum.getNombreArtistico();
+    }
 
 }

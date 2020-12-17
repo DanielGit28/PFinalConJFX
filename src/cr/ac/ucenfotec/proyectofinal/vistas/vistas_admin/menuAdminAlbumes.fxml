@@ -5,26 +5,26 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="anchorMenuAdmin" prefHeight="800.0" prefWidth="800.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin.CtrlAdminAlbumes">
+<AnchorPane id="anchorMenuAdmin" prefHeight="900.0" prefWidth="1000.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin.CtrlAdminAlbumes">
    <children>
-      <Button fx:id="cerrarSesion" layoutX="685.0" layoutY="28.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión">
+      <Button fx:id="cerrarSesion" layoutX="847.0" layoutY="27.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión">
          <font>
             <Font size="14.0" />
          </font></Button>
-      <TableView fx:id="tablaCompositores" layoutX="229.0" layoutY="192.0" prefHeight="415.0" prefWidth="486.0" style="-fx-background-color: black;">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="74.0" text="C2" />
-            <TableColumn prefWidth="69.0" text="Column X" />
-            <TableColumn prefWidth="82.0" text="Column X" />
-        </columns>
-      </TableView>
-      <Text layoutX="399.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Compositores">
+      <TableView fx:id="tablaAlbumes" editable="true" layoutX="166.0" layoutY="138.0" prefHeight="477.0" prefWidth="833.0" style="-fx-background-color: black;">
+         <columns>
+            <TableColumn fx:id="columnId" editable="false" minWidth="0.0" prefWidth="53.0" text="Id" />
+            <TableColumn fx:id="columnNombre" editable="false" minWidth="7.0" prefWidth="227.0" text="Nombre" />
+            <TableColumn fx:id="columnFechaLanz" editable="false" prefWidth="143.0" text="Fecha lanzamiento" />
+            <TableColumn fx:id="columnArtista" editable="false" prefWidth="156.0" text="Artista" />
+            <TableColumn fx:id="columnImagen" editable="false" prefWidth="253.0" text="Recurso imagen" />
+         </columns></TableView>
+      <Text fill="WHITE" layoutX="534.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Álbumes">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
-      <Pane prefHeight="800.0" prefWidth="157.0" style="-fx-background-color: black;">
+      <Pane prefHeight="900.0" prefWidth="166.0" style="-fx-background-color: black;">
          <children>
             <Button fx:id="inicio" mnemonicParsing="false" onAction="#inicio" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
                <font>
@@ -35,25 +35,35 @@
                <font>
                   <Font size="18.0" />
                </font></Button>
-            <Button fx:id="btnCompositor" layoutY="283.0" mnemonicParsing="false" onAction="#compositores" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Compositores" textFill="WHITE">
+            <Button fx:id="btnCompositor" layoutX="4.0" layoutY="282.0" mnemonicParsing="false" onAction="#compositores" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Compositores" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font></Button>
-            <Button fx:id="btnArtista" layoutY="375.0" mnemonicParsing="false" onAction="#artistas" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Artistas" textFill="WHITE">
+            <Button fx:id="btnArtista" layoutX="4.0" layoutY="400.0" mnemonicParsing="false" onAction="#artistas" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Artistas" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font></Button>
-            <Button fx:id="btnGenero" layoutY="477.0" mnemonicParsing="false" onAction="#generos" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Generos" textFill="WHITE">
+            <Button fx:id="btnGenero" layoutX="4.0" layoutY="506.0" mnemonicParsing="false" onAction="#generos" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Generos" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font></Button>
-            <Button fx:id="btnAlbum" layoutX="-1.0" layoutY="563.0" mnemonicParsing="false" onAction="#albumes" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Álbumes" textFill="WHITE">
+            <Button fx:id="btnAlbum" layoutX="4.0" layoutY="630.0" mnemonicParsing="false" onAction="#albumes" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Álbumes" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font></Button>
          </children></Pane>
-      <TextField fx:id="fieldBusqueda" layoutX="365.0" layoutY="100.0" prefHeight="29.0" prefWidth="215.0" promptText="Buscar" />
-      <Button fx:id="btnCrearCompositor" layoutX="394.0" layoutY="666.0" mnemonicParsing="false" onAction="#escenaCrearCompositor" prefHeight="39.0" prefWidth="157.0" text="Crear compositor">
+      <TextField fx:id="fieldBusqueda" layoutX="460.0" layoutY="80.0" prefHeight="29.0" prefWidth="246.0" promptText="Buscar" />
+      <Button fx:id="btnCrearAlbum" layoutX="502.0" layoutY="798.0" mnemonicParsing="false" onAction="#escenaCrearAlbum" prefHeight="39.0" prefWidth="157.0" text="Crear álbum">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnActualizar" layoutX="343.0" layoutY="707.0" mnemonicParsing="false" onAction="#actualizarAlbum" prefHeight="39.0" prefWidth="157.0" text="Actualizar">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnEliminar" layoutX="659.0" layoutY="707.0" mnemonicParsing="false" onAction="#eliminarAlbum" prefHeight="39.0" prefWidth="157.0" text="Eliminar">
          <font>
             <Font size="14.0" />
          </font>

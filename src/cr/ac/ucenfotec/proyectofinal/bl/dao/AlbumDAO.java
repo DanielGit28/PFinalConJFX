@@ -54,6 +54,17 @@ public class AlbumDAO {
         return listaAlbumes;
     }
 
+
+    /**
+     * Elimina un Álbum en la BD
+     * @param idAlbum id del álbum que se va a eliminar
+     * @throws SQLException
+     */
+    public void eliminarAlbum(int idAlbum) throws SQLException {
+        Statement query = cnx.createStatement();
+        query.execute("delete from album where idCompositor = "+idAlbum);
+    }
+
     /**
      *
      * @param nuevo objeto album que se va a guardar en la base de datos

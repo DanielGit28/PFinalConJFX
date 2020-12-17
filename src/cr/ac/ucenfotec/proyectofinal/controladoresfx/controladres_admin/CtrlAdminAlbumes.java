@@ -1,6 +1,10 @@
+
 package cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin;
 
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.Album;
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.Compositor;
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,14 +12,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * @author Daniel Zúñiga Rojas
@@ -23,6 +31,7 @@ import java.util.ResourceBundle;
  */
 
 public class CtrlAdminAlbumes implements Initializable {
+
 
     Gestor gestor = new Gestor();
 
@@ -33,19 +42,64 @@ public class CtrlAdminAlbumes implements Initializable {
     private Button cerrarSesion;
 
     @FXML
+    private TableView<Album> tablaAlbumes;
+
+    @FXML
+    private TableColumn<Album, String> columnImagen;
+
+    @FXML
+    private Button btnCanciones;
+
+    @FXML
+    private Button btnCrearAlbum;
+
+    @FXML
+    private TableColumn<Album, Integer> columnId;
+
+    @FXML
+    private Button btnCompositor;
+
+    @FXML
     private Button inicio;
 
     @FXML
-    private TableView<?> tablaCompositores;
+    private TableColumn<Album, String> columnNombre;
 
     @FXML
-    private Button btnCrearCompositor;
+    private Button btnArtista;
 
     @FXML
     private TextField fieldBusqueda;
 
+    @FXML
+    private TableColumn<Album, String> columnArtista;
 
+    @FXML
+    private Button btnAlbum;
 
+    @FXML
+    private Button btnEliminar;
+
+    @FXML
+    private TableColumn<Album, LocalDate> columnFechaLanz;
+
+    @FXML
+    private Button btnGenero;
+
+    @FXML
+    private Button btnActualizar;
+
+    private FilteredList<Album> albumFilt;
+
+    Album albumSeleccionado = new Album();
+
+    {
+        try {
+            albumFilt = gestor.cargaAlbumes();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 
     /**
      * Este método devuelve al escenario inicial del admin
@@ -116,17 +170,84 @@ public class CtrlAdminAlbumes implements Initializable {
         window.show();
     }
 
+
+    public boolean buscadorAlbum(Album album, String textoBuscado){
+        return album.getNombreAlbum().toLowerCase().contains(textoBuscado.toLowerCase()) ||
+                album.getArtistaAlbum().getNombreArtistico().toLowerCase().contains(textoBuscado.toLowerCase()) ||
+                album.getFechaLanzamiento().toString().contains(textoBuscado.toLowerCase());
+    }
+
+    private Predicate<Album> crearPredicate(String textoBuscado){
+        return album -> {
+            if (textoBuscado == null || textoBuscado.isEmpty()) return true;
+            return buscadorAlbum(album, textoBuscado);
+        };
+    }
+
+
     /**
-     * Este método carga la escena de registro de compositores
-     * @param event evento que se genera cuando se aprieta el botón de crear compositor
-     * @throws IOException
+     * Llama al gestor para eliminar el álbum seleccionado
      */
-    public void escenaCrearCompositor(ActionEvent event) throws IOException {
-        gestor.escenarioCrearCompositores(event,window);
+    public void eliminarAlbum() {
+        try {
+            gestor.eliminarAlbum(albumSeleccionado.getId());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        try {
+            albumFilt = gestor.cargaAlbumes();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        tablaAlbumes.setItems(albumFilt);
+    }
+
+    /**
+     * Este método carga la escena de registro de álbumes
+     * @param event evento que se genera cuando se aprieta el botón de crear álbum
+     * @throws java.io.IOException
+     */
+    public void escenaCrearAlbum(ActionEvent event) throws IOException {
+        gestor.escenarioCrearAlbumes(event,window);
+    }
+
+    /**
+     * Este método carga la escena de actualizar álbum
+     * @param event evento que se genera cuando se aprieta el botón de actualizar álbum
+     * @throws java.io.IOException
+     */
+    public void actualizarAlbum(ActionEvent event) throws IOException {
+        gestor.escenarioActualizarAlbumes(event,window);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            albumFilt = gestor.cargaAlbumes();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
+        columnId.setCellValueFactory(new PropertyValueFactory<Album, Integer>("id"));
+        columnNombre.setCellValueFactory(new PropertyValueFactory<Album, String>("nombreAlbum"));
+        columnFechaLanz.setCellValueFactory(new PropertyValueFactory<Album, LocalDate>("fechaLanzamiento"));
+        columnArtista.setCellValueFactory(new PropertyValueFactory<Album, String>("nombreArtista"));
+        columnImagen.setCellValueFactory(new PropertyValueFactory<Album, String>("imagenAlbum"));
+
+        tablaAlbumes.setItems(albumFilt);
+
+        tablaAlbumes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                TablePosition pos = tablaAlbumes.getSelectionModel().getSelectedCells().get(0);
+                int row = pos.getRow();
+
+                albumSeleccionado = tablaAlbumes.getItems().get(row);
+            }
+        });
+
+        fieldBusqueda.textProperty().addListener((observable, oldValue, newValue) ->
+                albumFilt.setPredicate(crearPredicate(newValue))
+        );
     }
+
 }

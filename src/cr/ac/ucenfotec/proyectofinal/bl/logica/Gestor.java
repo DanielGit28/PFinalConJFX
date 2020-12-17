@@ -745,6 +745,29 @@ public class Gestor {
         return cancionesFilt;
     }
 
+    /**
+     * Devuelve un FilteredList para cargar una tabla del tipo Album
+     * @return FilteredList del tipo de objeto Album
+     * @throws SQLException
+     */
+    public FilteredList<Album> cargaAlbumes() throws SQLException {
+        ResultSet resultadoAlbum = queryAlbumes.executeQuery();
+        ObservableList<Album> albumes = FXCollections.observableArrayList();
+        while(resultadoAlbum.next()) {
+            Album leido = new Album();
+
+            leido.setId(resultadoAlbum.getInt("idAlbum"));
+            leido.setNombreAlbum(resultadoAlbum.getString("nombreAlbum"));
+            leido.setFechaLanzamiento(resultadoAlbum.getDate("fechaLanzamiento").toLocalDate());
+            leido.setArtistaAlbum(getArtistaById(resultadoAlbum.getInt("idArtistaAlbum")));
+            leido.setImagenAlbum(resultadoAlbum.getString("imagenAlbum"));
+
+            albumes.add(leido);
+        }
+        FilteredList<Album> albumesFiltrado = new FilteredList<>(FXCollections.observableList(albumes));
+        //System.out.println(generosFiltrado);
+        return albumesFiltrado;
+    }
 
     /**
      * Actualiza el género recibido en la BD
@@ -841,6 +864,16 @@ public class Gestor {
     public void eliminarCancion(int id) throws SQLException {
         cancionDAO.eliminarCancion(id);
         alertasInformacion("Canción","Canción eliminada exitosamente");
+    }
+
+    /**
+     * Elimina un Album de la BD
+     * @param id id del Album
+     * @throws SQLException
+     */
+    public void eliminarAlbum(int id) throws SQLException {
+        albumDAO.eliminarAlbum(id);
+        alertasInformacion("Álbum","Álbum eliminado exitosamente");
     }
 
     /**
@@ -1320,7 +1353,36 @@ public class Gestor {
         window.setScene(vistaLogin);
         window.show();
     }
-    
+
+    /**
+     * Este método carga el escenario de crear álbumes
+     * @param event evento que se genera cuando se aprieta el botón de crear álbumes
+     * @throws IOException
+     */
+    public void escenarioCrearAlbumes(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/crearAlbumes.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
+    }
+
+    /**
+     * Este método carga el escenario de actualizar álbumes
+     * @param event evento que se genera cuando se aprieta el botón de actualizar álbum
+     * @throws IOException
+     */
+    public void escenarioActualizarAlbumes(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/actualizarAlbumes.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
+    }
     
     //--FIN CARGA DE ESCENAS ADMIN--
     
