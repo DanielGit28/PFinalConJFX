@@ -134,5 +134,11 @@ public class Artista {
                 '}';
     }
 
-
+    //Para las tablas
+    public String getNombrePais() {
+        return paisNacimiento.getNombrePais();
+    }
+    public String getNombreGenero() {
+        return generoMusicalArtista.getNombreGenero();
+    }
 }

@@ -90,5 +90,9 @@ public class Compositor {
                 '}';
     }
 
+    //Para las tablas
+    public String getNombrePais() {
+        return paisNacimientoCompositor.getNombrePais();
+    }
 
 }

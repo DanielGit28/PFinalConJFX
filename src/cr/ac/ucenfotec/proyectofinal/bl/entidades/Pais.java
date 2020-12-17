@@ -49,4 +49,8 @@ public class Pais {
                 ", nombrePais='" + nombrePais + '\'' +
                 '}';
     }
+
+    public String toString2() {
+        return "nombrePais= '"+nombrePais +'\'';
+    }
 }

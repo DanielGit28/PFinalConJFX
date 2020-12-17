@@ -25,7 +25,7 @@ public class AlbumDAO {
      *
      * @param conexion conexión de la clase con la base de datos
      */
-    public AlbumDAO(Connection conexion){
+    public AlbumDAO(Connection conexion) throws SQLException {
         this.cnx = conexion;
         try {
             this.cmdInsertar = cnx.prepareStatement(TEMPLATE_CMD_INSERTAR);
@@ -33,6 +33,7 @@ public class AlbumDAO {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
     }
 
     public Admin encontrarPorId(String cedula){

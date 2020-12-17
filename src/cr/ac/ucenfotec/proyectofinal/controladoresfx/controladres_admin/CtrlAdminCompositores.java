@@ -253,7 +253,7 @@ public class CtrlAdminCompositores implements Initializable {
         columnId.setCellValueFactory(new PropertyValueFactory<Compositor, Integer>("id"));
         columnNombre.setCellValueFactory(new PropertyValueFactory<Compositor, String>("nombre"));
         columnApellidos.setCellValueFactory(new PropertyValueFactory<Compositor, String>("apellidos"));
-        columnPais.setCellValueFactory(new PropertyValueFactory<Compositor, String>("getNombrePais"));
+        columnPais.setCellValueFactory(new PropertyValueFactory<Compositor, String>("nombrePais"));
         columnFechaNac.setCellValueFactory(new PropertyValueFactory<Compositor, LocalDate>("fechaNacimientoCompositor"));
         columnEdad.setCellValueFactory(new PropertyValueFactory<Compositor, Integer>("edadCompositor"));
 

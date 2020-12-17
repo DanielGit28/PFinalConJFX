@@ -8,18 +8,18 @@ import java.util.ArrayList;
  * @version 1.2
  */
 public class Album {
-    private String id;
+    private int id;
     private String nombreAlbum;
     private LocalDate fechaLanzamiento;
     private Artista artistaAlbum;
     private String imagenAlbum;
     private ArrayList<Cancion> cancionesAlbum;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -65,7 +65,7 @@ public class Album {
 
     public Album(){}
 
-    public Album(String id, String nombreAlbum, LocalDate fechaLanzamiento, Artista artistaAlbum,
+    public Album(int id, String nombreAlbum, LocalDate fechaLanzamiento, Artista artistaAlbum,
                  String imagenAlbum, ArrayList<Cancion> cancionesAlbum) {
         this.id = id;
         this.nombreAlbum = nombreAlbum;

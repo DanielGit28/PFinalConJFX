@@ -11,65 +11,89 @@
       <Button fx:id="cerrarSesion" layoutX="685.0" layoutY="28.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión" />
       <Pane prefHeight="800.0" prefWidth="160.0" style="-fx-background-color: black;">
          <children>
-            <Button fx:id="btnInicio" mnemonicParsing="false" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
+            <Button fx:id="btnInicio" mnemonicParsing="false" onAction="#inicio" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="btnCanciones" layoutY="186.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Canciones" textFill="WHITE">
+            <Button fx:id="btnCanciones" layoutY="186.0" mnemonicParsing="false" onAction="#canciones" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Canciones" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font></Button>
-            <Button fx:id="btnCompositor" layoutY="283.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Compositores" textFill="WHITE">
+            <Button fx:id="btnCompositor" layoutY="283.0" mnemonicParsing="false" onAction="#compositores" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Compositores" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font></Button>
-            <Button fx:id="btnArtista" layoutY="375.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Artistas" textFill="WHITE">
+            <Button fx:id="btnArtista" layoutY="375.0" mnemonicParsing="false" onAction="#artistas" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Artistas" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font></Button>
-            <Button fx:id="btnGenero" layoutY="477.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Géneros" textFill="WHITE">
+            <Button fx:id="btnGenero" layoutY="477.0" mnemonicParsing="false" onAction="#generos" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Géneros" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font></Button>
-            <Button fx:id="btnAlbum" layoutX="-1.0" layoutY="563.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Álbumes" textFill="WHITE">
+            <Button fx:id="btnAlbum" layoutX="-1.0" layoutY="563.0" mnemonicParsing="false" onAction="#albumes" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Álbumes" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font></Button>
          </children></Pane>
-      <Text fill="WHITE" layoutX="284.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registro Compositor">
+      <Text fill="WHITE" layoutX="320.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Agregar canción">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
       </Text>
-      <Button fx:id="btnGuardar" layoutX="384.0" layoutY="451.0" mnemonicParsing="false" onAction="#guardarCompositor" prefHeight="41.0" prefWidth="150.0" text="Guardar compositor">
+      <Button fx:id="btnGuardar" layoutX="384.0" layoutY="570.0" mnemonicParsing="false" onAction="#guardarCancion" prefHeight="41.0" prefWidth="150.0" text="Guardar canción">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <ComboBox fx:id="paisNacimiento" layoutX="521.0" layoutY="350.0" onAction="#cargarPaises" onMouseClicked="#cargarPaises" prefHeight="29.0" prefWidth="162.0" />
-      <DatePicker fx:id="fechaNacimiento" layoutX="525.0" layoutY="261.0" prefHeight="29.0" prefWidth="162.0" />
-      <Label layoutX="525.0" layoutY="233.0" text="Fecha de nacimiento" textFill="WHITE">
+      <Label layoutX="528.0" layoutY="241.0" text="Álbum canción" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="525.0" layoutY="319.0" text="País de nacimiento" textFill="WHITE">
+      <Label layoutX="529.0" layoutY="406.0" text="Archivo canción" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="fiedlNombre" layoutX="240.0" layoutY="261.0" />
-      <TextField fx:id="fieldApellidos" layoutX="240.0" layoutY="350.0" />
-      <Label layoutX="245.0" layoutY="319.0" text="Apellidos" textFill="WHITE">
+      <TextField fx:id="fiedlNombre" layoutX="220.0" layoutY="194.0" prefWidth="180.0" />
+      <Label layoutX="220.0" layoutY="241.0" text="Artista" textFill="WHITE">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="240.0" layoutY="233.0" text="Nombre" textFill="WHITE">
+      <Label layoutX="220.0" layoutY="164.0" text="Nombre" textFill="WHITE">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
+      <Label layoutX="528.0" layoutY="164.0" text="Género canción" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <DatePicker fx:id="fechaLanzamiento" layoutX="220.0" layoutY="435.0" prefHeight="29.0" prefWidth="180.0" />
+      <Label layoutX="220.0" layoutY="322.0" text="Compositor" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="220.0" layoutY="406.0" text="Fecha de lanzamiento" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="fieldGenero" layoutX="528.0" layoutY="194.0" onMouseClicked="#cargarGeneros" prefHeight="29.0" prefWidth="180.0" />
+      <ComboBox fx:id="fieldArtista" layoutX="220.0" layoutY="269.0" onMouseClicked="#cargarArtistas" prefHeight="29.0" prefWidth="180.0" />
+      <ComboBox fx:id="fieldCompositor" layoutX="220.0" layoutY="354.0" onMouseClicked="#cargarCompositores" prefHeight="29.0" prefWidth="180.0" />
+      <ComboBox fx:id="fieldAlbum" layoutX="528.0" layoutY="269.0" onMouseClicked="#cargarAlbumes" prefHeight="29.0" prefWidth="180.0" />
+      <Button fx:id="btnArchivoCancion" layoutX="529.0" layoutY="435.0" mnemonicParsing="false" onAction="#cargarArchivo" prefHeight="29.0" prefWidth="105.0" text="Seleccionar" />
+      <Label layoutX="528.0" layoutY="326.0" text="Precio canción" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="fieldPrecio" layoutX="528.0" layoutY="354.0" prefWidth="180.0" />
    </children>
 </AnchorPane>

@@ -28,13 +28,18 @@ public class CompositorDAO {
      *
      * @param conexion  conexión de la clase con la base de datos
      */
-    public CompositorDAO(Connection conexion){
+    public CompositorDAO(Connection conexion) throws SQLException {
         this.cnx = conexion;
         try {
             this.cmdInsertar = cnx.prepareStatement(TEMPLATE_CMD_INSERTAR);
             this.queryCompositores = cnx.prepareStatement(TEMPLATE_QRY_TODOSLOSCOMPOSITORES);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+        Statement query = cnx.createStatement();
+        ResultSet resultado = query.executeQuery("select * from compositor where nombre = 'Default'");
+        if(!resultado.next()) {
+            query.executeQuery("insert into compositor (nombre,apellidos,idPaisCompositor,fechaNacimiento,edad) values ('Default','def',51,2020-12-16,-1)");
         }
     }
 

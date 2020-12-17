@@ -125,6 +125,61 @@ public class Gestor {
     }
 
     /**
+     * Carga valores defaults en la base de datos, para así evitar problemas con las llaves foráneas
+     * @throws SQLException
+     */
+    public void cargarDefaults() throws SQLException {
+        Statement queryInsertarCancion = connection.createStatement();
+        Statement queryInsertarGenero = connection.createStatement();
+        Statement queryInsertarAlbum = connection.createStatement();
+        Statement queryInsertarBibliotecaAlbum = connection.createStatement();
+
+        Statement queryAlbum = connection.createStatement();
+        Statement queryArtista = connection.createStatement();
+        Statement queryCompositor = connection.createStatement();
+        Statement queryGenero = connection.createStatement();
+        Statement queryBiblioteca = connection.createStatement();
+        Statement queryCancion = connection.createStatement();
+
+        ResultSet resultadoAlbum = queryAlbum.executeQuery("select * from album where nombreAlbum = 'Default'");
+        ResultSet resultadoArtista = queryArtista.executeQuery("select * from artista where nombreArtistico = 'Default'");
+        ResultSet resultadoCompositor = queryCompositor.executeQuery("select * from compositor where nombre = 'Default'");
+        ResultSet resultadoGenero = queryGenero.executeQuery("select * from genero where nombre = 'Default'");
+        ResultSet resultadoCancion = queryCancion.executeQuery("select * from cancion where nombreCancion = 'Default'");
+        if(resultadoCancion.next()) {
+            System.out.println("Canción default ya agregada");
+        } else {
+            queryInsertarCancion.execute("insert into cancion (nombreCancion,idArtistaCancion,idCompositorCancion,fechaLanzamiento,idGeneroCancion,cancionSimple,cancionCompra,precio,idAlbumCancion,recurso)" +
+                    " values('Default',"+resultadoArtista.getInt("idArtista")+","+resultadoCompositor.getInt("idCompositor")+",2020-12-16,"+resultadoGenero.getInt("idGenero")+",1,1,1,"+resultadoAlbum.getInt("idAlbum")+",'def')" );
+        }
+
+
+
+
+        queryInsertarBibliotecaAlbum.execute("insert into biblioteca_album (idAlbumBiblioteca,idCancionAlbumBiblioteca) values ("+resultadoAlbum.getInt("idAlbum")+","+);
+
+        if(resultadoGenero.next()) {
+            System.out.println("Genero default ya agregado");
+        } else {
+            queryInsertarGenero.execute("insert into genero (nombre,descripcion) values ('Default','Genero default')");
+
+        }
+        if(resultadoAlbum.next()) {
+            System.out.println("Album default ya agregado");
+
+        } else {
+            ResultSet resultadoBiblioteca = queryBiblioteca.executeQuery("select * from biblioteca_album where idBibliotecaAlbum = 1");
+
+            queryInsertarAlbum.execute("insert into album (nombreAlbum,fechaLanzamiento,idArtistaAlbum,imagenAlbum,idAlbumCanciones) values ('Default',2020-12-16,"+resultadoArtista.getInt("idArtista")+",'def',"+res);
+        }
+
+
+
+
+    }
+
+
+    /**
      * Esta función carga, con los paises de la BD, cualquier ComboBox que reciba como parámetro
      * @param combo ComboBox que se desea cargar de paises
      * @throws SQLException
@@ -145,6 +200,42 @@ public class Gestor {
         ResultSet resultadoGeneros = queryGeneros.executeQuery();
         while (resultadoGeneros.next()) {
             combo.getItems().add(resultadoGeneros.getString("nombre"));
+        }
+    }
+
+    /**
+     * Esta función carga, con los artistas de la BD, cualquier ComboBox que reciba como parámetro
+     * @param combo ComboBox que se desea cargar de artistas
+     * @throws SQLException
+     */
+    public void cargarArtistasComboBox(ComboBox<String> combo) throws SQLException {
+        ResultSet resultadoArtistas = queryArtistas.executeQuery();
+        while (resultadoArtistas.next()) {
+            combo.getItems().add(resultadoArtistas.getString("nombreArtistico"));
+        }
+    }
+
+    /**
+     * Esta función carga, con los compositores de la BD, cualquier ComboBox que reciba como parámetro
+     * @param combo ComboBox que se desea cargar de compositores
+     * @throws SQLException
+     */
+    public void cargarCompositoresComboBox(ComboBox<String> combo) throws SQLException {
+        ResultSet resultadoCompositores = queryCompositores.executeQuery();
+        while (resultadoCompositores.next()) {
+            combo.getItems().add(resultadoCompositores.getString("nombre"));
+        }
+    }
+
+    /**
+     * Esta función carga, con los álbumes de la BD, cualquier ComboBox que reciba como parámetro
+     * @param combo ComboBox que se desea cargar de álbumes
+     * @throws SQLException
+     */
+    public void cargarAlbumesComboBox(ComboBox<String> combo) throws SQLException {
+        ResultSet resultadoAlbumes = queryAlbumes.executeQuery();
+        while (resultadoAlbumes.next()) {
+            combo.getItems().add(resultadoAlbumes.getString("nombreAlbum"));
         }
     }
 
@@ -231,6 +322,7 @@ public class Gestor {
         return genero;
     }
 
+
     /**
      * Busca y devuelve un género musical de la base de datos
      * @param idGenero id del género para buscar en la BD
@@ -250,6 +342,262 @@ public class Gestor {
         }
 
         return genero;
+    }
+
+    /**
+     * Devuelve un artista encontrado en la BD
+     * @param idArtista id del artista en la BD
+     * @return Objeto Artista
+     * @throws SQLException
+     */
+    public Artista getArtistaById(int idArtista) throws SQLException {
+        Artista artista = new Artista();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from artista where idArtista = " + idArtista);
+        if (result.next()) {
+            artista.setId(result.getInt("idArtista"));
+            artista.setNombreArtista(result.getString("nombre"));
+            artista.setApellidoArtista(result.getString("apellido"));
+            artista.setNombreArtistico(result.getString("nombreArtistico"));
+            artista.setFechaNacimientoArtista(result.getDate("fechaNacimiento").toLocalDate());
+            if(result.getDate("fechaFallecimiento") == null) {
+                artista.setFechaFallecimientoArtista(LocalDate.now());
+            } else {
+                artista.setFechaFallecimientoArtista(result.getDate("fechaFallecimiento").toLocalDate());
+            }
+            artista.setPaisNacimiento(getPaisById(result.getInt("idPaisArtista")));
+            artista.setGeneroMusicalArtista(getGeneroById(result.getInt("idGeneroArtista")));
+            artista.setEdadArtista(result.getInt("edadArtista"));
+            artista.setDescripcionArtista(result.getString("descripcion"));
+        } else {
+            System.out.println("No se encontró ningún artista con ese nombre");
+        }
+        return artista;
+    }
+
+    /**
+     * Devuelve un artista de la BD
+     * @param nomArtista nombre artístico del artista en la BD
+     * @return Objeto Artista
+     * @throws SQLException
+     */
+    public Artista getArtista(String nomArtista) throws SQLException {
+        Artista artista = new Artista();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from artista where nombreArtistico = '" + nomArtista+"'");
+        if (result.next()) {
+            artista.setId(result.getInt("idArtista"));
+            artista.setNombreArtista(result.getString("nombre"));
+            artista.setApellidoArtista(result.getString("apellido"));
+            artista.setNombreArtistico(result.getString("nombreArtistico"));
+            artista.setFechaNacimientoArtista(result.getDate("fechaNacimiento").toLocalDate());
+            if(result.getDate("fechaFallecimiento") == null) {
+                artista.setFechaFallecimientoArtista(LocalDate.now());
+            } else {
+                artista.setFechaFallecimientoArtista(result.getDate("fechaFallecimiento").toLocalDate());
+            }
+            artista.setPaisNacimiento(getPaisById(result.getInt("idPaisArtista")));
+            artista.setGeneroMusicalArtista(getGeneroById(result.getInt("idGeneroArtista")));
+            artista.setEdadArtista(result.getInt("edadArtista"));
+            artista.setDescripcionArtista(result.getString("descripcion"));
+        } else {
+            System.out.println("No se encontró ningún artista con ese nombre");
+        }
+        return artista;
+    }
+
+    /**
+     * Devuelve un compositor de la BD
+     * @param idCompositor id del compositor en la BD
+     * @return Objeto Compositor
+     * @throws SQLException
+     */
+    public Compositor getCompositorById(int idCompositor) throws SQLException {
+        Compositor compositor = new Compositor();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from compositor where idCompositor = " + idCompositor);
+        if (result.next()) {
+            compositor.setId(result.getInt("idCompositor"));
+            compositor.setNombre(result.getString("nombre"));
+            compositor.setApellidos(result.getString("apellidos"));
+            compositor.setPaisNacimientoCompositor(getPaisById(result.getInt("idPaisCompositor")));
+            compositor.setFechaNacimientoCompositor(result.getDate("fechaNacimiento").toLocalDate());
+            compositor.setEdadCompositor(result.getInt("edad"));
+        } else {
+            System.out.println("No se encontró ningún artista con ese nombre");
+        }
+        return compositor;
+    }
+
+    /**
+     * Devuelve un compositor de la BD
+     * @param nomCompositor id del compositor en la BD
+     * @return Objeto Compositor
+     * @throws SQLException
+     */
+    public Compositor getCompositor(String nomCompositor) throws SQLException {
+        Compositor compositor = new Compositor();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from compositor where nombre = '" + nomCompositor+"'");
+        if (result.next()) {
+            compositor.setId(result.getInt("idCompositor"));
+            compositor.setNombre(result.getString("nombre"));
+            compositor.setApellidos(result.getString("apellidos"));
+            compositor.setPaisNacimientoCompositor(getPaisById(result.getInt("idPaisCompositor")));
+            compositor.setFechaNacimientoCompositor(result.getDate("fechaNacimiento").toLocalDate());
+            compositor.setEdadCompositor(result.getInt("edad"));
+        } else {
+            System.out.println("No se encontró ningún artista con ese nombre");
+        }
+        return compositor;
+    }
+
+    /**
+     * Devuelve una canción de la BD
+     * @param idCancion id de la canción en la BD
+     * @return Objeto Cancion
+     * @throws SQLException
+     */
+    public Cancion getCancionById(int idCancion) throws SQLException {
+        Cancion cancion = new Cancion();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from cancion where idCancion = " + idCancion);
+        Compositor compositor = new Compositor();
+        Artista artista = new Artista();
+        Album album = new Album();
+        if (result.next()) {
+            cancion.setId(result.getInt("idCancion"));
+            cancion.setNombreCancion(result.getString("nombreCancion"));
+            if(result.getInt("idArtista") == 0) {
+                cancion.setArtistaCancion(artista);
+            } else {
+                cancion.setArtistaCancion(getArtistaById(result.getInt("idArtista")));
+            }
+            if(result.getInt("idCompositor") == 0) {
+                cancion.setCompositorCancion(compositor);
+            }else {
+                cancion.setCompositorCancion(getCompositorById(result.getInt("idCompositor")));
+            }
+            cancion.setFechaLanzamientoCancion(result.getDate("fechaLanzamiento").toLocalDate());
+            cancion.setGeneroCancion(getGeneroById(result.getInt("idGeneroCancion")));
+            cancion.setCancionSimple(result.getInt("cancionSimple"));
+            if(result.getInt("idAlbum") == 0) {
+                cancion.setAlbumCancion(album);
+            } else {
+                cancion.setAlbumCancion(getAlbumById(result.getInt("idAlbum")));
+            }
+            cancion.setRecurso(result.getString("recurso"));
+            cancion.setCancionCompra(result.getInt("cancionCompra"));
+        } else {
+            System.out.println("No se encontró ninguna canción con ese nombre");
+        }
+        return cancion;
+    }
+
+    /**
+     * Devuelve una canción de la BD
+     * @param nomCancion id de la canción en la BD
+     * @return Objeto Cancion
+     * @throws SQLException
+     */
+    public Cancion getCancion(String nomCancion) throws SQLException {
+        Cancion cancion = new Cancion();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from cancion where nombreCancion = '" + nomCancion+"'");
+        Compositor compositor = new Compositor();
+        Artista artista = new Artista();
+        Album album = new Album();
+        if (result.next()) {
+            cancion.setId(result.getInt("idCancion"));
+            cancion.setNombreCancion(result.getString("nombreCancion"));
+            if(result.getInt("idArtista") == 0) {
+                cancion.setArtistaCancion(artista);
+            } else {
+                cancion.setArtistaCancion(getArtistaById(result.getInt("idArtista")));
+            }
+            if(result.getInt("idCompositor") == 0) {
+                cancion.setCompositorCancion(compositor);
+            }else {
+                cancion.setCompositorCancion(getCompositorById(result.getInt("idCompositor")));
+            }
+            cancion.setFechaLanzamientoCancion(result.getDate("fechaLanzamiento").toLocalDate());
+            cancion.setGeneroCancion(getGeneroById(result.getInt("idGeneroCancion")));
+            cancion.setCancionSimple(result.getInt("cancionSimple"));
+            if(result.getInt("idAlbum") == 0) {
+                cancion.setAlbumCancion(album);
+            } else {
+                cancion.setAlbumCancion(getAlbumById(result.getInt("idAlbum")));
+            }
+            cancion.setRecurso(result.getString("recurso"));
+            cancion.setCancionCompra(result.getInt("cancionCompra"));
+        } else {
+            System.out.println("No se encontró ninguna canción con ese nombre");
+        }
+        return cancion;
+    }
+
+    /**
+     * Devuelve un arrayList de canciones de la BD
+     * @param idBibliotecaCanciones id de la biblioteca para almacenar canciones de un álbum
+     * @return ArrayList del tipo de objeto Cancion
+     * @throws SQLException
+     */
+    public ArrayList<Cancion> getArrayListCanciones(int idBibliotecaCanciones) throws SQLException {
+        ArrayList<Cancion> canciones = new ArrayList<>();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from biblioteca_album where idBibliotecaAlbum = " + idBibliotecaCanciones);
+        while (result.next()) {
+            Cancion cancion = new Cancion();
+            cancion = getCancionById(result.getInt("idCancionAlbumBiblioteca"));
+            canciones.add(cancion);
+        }
+        return canciones;
+    }
+
+    /**
+     * Devuelve un álbum de la BD
+     * @param idAlbum id del álbum en la BD
+     * @return Objeto Album
+     * @throws SQLException
+     */
+    public Album getAlbumById(int idAlbum) throws SQLException {
+        Album album = new Album();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from album where idAlbum = " + idAlbum);
+        if (result.next()) {
+            album.setId(result.getInt("idAlbum"));
+            album.setNombreAlbum(result.getString("nombreAlbum"));
+            album.setFechaLanzamiento(result.getDate("fechaLanzamiento").toLocalDate());
+            album.setArtistaAlbum(getArtistaById(result.getInt("idArtistaAlbum")));
+            album.setImagenAlbum(result.getString("imagenAlbum"));
+            album.setCancionesAlbum(getArrayListCanciones(result.getInt("idAlbumCanciones")));
+        } else {
+            System.out.println("No se encontró ningún album con ese nombre");
+        }
+        return album;
+    }
+
+    /**
+     * Devuelve un álbum de la BD
+     * @param nomAlbum id del álbum en la BD
+     * @return Objeto Album
+     * @throws SQLException
+     */
+    public Album getAlbum(String nomAlbum) throws SQLException {
+        Album album = new Album();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from album where nombreAlbum = '" + nomAlbum+"'");
+        if (result.next()) {
+            album.setId(result.getInt("idAlbum"));
+            album.setNombreAlbum(result.getString("nombreAlbum"));
+            album.setFechaLanzamiento(result.getDate("fechaLanzamiento").toLocalDate());
+            album.setArtistaAlbum(getArtistaById(result.getInt("idArtistaAlbum")));
+            album.setImagenAlbum(result.getString("imagenAlbum"));
+            album.setCancionesAlbum(getArrayListCanciones(result.getInt("idAlbumCanciones")));
+        } else {
+            System.out.println("No se encontró ningún album con ese nombre");
+        }
+        return album;
     }
 
     /**
@@ -313,7 +661,6 @@ public class Gestor {
      * @return ObservableList del tipo de objeto Compositor
      * @throws SQLException
      */
-
     public FilteredList<Compositor> cargaCompositores() throws SQLException {
         ResultSet resultadoCompositor = queryCompositores.executeQuery();
         ObservableList<Compositor> compositores = FXCollections.observableArrayList();
@@ -333,6 +680,49 @@ public class Gestor {
         //System.out.println(generosFiltrado);
         return compositoresFiltrado;
     }
+
+    /**
+     * Devuelve un FilteredList para cargar una tabla del tipo Cancion
+     * @return FilteredList del tipo de objeto Cancion
+     * @throws SQLException
+     */
+    public FilteredList<Cancion> cargaCanciones() throws SQLException {
+        ResultSet resultadoCancion = queryCanciones.executeQuery();
+        ObservableList<Cancion> canciones = FXCollections.observableArrayList();
+        Compositor compositor = new Compositor();
+        Artista artista = new Artista();
+        Album album = new Album();
+        while(resultadoCancion.next()) {
+            Cancion cancion = new Cancion();
+            cancion.setId(resultadoCancion.getInt("idCancion"));
+            cancion.setNombreCancion(resultadoCancion.getString("nombreCancion"));
+            if(resultadoCancion.getInt("idArtista") == 0) {
+                cancion.setArtistaCancion(artista);
+            } else {
+                cancion.setArtistaCancion(getArtistaById(resultadoCancion.getInt("idArtista")));
+            }
+            if(resultadoCancion.getInt("idCompositor") == 0) {
+                cancion.setCompositorCancion(compositor);
+            }else {
+                cancion.setCompositorCancion(getCompositorById(resultadoCancion.getInt("idCompositor")));
+            }
+            cancion.setFechaLanzamientoCancion(resultadoCancion.getDate("fechaLanzamiento").toLocalDate());
+            cancion.setGeneroCancion(getGeneroById(resultadoCancion.getInt("idGeneroCancion")));
+            cancion.setCancionSimple(resultadoCancion.getInt("cancionSimple"));
+            if(resultadoCancion.getInt("idAlbum") == 0) {
+                cancion.setAlbumCancion(album);
+            } else {
+                cancion.setAlbumCancion(getAlbumById(resultadoCancion.getInt("idAlbum")));
+            }
+            cancion.setRecurso(resultadoCancion.getString("recurso"));
+            cancion.setCancionCompra(resultadoCancion.getInt("cancionCompra"));
+            canciones.add(cancion);
+        }
+        FilteredList<Cancion> cancionesFilt = new FilteredList<>(FXCollections.observableList(canciones));
+        //System.out.println(generosFiltrado);
+        return cancionesFilt;
+    }
+
 
     /**
      * Actualiza el género recibido en la BD
@@ -377,6 +767,21 @@ public class Gestor {
     }
 
     /**
+     * Actualiza una Cancion en la BD
+     * @param id id de la canción
+     * @param nombre nombre de la canción
+     * @param artista artista de la canción
+     * @param compositor compositor de la canción
+     * @throws SQLException
+     */
+    public void actualizarCancion(int id, String nombre, String artista, String compositor) throws SQLException {
+
+        cancionDAO.actualizarCancion(id,nombre,getArtista(artista).getId(),getCompositor(compositor).getId());
+        //System.out.println(genero.toString());
+        alertasInformacion("Canción", "Canción actualizada exitosamente");
+    }
+
+    /**
      * Elimina el genero recibido en la BD
      * @param genero Objeto Genero que se eliminara
      * @throws SQLException
@@ -406,7 +811,15 @@ public class Gestor {
         alertasInformacion("Compositor","Compositor eliminado exitosamente");
     }
 
-
+    /**
+     * Elimina una Cancion de la BD
+     * @param id id de la canción
+     * @throws SQLException
+     */
+    public void eliminarCancion(int id) throws SQLException {
+        cancionDAO.eliminarCancion(id);
+        alertasInformacion("Canción","Canción eliminada exitosamente");
+    }
 
     /**
      * @param contrasenna Recibe como parametro el string de la contraseña a evaluar
@@ -684,6 +1097,40 @@ public class Gestor {
     }
 
     /**
+     * Guarda una canción en la BD
+     * @param nombre nombre de la canción
+     * @param artista artista de la canción si es el caso
+     * @param compositor compositor de la canción si es el caso
+     * @param fechaLanz fecha de lanzamiento de la canción
+     * @param genero género de la canción
+     * @param album álbum de la canción
+     * @param precio precio de la canción
+     * @param recurso dirección del archivo de audio
+     * @throws SQLException
+     */
+    public void guardarCancion(String nombre,String artista, String compositor,LocalDate fechaLanz, String genero,String album, int precio,String recurso) throws SQLException {
+        Artista artis = getArtista(artista);
+        Compositor compos = getCompositor(compositor);
+        Genero gen = getGenero(genero);
+        int cancionSimple = 0;
+        int cancionCompra = 1;
+        if(album != null) {
+            cancionSimple = 1;
+        } else {
+            cancionSimple = 2;
+        }
+        Album albumCancion = getAlbum(album);
+
+        Cancion cancion = new Cancion(1,nombre,artis,compos,fechaLanz,gen,cancionSimple,cancionCompra,precio,albumCancion, recurso);
+        if(siExiste("select * from cancion where nombreCancion = '"+nombre+"'") == false) {
+            cancionDAO.guardarCancion(cancion);
+        } else {
+            creacionAlertas("Canción ya existente");
+        }
+
+    }
+
+    /**
      * Guarda un género musical en la base de datos
      * @param nombre nombre del género
      * @param descripcion descripción del género
@@ -697,6 +1144,8 @@ public class Gestor {
             creacionAlertas("Género existente");
         }
     }
+
+
 
     //--CARGA DE ESCENAS ADMIN--
     /**

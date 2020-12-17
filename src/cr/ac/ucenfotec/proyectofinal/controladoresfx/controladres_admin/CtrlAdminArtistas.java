@@ -204,8 +204,8 @@ public class CtrlAdminArtistas implements Initializable {
     }
 
     /**
-     * Este método carga la escena de registro de compositores
-     * @param event evento que se genera cuando se aprieta el botón de crear compositor
+     * Este método carga la escena de registro de artistas
+     * @param event evento que se genera cuando se aprieta el botón de crear artista
      * @throws IOException
      */
     public void escenaCrearArtista(ActionEvent event) throws IOException {
@@ -289,8 +289,8 @@ public class CtrlAdminArtistas implements Initializable {
         columnFechaFallecimiento.setCellValueFactory(new PropertyValueFactory<Artista, LocalDate>("fechaFallecimientoArtista"));
 
         //FALTA AVERIGUAR COMO OBTENER SOLO UN ATRIBUTO DEL OBJETO PAIS QUE VIENE EN EL OBSERVABLE LIST
-        columnPais.setCellValueFactory(new PropertyValueFactory<Artista, String>("getNombrePais"));
-        columnGenero.setCellValueFactory(new PropertyValueFactory<Artista, String>("getNombreGenero"));
+        columnPais.setCellValueFactory(new PropertyValueFactory<Artista, String>("nombrePais"));
+        columnGenero.setCellValueFactory(new PropertyValueFactory<Artista, String>("nombreGenero"));
 
         columnEdad.setCellValueFactory(new PropertyValueFactory<Artista, Integer>("edadArtista"));
         columnDescripcion.setCellValueFactory(new PropertyValueFactory<Artista, String>("descripcionArtista"));

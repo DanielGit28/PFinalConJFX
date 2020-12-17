@@ -7,7 +7,7 @@ import java.time.LocalDate;
  * @version 1.2
  */
 public class Cancion {
-    private String id;
+    private int id;
     private String nombreCancion;
     private Artista artistaCancion;
     private Compositor compositorCancion;
@@ -15,14 +15,15 @@ public class Cancion {
     private Genero generoCancion;
     private int cancionSimple;//1 si es un sencillo, 2 si es de un álbum
     private int cancionCompra;//1 si es normal, 2 si es compra
+    private int precioCancion;
     private Album albumCancion;
     private String recurso;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -98,11 +99,19 @@ public class Cancion {
         this.nombreCancion = nombreCancion;
     }
 
+    public int getPrecioCancion() {
+        return precioCancion;
+    }
+
+    public void setPrecioCancion(int precioCancion) {
+        this.precioCancion = precioCancion;
+    }
+
     public Cancion() {}
 
-    public Cancion(String id, String nombreCancion, Artista artistaCancion, Compositor compositorCancion,
+    public Cancion(int id, String nombreCancion, Artista artistaCancion, Compositor compositorCancion,
                    LocalDate fechaLanzamientoCancion, Genero generoCancion,
-                   int cancionSimple,int cancionCompra, Album albumCancion, String recurso) {
+                   int cancionSimple,int cancionCompra, int precioCancion,Album albumCancion, String recurso) {
         this.id = id;
         this.nombreCancion = nombreCancion;
         this.artistaCancion = artistaCancion;
@@ -111,6 +120,7 @@ public class Cancion {
         this.generoCancion = generoCancion;
         this.cancionSimple = cancionSimple;
         this.cancionCompra = cancionCompra;
+        this.precioCancion = precioCancion;
         this.albumCancion = albumCancion;
         this.recurso = recurso;
 
@@ -130,10 +140,25 @@ public class Cancion {
                 ", fechaLanzamientoCancion='" + fechaLanzamientoCancion + '\'' +
                 ", generoCancion=" + generoCancion +
                 ", cancionSimple=" + cancionSimple +
+                ", cancionCompra=" + cancionCompra +
+                ", precioCancion=" + precioCancion +
                 ", albumCancion=" + albumCancion +
                 ", recurso=" + recurso +
                 '}';
     }
 
+    //Para las tablas
+    public String getNombreArtista() {
+        return artistaCancion.getNombreArtistico();
+    }
+    public String getNombreCompositor() {
+        return compositorCancion.getNombre();
+    }
+    public String getNombreGenero() {
+        return generoCancion.getNombreGenero();
+    }
+    public String getNombreAlbum() {
+        return albumCancion.getNombreAlbum();
+    }
 
 }
