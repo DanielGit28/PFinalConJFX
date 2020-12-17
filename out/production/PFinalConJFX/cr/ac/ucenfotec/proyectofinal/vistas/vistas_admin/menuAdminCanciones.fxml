@@ -79,7 +79,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Text>
-      <ComboBox fx:id="fieldArtista" layoutX="756.0" layoutY="657.0" prefWidth="150.0" />
-      <ComboBox fx:id="fieldCompositor" layoutX="928.0" layoutY="657.0" prefWidth="150.0" />
+      <ComboBox fx:id="fieldArtista" layoutX="756.0" layoutY="657.0" onMouseClicked="#cargarArtistas" prefWidth="150.0" />
+      <ComboBox fx:id="fieldCompositor" layoutX="928.0" layoutY="657.0" onMouseClicked="#cargarCompositores" prefWidth="150.0" />
    </children>
 </AnchorPane>

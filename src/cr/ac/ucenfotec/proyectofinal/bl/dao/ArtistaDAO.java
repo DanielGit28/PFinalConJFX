@@ -35,11 +35,7 @@ public class ArtistaDAO {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        Statement query = cnx.createStatement();
-        ResultSet resultado = query.executeQuery("select * from artista where nombreArtistico = 'Default'");
-        if(!resultado.next()) {
-            query.executeQuery("insert into artista (nombre,apellido,nombreArtistico,fechaNacimiento,fechaFallecimiento,idPaisArtita,idGeneroArtista,edadArtista,descripcion) values ('Def','def','Default',2020-12-16,2020-12-17,51,1,-1,'artista default')");
-        }
+
     }
 
     public Admin encontrarPorId(String cedula){

@@ -35,7 +35,7 @@ public class CtrlAgregarCanciones {
     private DatePicker fechaLanzamiento;
 
     @FXML
-    private ComboBox<?> fieldAlbum;
+    private ComboBox<String> fieldAlbum;
 
     @FXML
     private Button btnCanciones;
@@ -228,8 +228,9 @@ public class CtrlAgregarCanciones {
      * @throws SQLException
      */
     public void cargarAlbumes() throws SQLException {
-        if(fieldCompositor.getItems().size() == 0) {
-            gestor.cargarAlbumesComboBox(fieldCompositor);
+        if(fieldAlbum.getItems().size() == 0) {
+            gestor.cargarAlbumesComboBox(fieldAlbum);
         }
     }
+
 }

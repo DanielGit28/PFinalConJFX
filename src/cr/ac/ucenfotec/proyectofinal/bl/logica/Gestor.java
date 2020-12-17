@@ -129,6 +129,9 @@ public class Gestor {
      * @throws SQLException
      */
     public void cargarDefaults() throws SQLException {
+        Statement queryArtistas = connection.createStatement();
+        ResultSet resultado = queryArtistas.executeQuery("select * from artista where nombreArtistico = 'Default'");
+
         Statement queryInsertarCancion = connection.createStatement();
         Statement queryInsertarGenero = connection.createStatement();
         Statement queryInsertarAlbum = connection.createStatement();
@@ -146,36 +149,57 @@ public class Gestor {
         ResultSet resultadoCompositor = queryCompositor.executeQuery("select * from compositor where nombre = 'Default'");
         ResultSet resultadoGenero = queryGenero.executeQuery("select * from genero where nombre = 'Default'");
         ResultSet resultadoCancion = queryCancion.executeQuery("select * from cancion where nombreCancion = 'Default'");
-        if(resultadoCancion.next()) {
-            System.out.println("Canción default ya agregada");
-        } else {
-            queryInsertarCancion.execute("insert into cancion (nombreCancion,idArtistaCancion,idCompositorCancion,fechaLanzamiento,idGeneroCancion,cancionSimple,cancionCompra,precio,idAlbumCancion,recurso)" +
-                    " values('Default',"+resultadoArtista.getInt("idArtista")+","+resultadoCompositor.getInt("idCompositor")+",2020-12-16,"+resultadoGenero.getInt("idGenero")+",1,1,1,"+resultadoAlbum.getInt("idAlbum")+",'def')" );
-        }
-
-
-
-
-        queryInsertarBibliotecaAlbum.execute("insert into biblioteca_album (idAlbumBiblioteca,idCancionAlbumBiblioteca) values ("+resultadoAlbum.getInt("idAlbum")+","+);
 
         if(resultadoGenero.next()) {
             System.out.println("Genero default ya agregado");
         } else {
-            queryInsertarGenero.execute("insert into genero (nombre,descripcion) values ('Default','Genero default')");
-
+            queryInsertarGenero.executeUpdate("insert into genero (nombre,descripcion) values ('Default','Genero default')");
         }
+        if(resultado.next()) {
+            System.out.println("Artista default ya creado");
+        } else {
+            resultadoGenero = queryGenero.executeQuery("select * from genero where nombre = 'Default'");
+            if(resultadoGenero.next()) {
+                queryArtistas.executeUpdate("insert into artista (nombre,apellido,nombreArtistico,fechaNacimiento,fechaFallecimiento,idPaisArtista,idGeneroArtista,edadArtista,descripcion) values ('Def','def','Default','2020-12-15','2020-12-16',51,"+resultadoGenero.getInt("idGenero")+",-1,'artista default')");
+            }
+        }
+
+        if(resultadoCompositor.next()) {
+            System.out.println("Compositor default ya creado");
+        } else {
+                queryArtistas.executeUpdate("insert into compositor (nombre,apellidos,idPaisCompositor,fechaNacimiento,edad) values ('Default','def',51,'2020-12-15',-1)");
+        }
+
+        if(resultadoCancion.next()) {
+            System.out.println("Canción default ya agregada");
+        } else {
+            resultadoGenero = queryGenero.executeQuery("select * from genero where nombre = 'Default'");
+            if(resultadoGenero.next()) {
+                resultadoArtista = queryArtista.executeQuery("select * from artista where nombreArtistico = 'Default'");
+                if(resultadoArtista.next()) {
+                    queryInsertarCancion.executeUpdate("insert into cancion (nombreCancion,idArtistaCancion,idCompositorCancion,fechaLanzamiento,idGeneroCancion,cancionSimple,cancionCompra,precio,idAlbumCancion,recurso)" +
+                            " values('Default',"+resultadoArtista.getInt("idArtista")+","+resultadoCompositor.getInt("idCompositor")+",'2020-12-16',"+resultadoGenero.getInt("idGenero")+",1,1,1,1,'def')" );
+                }
+                System.out.println("Cancion agregada");
+            }
+        }
+
         if(resultadoAlbum.next()) {
             System.out.println("Album default ya agregado");
-
         } else {
-            ResultSet resultadoBiblioteca = queryBiblioteca.executeQuery("select * from biblioteca_album where idBibliotecaAlbum = 1");
-
-            queryInsertarAlbum.execute("insert into album (nombreAlbum,fechaLanzamiento,idArtistaAlbum,imagenAlbum,idAlbumCanciones) values ('Default',2020-12-16,"+resultadoArtista.getInt("idArtista")+",'def',"+res);
+            resultadoArtista = queryArtista.executeQuery("select * from artista where nombreArtistico = 'Default'");
+            if(resultadoArtista.next()) {
+                queryInsertarAlbum.executeUpdate("insert into album (nombreAlbum,fechaLanzamiento,idArtistaAlbum,imagenAlbum) values ('Default','2020-12-16',"+resultadoArtista.getInt("idArtista")+",'def')");
+            }
         }
 
-
-
-
+        resultadoAlbum = queryAlbum.executeQuery("select * from album where nombreAlbum = 'Default'");
+        if(resultadoAlbum.next()) {
+            resultadoCancion = queryCancion.executeQuery("select * from cancion where nombreCancion = 'Default'");
+            if(resultadoCancion.next()){
+                queryInsertarBibliotecaAlbum.executeUpdate("insert into biblioteca_album (idAlbumBiblioteca,idCancionAlbumBiblioteca) values ("+resultadoAlbum.getInt("idAlbum")+","+resultadoCancion.getInt("idCancion")+")");
+            }
+        }
     }
 
 
@@ -570,7 +594,6 @@ public class Gestor {
             album.setFechaLanzamiento(result.getDate("fechaLanzamiento").toLocalDate());
             album.setArtistaAlbum(getArtistaById(result.getInt("idArtistaAlbum")));
             album.setImagenAlbum(result.getString("imagenAlbum"));
-            album.setCancionesAlbum(getArrayListCanciones(result.getInt("idAlbumCanciones")));
         } else {
             System.out.println("No se encontró ningún album con ese nombre");
         }
@@ -593,7 +616,6 @@ public class Gestor {
             album.setFechaLanzamiento(result.getDate("fechaLanzamiento").toLocalDate());
             album.setArtistaAlbum(getArtistaById(result.getInt("idArtistaAlbum")));
             album.setImagenAlbum(result.getString("imagenAlbum"));
-            album.setCancionesAlbum(getArrayListCanciones(result.getInt("idAlbumCanciones")));
         } else {
             System.out.println("No se encontró ningún album con ese nombre");
         }
@@ -696,23 +718,23 @@ public class Gestor {
             Cancion cancion = new Cancion();
             cancion.setId(resultadoCancion.getInt("idCancion"));
             cancion.setNombreCancion(resultadoCancion.getString("nombreCancion"));
-            if(resultadoCancion.getInt("idArtista") == 0) {
+            if(resultadoCancion.getInt("idArtistaCancion") == 0) {
                 cancion.setArtistaCancion(artista);
             } else {
-                cancion.setArtistaCancion(getArtistaById(resultadoCancion.getInt("idArtista")));
+                cancion.setArtistaCancion(getArtistaById(resultadoCancion.getInt("idArtistaCancion")));
             }
-            if(resultadoCancion.getInt("idCompositor") == 0) {
+            if(resultadoCancion.getInt("idCompositorCancion") == 0) {
                 cancion.setCompositorCancion(compositor);
             }else {
-                cancion.setCompositorCancion(getCompositorById(resultadoCancion.getInt("idCompositor")));
+                cancion.setCompositorCancion(getCompositorById(resultadoCancion.getInt("idCompositorCancion")));
             }
             cancion.setFechaLanzamientoCancion(resultadoCancion.getDate("fechaLanzamiento").toLocalDate());
             cancion.setGeneroCancion(getGeneroById(resultadoCancion.getInt("idGeneroCancion")));
             cancion.setCancionSimple(resultadoCancion.getInt("cancionSimple"));
-            if(resultadoCancion.getInt("idAlbum") == 0) {
+            if(resultadoCancion.getInt("idAlbumCancion") == 0) {
                 cancion.setAlbumCancion(album);
             } else {
-                cancion.setAlbumCancion(getAlbumById(resultadoCancion.getInt("idAlbum")));
+                cancion.setAlbumCancion(getAlbumById(resultadoCancion.getInt("idAlbumCancion")));
             }
             cancion.setRecurso(resultadoCancion.getString("recurso"));
             cancion.setCancionCompra(resultadoCancion.getInt("cancionCompra"));

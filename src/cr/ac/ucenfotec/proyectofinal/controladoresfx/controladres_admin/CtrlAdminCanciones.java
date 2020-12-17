@@ -260,6 +260,25 @@ public class CtrlAdminCanciones implements Initializable {
         tablaCanciones.setItems(cancionFilt);
     }
 
+    /**
+     * Esta función carga los paises de la BD en el ComboBox fieldArtista
+     * @throws SQLException
+     */
+    public void cargarArtistas() throws SQLException {
+        if(fieldArtista.getItems().size() == 0) {
+            gestor.cargarArtistasComboBox(fieldArtista);
+        }
+    }
+
+    /**
+     * Esta función carga los compositores de la BD en el ComboBox fieldCompositor
+     * @throws SQLException
+     */
+    public void cargarCompositores() throws SQLException {
+        if(fieldCompositor.getItems().size() == 0) {
+            gestor.cargarCompositoresComboBox(fieldCompositor);
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -270,8 +289,8 @@ public class CtrlAdminCanciones implements Initializable {
         }
         columnId.setCellValueFactory(new PropertyValueFactory<Cancion, Integer>("id"));
         columnNombre.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreCancion"));
-        columnArtista.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreArtistico"));
-        columnCompositor.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombre"));
+        columnArtista.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreArtista"));
+        columnCompositor.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreCompositor"));
         columnFechaLanz.setCellValueFactory(new PropertyValueFactory<Cancion, LocalDate>("fechaLanzamientoCancion"));
         columnGenero.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreGenero"));
         columnCancionSimple.setCellValueFactory(new PropertyValueFactory<Cancion, Integer>("cancionSimple"));
