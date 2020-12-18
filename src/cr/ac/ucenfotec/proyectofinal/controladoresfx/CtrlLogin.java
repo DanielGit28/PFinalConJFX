@@ -1,5 +1,6 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx;
 
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.Usuario;
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -79,6 +80,7 @@ public class CtrlLogin implements Initializable {
         boolean sesionAdmin = gestor.verificarSesionAdmin(correo,contrasenna);
         boolean sesionUsuario = gestor.verificarSesionUsuario(correo,contrasenna);
 
+        Usuario usuario = gestor.getUsuario();
         gestor.cargarDefaults();
         gestor.cargarPaises();
 

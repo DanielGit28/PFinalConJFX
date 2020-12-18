@@ -5,21 +5,21 @@ import java.util.ArrayList;
 
 /**
  * @author Daniel
- * @version 1.2
+ * @version 1.3
  */
 
 public class ListaReproduccion {
-    private String id;
+    private int id;
     private ArrayList<Cancion> cancionesListaReproduccion;
     private LocalDate fechaCreacionListaReproduccion;
     private String nombreListaReproduccion;
-    private String calificacionReproduccion;
+    private int calificacionReproduccion;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -47,20 +47,20 @@ public class ListaReproduccion {
         this.nombreListaReproduccion = nombreListaReproduccion;
     }
 
-    public String getCalificacionReproduccion() {
+    public int getCalificacionReproduccion() {
         return calificacionReproduccion;
     }
 
-    public void setCalificacionReproduccion(String calificacionReproduccion) {
+    public void setCalificacionReproduccion(int calificacionReproduccion) {
         this.calificacionReproduccion = calificacionReproduccion;
     }
 
     public ListaReproduccion(){}
 
-    public ListaReproduccion(String id, ArrayList<Cancion> cancionesListaReproduccion,
+    public ListaReproduccion(int id, ArrayList<Cancion> cancionesListaReproduccion,
                              LocalDate fechaCreacionListaReproduccion,
                              String nombreListaReproduccion,
-                             String calificacionReproduccion) {
+                             int calificacionReproduccion) {
         this.id = id;
         this.cancionesListaReproduccion = cancionesListaReproduccion;
         this.fechaCreacionListaReproduccion = fechaCreacionListaReproduccion;

@@ -567,6 +567,67 @@ public class Gestor {
     }
 
     /**
+     * Devuelve una lista de reproduccion de un Usuario específico
+     * Busca en la BD las canciones de la lista en la tabla biblioteca_lista_reproduccion
+     * @param idUsuario id del Usuario de la lista
+     * @return Objeto ListaReproduccion
+     * @throws SQLException
+     */
+    public ListaReproduccion getListaReproduccion(int idUsuario, String nombreLista) throws SQLException {
+        ListaReproduccion lista = new ListaReproduccion();
+        ArrayList<Cancion> canciones = new ArrayList<>();
+
+        Statement queryLista = connection.createStatement();
+        ResultSet result = queryLista.executeQuery("select * from lista_reproduccion_usuario where idUsuarioLista = "+idUsuario+" and nombreList = '"+nombreLista+"'");
+
+        Statement queryBiblioteca = connection.createStatement();
+        if (result.next()) {
+        ResultSet resultadoBiblioteca = queryBiblioteca.executeQuery("select * from biblioteca_lista_reproduccion where idListaReproduccionUsuario = "+result.getInt("idListaUsuario"));
+            while(resultadoBiblioteca.next()) {
+                canciones.add(getCancionById(resultadoBiblioteca.getInt("idCancionBibliotecaLista")));
+            }
+            lista.setId(result.getInt("idListaUsuario"));
+            lista.setFechaCreacionListaReproduccion(result.getDate("fechaCreacion").toLocalDate());
+            lista.setNombreListaReproduccion(result.getString("nombreLista"));
+            lista.setCalificacionReproduccion(result.getInt("calificacion"));
+        } else {
+            System.out.println("No se encontró ninguna playlist asociada al usuario");
+        }
+        return lista;
+    }
+
+    /**
+     * Devuelve todas las listas de reproduccion de un Usuario específico
+     * Busca en la BD las canciones de la lista en la tabla biblioteca_lista_reproduccion
+     * @param idUsuario id del Usuario de la lista
+     * @return ArrayList del Objeto ListaReproduccion
+     * @throws SQLException
+     */
+    public ArrayList<ListaReproduccion> getListasReproduccionesUsuario(int idUsuario) throws SQLException {
+
+        ArrayList<Cancion> canciones = new ArrayList<>();
+        ArrayList<ListaReproduccion> listas = new ArrayList<>();
+
+        Statement queryLista = connection.createStatement();
+        ResultSet result = queryLista.executeQuery("select * from lista_reproduccion_usuario where idUsuarioLista = "+idUsuario);
+
+        Statement queryBiblioteca = connection.createStatement();
+        while (result.next()) {
+            ResultSet resultadoBiblioteca = queryBiblioteca.executeQuery("select * from biblioteca_lista_reproduccion where idListaReproduccionUsuario = "+result.getInt("idListaUsuario"));
+            while(resultadoBiblioteca.next()) {
+                canciones.add(getCancionById(resultadoBiblioteca.getInt("idCancionBibliotecaLista")));
+            }
+            ListaReproduccion lista = new ListaReproduccion();
+            lista.setId(result.getInt("idListaUsuario"));
+            lista.setFechaCreacionListaReproduccion(result.getDate("fechaCreacion").toLocalDate());
+            lista.setNombreListaReproduccion(result.getString("nombreLista"));
+            lista.setCalificacionReproduccion(result.getInt("calificacion"));
+            listas.add(lista);
+        }
+        return listas;
+    }
+
+    /**
      * Devuelve un arrayList de canciones de la BD
      * @param idBibliotecaCanciones id de la biblioteca para almacenar canciones de un álbum
      * @return ArrayList del tipo de objeto Cancion
@@ -583,6 +644,25 @@ public class Gestor {
         }
         return canciones;
     }
+
+    /**
+     * Devuelve un arrayList de canciones de la BD
+     * @param idUsuario id del Usuario de la playList
+     * @return ArrayList del tipo de objeto Cancion
+     * @throws SQLException
+     */
+    /*
+    public ArrayList<Cancion> getCancionesListaReproduccion(int idUsuario) throws SQLException {
+        ArrayList<Cancion> canciones = new ArrayList<>();
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("select * from biblioteca_lista_reproduccion where idBibliotecaAlbum = " + idBibliotecaCanciones);
+        while (result.next()) {
+            Cancion cancion = new Cancion();
+            cancion = getCancionById(result.getInt("idCancionAlbumBiblioteca"));
+            canciones.add(cancion);
+        }
+        return canciones;
+    }*/
 
     /**
      * Devuelve un álbum de la BD
@@ -1093,7 +1173,6 @@ public class Gestor {
 
     /**
      * Devuelve el administrador de la base de datos
-     *
      * @return nuevo Objeto Admin de la BD
      * @throws SQLException
      */
@@ -1107,6 +1186,34 @@ public class Gestor {
             nuevo.setCorreoUsuario(resultado.getString("correo"));
             nuevo.setContrasennaUsuario(resultado.getString("contrasenna"));
             nuevo.setNombreUsuarioAdmin(resultado.getString("nombreUsuario"));
+        }
+
+        return nuevo;
+    }
+
+
+    public UsuarioFinal getUsuario(String correo, String contrasenna) throws SQLException {
+        Statement queryUsuario = connection.createStatement();
+        ResultSet resultado = queryUsuario.executeQuery("select * from usuario_final where correo = '"+correo+"' and contrasenna = '"+contrasenna+"'");
+        UsuarioFinal nuevo = new UsuarioFinal();
+        ArrayList<Cancion> canciones = new ArrayList<>();
+        ArrayList<ListaReproduccion> listasReproduccion = new ArrayList<>();
+        if (resultado.next()) {
+            nuevo.setAvatarUsuario(resultado.getString("avatar"));
+            nuevo.setNombre(resultado.getString("nombre"));
+            nuevo.setApellidosUsuario(resultado.getString("apellidos"));
+            nuevo.setCorreoUsuario(resultado.getString("correo"));
+            nuevo.setContrasennaUsuario(resultado.getString("contrasenna"));
+            nuevo.setFechaNacimientoUsuario(resultado.getDate("fechaNacimiento").toLocalDate());
+            nuevo.setPaisProcedenciaUsuario(getPaisById(resultado.getInt("idPais")));
+            nuevo.setIdentificacionUsuario(resultado.getString("identificacion"));
+            nuevo.setNombreUsuario(resultado.getString("nombreUsuario"));
+            if(resultado.getInt("otp") == 0 || String.valueOf(resultado.getInt("otp")) == null ) {
+                nuevo.setOtp(0);
+            } else {
+                nuevo.setOtp(resultado.getInt("otp"));
+            }
+
         }
 
         return nuevo;
