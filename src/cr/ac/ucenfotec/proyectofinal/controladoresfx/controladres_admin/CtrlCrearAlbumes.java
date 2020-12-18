@@ -1,6 +1,7 @@
 
 package cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin;
 
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.Album;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Artista;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Cancion;
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
@@ -35,112 +36,55 @@ import static java.lang.Integer.parseInt;
  * @version 1.0
  */
 
-public class CtrlCrearAlbumes implements Initializable {
+public class CtrlCrearAlbumes {
 
     Gestor gestor = new Gestor();
 
     Scene escenaRegistro;
     Stage window;
 
-    @FXML
-    private TableColumn<Cancion, String> columnRecurso;
-
-    @FXML
-    private Button btnCanciones;
-
-    @FXML
-    private TableColumn<Cancion, Integer> columnId;
-
-    @FXML
-    private TableColumn<Cancion, Integer> columnCancionSimple;
-
-    @FXML
-    private Button inicio;
-
-    @FXML
-    private Button btnArtista;
-
-    @FXML
-    private TableView<Cancion> tablaCanciones;
-
-
-    @FXML
-    private Button btnCrearCanción;
-
-
-    @FXML
-    private TableColumn<Cancion, LocalDate> columnFechaLanz;
-
-    @FXML
-    private Button btnGenero;
-
-    @FXML
-    private TableColumn<Cancion, String> columnAlbum;
-
-    @FXML
-    private Button btnActualizar;
 
     @FXML
     private Button cerrarSesion;
 
     @FXML
-    private TableColumn<Cancion, String> columnCompositor;
+    private DatePicker fechaLanzamiento;
 
     @FXML
-    private DatePicker fieldFechaLanz;
-
-
-    @FXML
-    private TableColumn<Cancion, String> columnNombre;
+    private Button btnCanciones;
 
     @FXML
-    private TextField fieldBusqueda;
+    private Button btnCompositor;
 
     @FXML
-    private TableColumn<Cancion, String> columnArtista;
+    private Button btnImagen;
 
     @FXML
-    private TableColumn<Cancion, String> columnGenero;
-
-    @FXML
-    private Button btnAlbum;
-
-    @FXML
-    private Button btnQuitarCancion;
-
-    @FXML
-    private Button btnAgregarCancion;
+    private Button btnArtista;
 
     @FXML
     private TextField fiedlNombre;
 
     @FXML
+    private Button btnAlbum;
+
+    @FXML
     private ComboBox<String> fieldArtista;
 
     @FXML
-    private DatePicker fechaLanzamiento;
+    private Button btnGuardarAlbum;
+
+    @FXML
+    private Button btnInicio;
 
     @FXML
     private ImageView ivImagen;
 
     @FXML
-    private Button btnImagen;
+    private Button btnGenero;
 
-
-    Cancion cancionSeleccionada = new Cancion();
-    ArrayList<Cancion> cancionesSeleccionadas = new ArrayList<>();
     String pathImg;
 
-    private FilteredList<Cancion> cancionFilt;
-
-
-    {
-        try {
-            cancionFilt = gestor.cargaCanciones();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
 
     /**
      * Este método devuelve al escenario inicial del admin
@@ -218,29 +162,6 @@ public class CtrlCrearAlbumes implements Initializable {
         window.show();
     }
 
-    /**
-     * Este método carga la escena de registro de canciones
-     *
-     * @param event evento que se genera cuando se aprieta el botón de crear canciones
-     * @throws IOException
-     */
-    public void escenaCrearCancion(ActionEvent event) throws IOException {
-        gestor.escenarioGuardarCanciones(event, window);
-    }
-
-    public boolean buscadorCancion(Cancion cancion, String textoBuscado) {
-        return cancion.getNombreCancion().toLowerCase().contains(textoBuscado.toLowerCase()) ||
-                cancion.getAlbumCancion().getNombreAlbum().toLowerCase().contains(textoBuscado.toLowerCase()) ||
-                cancion.getGeneroCancion().getNombreGenero().toLowerCase().contains(textoBuscado.toLowerCase()) ||
-                cancion.getArtistaCancion().getNombreArtistico().toLowerCase().contains(textoBuscado.toLowerCase());
-    }
-
-    private Predicate<Cancion> crearPredicate(String textoBuscado) {
-        return cancion -> {
-            if (textoBuscado == null || textoBuscado.isEmpty()) return true;
-            return buscadorCancion(cancion, textoBuscado);
-        };
-    }
 
     /**
      * Este método carga la imagen que se selecciona en el registro
@@ -281,63 +202,26 @@ public class CtrlCrearAlbumes implements Initializable {
         }
     }
 
-    /**
-     * Esta función quita la canción seleccionada, en la tabla, del ArrayList de canciones local del controlador
-     */
-    public void quitarCancionArray() {
-
-    }
 
     /**
-     * Esta función agrega la canción seleccionada, en la tabla al ArrayList de canciones local del controlador
+     * Guarda un álbum en la BD
+     * @throws SQLException
      */
-    public void agregarCancionArray() {
-        if(cancionSeleccionada.getAlbumCancion() != null) {
-            gestor.creacionAlertas("No se puede agregar esta canción porque ya pertence a otro álbum");
-        }else {
-            cancionesSeleccionadas.add(cancionSeleccionada);
+    public void guardarAlbum() throws SQLException {
+        Album album = new Album();
+        String nombre = fiedlNombre.getText();
+        LocalDate fechaLanz = fechaLanzamiento.getValue();
+        Artista artista = gestor.getArtista(fieldArtista.getValue());
+        if(nombre != null && fechaLanz != null && artista != null && pathImg != null) {
+            album.setNombreAlbum(nombre);
+            album.setFechaLanzamiento(fechaLanz);
+            album.setArtistaAlbum(artista);
+            album.setImagenAlbum(pathImg);
+            gestor.guardarAlbum(album);
+        } else {
+            gestor.creacionAlertas("Debe seleccionar todos los campos de registro");
         }
 
-    }
-
-    public void guardarAlbum() {
-
-    }
-
-
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        try {
-            cancionFilt = gestor.cargaCanciones();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        columnId.setCellValueFactory(new PropertyValueFactory<Cancion, Integer>("id"));
-        columnNombre.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreCancion"));
-        columnArtista.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreArtista"));
-        columnCompositor.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreCompositor"));
-        columnFechaLanz.setCellValueFactory(new PropertyValueFactory<Cancion, LocalDate>("fechaLanzamientoCancion"));
-        columnGenero.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreGenero"));
-        columnCancionSimple.setCellValueFactory(new PropertyValueFactory<Cancion, Integer>("cancionSimple"));
-        columnAlbum.setCellValueFactory(new PropertyValueFactory<Cancion, String>("nombreAlbum"));
-        columnRecurso.setCellValueFactory(new PropertyValueFactory<Cancion, String>("recurso"));
-
-        tablaCanciones.setItems(cancionFilt);
-
-        tablaCanciones.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                TablePosition pos = tablaCanciones.getSelectionModel().getSelectedCells().get(0);
-                int row = pos.getRow();
-
-                cancionSeleccionada = tablaCanciones.getItems().get(row);
-
-            }
-        });
-
-        fieldBusqueda.textProperty().addListener((observable, oldValue, newValue) ->
-                cancionFilt.setPredicate(crearPredicate(newValue))
-        );
     }
 
 

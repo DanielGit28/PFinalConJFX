@@ -2,6 +2,7 @@ package cr.ac.ucenfotec.proyectofinal.bl.dao;
 
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Album;
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.Cancion;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,8 +18,8 @@ public class AlbumDAO {
     private PreparedStatement cmdInsertar;
     private PreparedStatement queryAlbum;
 
-    private final String TEMPLATE_CMD_INSERTAR = "insert into usuario_final (avatar,nombre,apellidos,correo,contrasenna,fechaNacimiento,pais,nombreUsuario)" +
-            " values (?,?,?,?,?,?,?,?)";
+    private final String TEMPLATE_CMD_INSERTAR = "insert into album (nombreAlbum,fechaLanzamiento,idArtistaAlbum,imagenAlbum)" +
+            " values (?,?,?,?)";
     private final String TEMPLATE_QRY_TODOSLOSALBUMES = "select * from album";
 
     /**
@@ -54,7 +55,6 @@ public class AlbumDAO {
         return listaAlbumes;
     }
 
-
     /**
      * Elimina un Álbum en la BD
      * @param idAlbum id del álbum que se va a eliminar
@@ -66,6 +66,33 @@ public class AlbumDAO {
     }
 
     /**
+     * Guarda las canciones del álbum en una tabla Biblioteca en la BD
+     * @param nuevo Album con el ArrayList de canciones para guardar
+     * @throws SQLException
+     */
+    public void agregarCancionesBiblioteca(Album nuevo) throws SQLException {
+        Statement queryAlbumes = cnx.createStatement();
+        Statement queryBiblioteca = cnx.createStatement();
+        ResultSet resultadoAlbumes = queryAlbumes.executeQuery("select * from album where nombreAlbum = '"+nuevo.getNombreAlbum()+"'");
+        ResultSet resultadoBiblioteca;
+
+        //ESTE FOR AÑADE CADA CANCION DEL ARRAYLIST DE CANCIONES DEL ALBUM, A LA TABLA BIBLIOTECA_ALBUM
+        for(Cancion cancion: nuevo.getCancionesAlbum()) {
+            resultadoBiblioteca = queryBiblioteca.executeQuery("select * from biblioteca_album where idCancionAlbumBiblioteca = "+cancion.getId());
+            if(resultadoAlbumes.next()) {
+                Statement query = cnx.createStatement();
+                if(resultadoBiblioteca.next()) {
+                    System.out.println("No se puede agregar la canción a la biblioteca porque ya está repetida");
+                } else {
+                    query.execute("insert into biblioteca_album (idAlbumBiblioteca, idCancionAlbumBiblioteca) values ("+resultadoAlbumes.getInt("idBibliotecaAlbum")+","+cancion.getId()+")");
+                }
+            } else {
+                System.out.println("No se pueden agregar canciones a biblioteca");
+            }
+        }
+    }
+
+    /**
      *
      * @param nuevo objeto album que se va a guardar en la base de datos
      * @throws SQLException
@@ -74,13 +101,14 @@ public class AlbumDAO {
         if(this.cmdInsertar != null) {
             this.cmdInsertar.setString(1,nuevo.getNombreAlbum());
             this.cmdInsertar.setDate(2, Date.valueOf(nuevo.getFechaLanzamiento()));
-            this.cmdInsertar.setString(3, nuevo.getArtistaAlbum().getNombreArtistico());
+            this.cmdInsertar.setInt(3, nuevo.getArtistaAlbum().getId());
             this.cmdInsertar.setString(4, nuevo.getImagenAlbum());
-            this.cmdInsertar.setString(5, nuevo.getNombreAlbum());//SOLUCIONAR RELACION ENTRE TABLAS PARA GUARDAR CANCIONES
-            //SE DEBERÍA ENVIAR EL ID DE LA BIBLIOTECA QUE TIENE LAS CANCIONES DEL ALBUM
             this.cmdInsertar.execute();
         } else {
             System.out.println("No se pudo guardar el album");
         }
+
     }
+
+
 }

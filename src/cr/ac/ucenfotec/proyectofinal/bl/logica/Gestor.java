@@ -1082,6 +1082,7 @@ public class Gestor {
      */
     public void actualizarAdmin(String avatar, String nombre, String apellidos, String nombreUsuario) throws SQLException {
         adminDAO.actualizarDatosAdmin(avatar, nombre, apellidos, nombreUsuario);
+        alertasInformacion("Admin", "Admin actualizado exitosamente");
     }
 
     /**
@@ -1119,6 +1120,7 @@ public class Gestor {
             Compositor compositor = new Compositor(1,nombre,apellidos,paisNac,fechaNacimiento,edadCompositor);
             if(siExiste("select * from compositor where nombre = '"+nombre+"' and apellidos = '"+apellidos+"'") == false) {
                 compositorDAO.guardarCompositor(compositor);
+                alertasInformacion("Compositor", "Compositor creado exitosamente");
             } else {
                 creacionAlertas("Compositor ya existente");
             }
@@ -1143,8 +1145,8 @@ public class Gestor {
         Genero generoArt = getGenero(generoMusical);
         Artista artista = new Artista(1,nombre,apellidos,nombreArtistico,fechaNacimiento,fechaFallecimiento,paisNac,generoArt,edadArtista,descripcion);
         if(siExiste("select * from artista where nombreArtistico = '"+nombreArtistico+"'") == false) {
-            
             artistaDAO.guardarArtista(artista);
+            alertasInformacion("Artista", "Artista creado exitosamente");
         } else {
             creacionAlertas("Artista ya existente");
         }
@@ -1167,18 +1169,20 @@ public class Gestor {
         Artista artis = getArtista(artista);
         Compositor compos = getCompositor(compositor);
         Genero gen = getGenero(genero);
+        Album albumCancion = getAlbum(album);
         int cancionSimple = 0;
         int cancionCompra = 1;
-        if(album != null) {
-            cancionSimple = 1;
-        } else {
+
+        if(albumCancion.getNombreAlbum().equals("Default")) {
             cancionSimple = 2;
+        } else {
+            cancionSimple = 1;
         }
-        Album albumCancion = getAlbum(album);
 
         Cancion cancion = new Cancion(1,nombre,artis,compos,fechaLanz,gen,cancionSimple,cancionCompra,precio,albumCancion, recurso);
         if(siExiste("select * from cancion where nombreCancion = '"+nombre+"'") == false) {
             cancionDAO.guardarCancion(cancion);
+            alertasInformacion("Canción", "Canción agregada exitosamente");
         } else {
             creacionAlertas("Canción ya existente");
         }
@@ -1195,12 +1199,42 @@ public class Gestor {
         Genero genero = new Genero(1,nombre,descripcion);
         if(siExiste("select * from genero where nombre = '"+nombre+"'") == false) {
             generoDAO.guardarGenero(genero);
+            alertasInformacion("Género", "Género creado exitosamente");
         } else {
             creacionAlertas("Género existente");
         }
     }
 
+    /**
+     * Guarda un álbum en la base de datos
+     * @param album Objeto Album que se va a guardar
+     * @throws SQLException
+     */
+    public void guardarAlbum(Album album) throws SQLException {
+        if(siExiste("select * from album where nombreAlbum = '"+album.getNombreAlbum()+"'") == false) {
+            albumDAO.guardarAlbum(album);
+            alertasInformacion("Álbum", "Álbum creado exitosamente");
+        } else {
+            creacionAlertas("Álbum existente");
+        }
 
+    }
+
+
+    /**
+     * Guarda las canciones de un álbum en la base de datos
+     * @param album Objeto Album que contiene el ArrayList de canciones que se van a guardar
+     * @throws SQLException
+     */
+    public void actualizarAlbum(Album album) throws SQLException {
+        if(siExiste("select * from album where nombreAlbum = '"+album.getNombreAlbum()+"'")) {
+            creacionAlertas("Álbum no encontrado");
+        } else {
+            albumDAO.agregarCancionesBiblioteca(album);
+            alertasInformacion("Canciones", "Canciones agregadas exitosamente");
+        }
+
+    }
 
     //--CARGA DE ESCENAS ADMIN--
     /**

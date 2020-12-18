@@ -93,7 +93,6 @@ public class CtrlAgregarCanciones {
         String recurso = pathArchivo;
         if(nombre != null  && fechaLanz != null && genero != null && recurso != null) {
             gestor.guardarCancion(nombre,artista,compositor,fechaLanz,genero,album,precio,recurso);
-            gestor.alertasInformacion("Canción","Canción registrada con éxito");
         } else {
             gestor.creacionAlertas("Debe rellenar todos los campos menos el de artista o compositor, dependiendo el intérprete de la canción, y álbum.");
         }
