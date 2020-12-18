@@ -80,6 +80,7 @@ public class CtrlLogin implements Initializable {
         boolean sesionUsuario = gestor.verificarSesionUsuario(correo,contrasenna);
 
         gestor.cargarDefaults();
+        gestor.cargarPaises();
 
         if(sesionAdmin == true) {
             login = FXMLLoader.load(getClass().getResource("../vistas/vistas_admin/menuAdmin.fxml"));

@@ -217,7 +217,8 @@ public class CtrlAdminArtistas implements Initializable {
                 artista.getNombreArtista().toLowerCase().contains(textoBuscado.toLowerCase()) ||
                 artista.getApellidoArtista().toLowerCase().contains(textoBuscado.toLowerCase()) ||
                 artista.getGeneroMusicalArtista().getNombreGenero().toLowerCase().contains(textoBuscado.toLowerCase()) ||
-                artista.getPaisNacimiento().getNombrePais().toLowerCase().contains(textoBuscado.toLowerCase()) ;
+                artista.getPaisNacimiento().getNombrePais().toLowerCase().contains(textoBuscado.toLowerCase()) ||
+                artista.getFechaNacimientoArtista().toString().contains(textoBuscado.toLowerCase());
     }
 
     private Predicate<Artista> crearPredicate(String textoBuscado){

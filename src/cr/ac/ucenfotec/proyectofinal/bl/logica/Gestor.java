@@ -102,25 +102,31 @@ public class Gestor {
             this.queryCanciones = connection.prepareStatement(TEMPLATE_QRY_CANCIONES);
             this.queryCompositores = connection.prepareStatement(TEMPLATE_QRY_COMPOSITORES);
 
-            ResultSet resultadoPaises = queryPaises.executeQuery();
-            if (resultadoPaises.next()) {
-                System.out.println("Paises cargados");
-            } else {
-                for (String countryCode : locales) {
-                    Locale paises = new Locale("", countryCode);
-                    if (this.cmdInsertarPaises != null) {
-                        this.cmdInsertarPaises.setString(1, paises.getDisplayCountry());
-                        this.cmdInsertarPaises.setString(2, paises.getCountry());
-                        this.cmdInsertarPaises.execute();
-                    } else {
-                        System.out.println("No se pudieron insertar los paises");
-                    }
-                }
-            }
-
         } catch (Exception e) {
             System.out.println("Cant connect to db");
             System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Carga los paises en la BD y si ya están agregados, manda un mensaje en consola
+     * @throws SQLException
+     */
+    public void cargarPaises() throws SQLException {
+        ResultSet resultadoPaises = queryPaises.executeQuery();
+        if (resultadoPaises.next()) {
+            System.out.println("Paises cargados");
+        } else {
+            for (String countryCode : locales) {
+                Locale paises = new Locale("", countryCode);
+                if (this.cmdInsertarPaises != null) {
+                    this.cmdInsertarPaises.setString(1, paises.getDisplayCountry());
+                    this.cmdInsertarPaises.setString(2, paises.getCountry());
+                    this.cmdInsertarPaises.execute();
+                } else {
+                    System.out.println("No se pudieron insertar los paises");
+                }
+            }
         }
     }
 
@@ -1227,7 +1233,7 @@ public class Gestor {
      * @throws SQLException
      */
     public void actualizarAlbum(Album album) throws SQLException {
-        if(siExiste("select * from album where nombreAlbum = '"+album.getNombreAlbum()+"'")) {
+        if(siExiste("select * from album where nombreAlbum = '"+album.getNombreAlbum()+"'") == false) {
             creacionAlertas("Álbum no encontrado");
         } else {
             albumDAO.agregarCancionesBiblioteca(album);

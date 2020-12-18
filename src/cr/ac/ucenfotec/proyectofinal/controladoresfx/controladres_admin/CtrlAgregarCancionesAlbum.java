@@ -251,10 +251,13 @@ public class CtrlAgregarCancionesAlbum implements Initializable {
      * Esta función quita la canción seleccionada, en la tabla, del ArrayList de canciones local del controlador
      */
     public void quitarCancionArray() {
-        if(cancionSeleccionada != null ) {
-            cancionesSeleccionadas.remove(cancionSeleccionada);
-        } else {
+        if(tablaCanciones.getSelectionModel().selectedItemProperty() == null) {
             gestor.creacionAlertas("Debe seleccionar una canción para poder quitarla del álbum");
+        } else {
+            if(cancionSeleccionada != null) {
+                cancionesSeleccionadas.remove(cancionSeleccionada);
+                gestor.alertasInformacion("Canción", "Canción removida");
+            }
         }
     }
 
@@ -262,21 +265,29 @@ public class CtrlAgregarCancionesAlbum implements Initializable {
      * Esta función agrega la canción seleccionada, en la tabla al ArrayList de canciones local del controlador
      */
     public void agregarCancionArray() {
-        if(cancionSeleccionada.getAlbumCancion().getNombreAlbum().equals("Default")) {
-            //VERIFICA QUE LA CANCIÓN NO ESTE REPETIDA EN EL ARRAYLIST LOCAL
-            for(Cancion cancion : cancionesSeleccionadas) {
-                if(cancionesSeleccionadas.size() != 0) {
-                    if(cancion.getId() == cancionSeleccionada.getId()) {
-                        gestor.creacionAlertas("Canción ya añadida");
-                    } else {
-                        cancionesSeleccionadas.add(cancionSeleccionada);
+        if(tablaCanciones.getSelectionModel().selectedItemProperty() != null) {
+            System.out.println(cancionSeleccionada.toString());
+            if(cancionSeleccionada.getNombreCancion() != null) {
+                if(cancionSeleccionada.getAlbumCancion().getNombreAlbum().equals("Default")) {
+                    //VERIFICA QUE LA CANCIÓN NO ESTE REPETIDA EN EL ARRAYLIST LOCAL
+                    for(Cancion cancion : cancionesSeleccionadas) {
+                            if(cancion.getId() == cancionSeleccionada.getId()) {
+                                gestor.creacionAlertas("Canción ya añadida");
+                            } else {
+                                cancionesSeleccionadas.add(cancionSeleccionada);
+                                gestor.alertasInformacion("Canción", "Canción añadida");
+                            }
                     }
-                } else {
-                    cancionesSeleccionadas.add(cancionSeleccionada);
+                    if(cancionesSeleccionadas.size() == 0) {
+                        cancionesSeleccionadas.add(cancionSeleccionada);
+                        gestor.alertasInformacion("Canción", "Canción añadida");
+                    }
+                }else {
+                    gestor.creacionAlertas("No se puede agregar esta canción porque ya pertence a otro álbum o ya ha sido agregada");
                 }
+            } else {
+                gestor.creacionAlertas("Debe seleccionar una canción para poder añadirla al álbum");
             }
-        }else {
-            gestor.creacionAlertas("No se puede agregar esta canción porque ya pertence a otro álbum o ya ha sido agregada");
         }
     }
 
@@ -319,8 +330,6 @@ public class CtrlAgregarCancionesAlbum implements Initializable {
             if (newSelection != null) {
                 TablePosition pos = tablaCanciones.getSelectionModel().getSelectedCells().get(0);
                 int row = pos.getRow();
-                cancionSeleccionada = tablaCanciones.getItems().get(row);
-
                 cancionSeleccionada = tablaCanciones.getItems().get(row);
             }
         });
