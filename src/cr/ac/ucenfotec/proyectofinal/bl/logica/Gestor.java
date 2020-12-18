@@ -1409,7 +1409,7 @@ public class Gestor {
      * @throws IOException
      */
     public void escenarioActualizarAlbumes(ActionEvent event, Stage window) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/actualizarAlbumes.fxml"));
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/agregarCancionesAlbum.fxml"));
         Scene vistaLogin = new Scene(login);
 
         //Esta linea agarra la informacion del escenario (stage o window)

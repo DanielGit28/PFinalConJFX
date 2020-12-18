@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="anchorMenuAdmin" prefHeight="900.0" prefWidth="1400.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin.CtrlCrearAlbumes">
+<AnchorPane id="anchorMenuAdmin" prefHeight="900.0" prefWidth="1400.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladres_admin.CtrlAgregarCancionesAlbum">
     <children>
         <Button fx:id="cerrarSesion" layoutX="1320.0" layoutY="29.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión">
             <font>
@@ -24,9 +24,9 @@
                 <TableColumn fx:id="columnAlbum" editable="false" prefWidth="142.0" text="Álbum" />
                 <TableColumn fx:id="columnRecurso" editable="false" prefWidth="234.0" text="Recurso" />
             </columns></TableView>
-        <Text fill="WHITE" layoutX="771.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Álbumes">
+        <Text fill="WHITE" layoutX="768.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Álbumes">
             <font>
-                <Font size="24.0" />
+                <Font name="System Bold" size="24.0" />
             </font>
         </Text>
         <Pane prefHeight="1000.0" prefWidth="166.0" style="-fx-background-color: black;">
@@ -63,9 +63,9 @@
                 <Font size="14.0" />
             </font>
         </Button>
-        <Label layoutX="795.0" layoutY="113.0" text="Álbum" textFill="WHITE">
+        <Label layoutX="789.0" layoutY="107.0" text="Álbum" textFill="WHITE">
             <font>
-                <Font name="System Bold" size="14.0" />
+                <Font name="System Bold" size="18.0" />
             </font>
         </Label>
         <ComboBox fx:id="fieldAlbum" layoutX="739.0" layoutY="141.0" onAction="#cargarAlbumes" onMouseClicked="#cargarAlbumes" prefHeight="29.0" prefWidth="162.0" />
