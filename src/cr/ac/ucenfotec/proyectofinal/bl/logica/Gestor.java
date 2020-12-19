@@ -270,6 +270,19 @@ public class Gestor {
     }
 
     /**
+     * Esta función carga cualquier ComboBox que reciba como parámetro con tarjetas de un usuario en específico
+     * @param combo ComboBox que se desea cargar de tarjetas de crédito
+     * @throws SQLException
+     */
+    public void cargarTarjetasComboBox(ComboBox<Integer> combo, int idUsuario) throws SQLException {
+        Statement queryTarjetas = connection.createStatement();
+        ResultSet resultadoTarjetas = queryTarjetas.executeQuery("select * from metodo_pago where idClientePago = "+idUsuario);
+        while (resultadoTarjetas.next()) {
+            combo.getItems().add(resultadoTarjetas.getInt("numeroTarjeta"));
+        }
+    }
+
+    /**
      * Busca el pais según el nombre en la BD y devuelve el id del pais
      *
      * @param nombrePais nombre del país que se desea buscar
@@ -329,6 +342,29 @@ public class Gestor {
         }
 
         return pais;
+    }
+
+    /**
+     * Devuelve los datos de una tarjeta específica de un usuario de la BD
+     * @param idUsuario id del usuario con la tarjeta asociada
+     * @param numeroTarjeta número de la tarjeta buscada para el usuario
+     * @return
+     * @throws SQLException
+     */
+    public MetodoPago getMetodoPagoByIdUsuario(int idUsuario, int numeroTarjeta) throws SQLException {
+        MetodoPago tarjeta = new MetodoPago();
+        Statement queryTarjetas = connection.createStatement();
+        ResultSet resultadoTarjetas = queryTarjetas.executeQuery("select * from metodo_pago where idClientePago = "+idUsuario+", and numeroTarjeta = "+numeroTarjeta);
+        if (resultadoTarjetas.next()) {
+            tarjeta.setId(resultadoTarjetas.getInt("idMetodoPago"));
+            tarjeta.setNumeroTarjeta(resultadoTarjetas.getInt("numeroTarjeta"));
+            tarjeta.setCodigoSeguridad(resultadoTarjetas.getInt("codigoSeguridad"));
+            tarjeta.setUsuario(getUsuarioById(resultadoTarjetas.getInt("idClientePago")));
+        } else {
+            System.out.println("No se encontró ninguna tarjeta con ese número o con ese usuario asociado");
+        }
+
+        return tarjeta;
     }
 
     /**
@@ -1241,6 +1277,34 @@ public class Gestor {
         return nuevo;
     }
 
+
+    public UsuarioFinal getUsuarioById(int idUsuario) throws SQLException {
+        Statement queryUsuario = connection.createStatement();
+        ResultSet resultado = queryUsuario.executeQuery("select * from usuario_final where idusuariofinal = "+idUsuario);
+        UsuarioFinal nuevo = new UsuarioFinal();
+        ArrayList<Cancion> canciones = new ArrayList<>();
+        ArrayList<ListaReproduccion> listasReproduccion = new ArrayList<>();
+        if (resultado.next()) {
+            nuevo.setAvatarUsuario(resultado.getString("avatar"));
+            nuevo.setNombre(resultado.getString("nombre"));
+            nuevo.setApellidosUsuario(resultado.getString("apellidos"));
+            nuevo.setCorreoUsuario(resultado.getString("correo"));
+            nuevo.setContrasennaUsuario(resultado.getString("contrasenna"));
+            nuevo.setFechaNacimientoUsuario(resultado.getDate("fechaNacimiento").toLocalDate());
+            nuevo.setPaisProcedenciaUsuario(getPaisById(resultado.getInt("idPais")));
+            nuevo.setIdentificacionUsuario(resultado.getString("identificacion"));
+            nuevo.setNombreUsuario(resultado.getString("nombreUsuario"));
+            if(resultado.getInt("otp") == 0 || String.valueOf(resultado.getInt("otp")) == null ) {
+                nuevo.setOtp(0);
+            } else {
+                nuevo.setOtp(resultado.getInt("otp"));
+            }
+
+        }
+
+        return nuevo;
+    }
+
     /**
      * Guarda los datos del compositor en la base de datos
      * @param nombre nombre del compositor
@@ -1633,12 +1697,12 @@ public class Gestor {
     }
 
     /**
-     * Este método carga el escenario de artistas
-     * @param event evento que se genera cuando se aprieta el botón de artistas
+     * Este método carga el escenario de métodos de pago del usuario
+     * @param event evento que se genera cuando se aprieta el botón de métodos de pago
      * @throws IOException
      */
-    public void aescenarioArtistas(ActionEvent event, Stage window) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/menuAdminArtistas.fxml"));
+    public void escenarioMetodosPago(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/metodosPago.fxml"));
         Scene vistaLogin = new Scene(login);
 
         //Esta linea agarra la informacion del escenario (stage o window)

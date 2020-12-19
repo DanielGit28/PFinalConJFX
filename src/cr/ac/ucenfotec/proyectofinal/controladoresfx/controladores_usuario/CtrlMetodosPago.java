@@ -1,6 +1,6 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario;
 
-import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.MetodoPago;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioFinal;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioHolder;
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
@@ -11,20 +11,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -34,7 +29,7 @@ import java.util.ResourceBundle;
  * @version 1.1
  */
 
-public class CtrlMenuUsuario implements Initializable {
+public class CtrlMetodosPago implements Initializable {
     Gestor gestor = new Gestor();
 
     Scene escenaRegistro;
@@ -49,94 +44,50 @@ public class CtrlMenuUsuario implements Initializable {
     private Button btnListaReproduccion;
 
     @FXML
-    private ComboBox<String> lblPais;
+    private TextField fieldNumeroTarjetaRegistrar;
 
     @FXML
     private Button btnCanciones;
 
     @FXML
-    private TextField lblNombre;
+    private Button bntMetodosPago;
 
     @FXML
-    private TextField lblNombreUsuario;
+    private PasswordField fieldCodigoSeguridad;
+
+    @FXML
+    private Button btnRegistrarTarjeta;
 
     @FXML
     private Button btnSubirCancion;
 
     @FXML
+    private DatePicker fieldFechaVenc;
+
+    @FXML
     private Button btnAlbum;
 
     @FXML
-    private ImageView ctnAvatar;
-
-    @FXML
-    private TextField lblCorreo;
-
-    @FXML
-    private Button btnSeleccionar;
+    private DatePicker fieldFechaVencRegistrar;
 
     @FXML
     private Button btnInicio;
 
     @FXML
-    private TextField lblIdentificacion;
-
-    @FXML
     private Button btnComprarCancion;
 
     @FXML
-    private DatePicker lblFechaNac;
+    private Button btnEliminarTarjeta;
 
     @FXML
-    private TextField lblApellidos;
+    private TextField fieldNumeroTarjeta;
 
     @FXML
-    private Button btnActualizar;
-
-    @FXML
-    private Button bntMetodosPago;
+    private ComboBox<Integer> fieldTarjeta;
 
 
     UsuarioFinal usuario;
 
-    /**
-     *
-     * @param actionEvent abre la escena del registro del administrador
-     */
-    /*
-    public void abrirEscenaRegistro(ActionEvent actionEvent) throws SQLException {
-        Stage stageRegistro = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-        stageRegistro.setScene(escenaRegistro);
-    }*/
-
-    /**
-     * Carga la imagen del avatar
-     */
-    public void cargarImagen() {
-        btnSeleccionar.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Buscar Imagen");
-
-            // Agregar filtros para facilitar la busqueda
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("All Images", "*.*"),
-                    new FileChooser.ExtensionFilter("JPG", "*.jpg"),
-                    new FileChooser.ExtensionFilter("PNG", "*.png")
-            );
-
-            // Obtener la imagen seleccionada
-            File imgFile = fileChooser.showOpenDialog(window);
-
-            // Mostar la imagen
-            if (imgFile != null) {
-                Image image = new Image("file:" + imgFile.getAbsolutePath());
-                ctnAvatar.setImage(image);
-                pathImg = String.valueOf(imgFile);
-                System.out.println(pathImg);
-                //System.out.println("DIR "+pathImg);
-            }
-        });
-    }
 
     /**
      * Este método carga el escenario de canciones
@@ -207,61 +158,24 @@ public class CtrlMenuUsuario implements Initializable {
         window.show();
     }
 
-    /**
-     *      * Carga los labels de la cuenta del admin con los datos de la base de datos
-     * @throws SQLException
-     */
-    public void cargarFields(){
-        if(usuario == null) {
-            System.out.println("Usuario vacío");
-        } else {
-            String avatar = usuario.getAvatarUsuario();
-            //System.out.println(avatar + ", avatar");
-            File file = new File(avatar);
-            Image image = new Image(file.toURI().toString());
-            //Image image = new Image("file:" + avatar);
-            ctnAvatar.setImage(image);
-            lblNombre.setText(usuario.getNombre());
-            lblApellidos.setText(usuario.getApellidosUsuario());
-            lblCorreo.setText(usuario.getCorreoUsuario());
-            lblNombreUsuario.setText(usuario.getNombreUsuario());
-            lblFechaNac.setValue(usuario.getFechaNacimientoUsuario());
-            lblIdentificacion.setText(usuario.getIdentificacionUsuario());
-            lblPais.setValue(usuario.getPaisProcedenciaUsuario().getNombrePais());
-        }
-
-    }
 
     /**
      * Esta función carga los paises de la BD en el ComboBox paisNacimiento
      * @throws SQLException
      */
-    public void cargarPaises() throws SQLException {
-        if(lblPais.getItems().size() == 0) {
-            gestor.cargarPaisesComboBox(lblPais);
+    public void cargarTarjetas() throws SQLException {
+        if(fieldTarjeta.getItems().size() == 0) {
+            gestor.cargarTarjetasComboBox(fieldTarjeta, usuario.getId());
+            cargarDatosTarjeta(usuario.getId(), fieldTarjeta.getValue());
         }
     }
 
-    /**
-     * Actualiza los datos del usuario según los campos de texto
-     * @throws SQLException
-     */
-    public void actualizarUsuario() throws SQLException {
-        String nombre = lblNombre.getText();
-        String apellidos = lblApellidos.getText();
-        LocalDate fechaNac = lblFechaNac.getValue();
-        String pais = lblPais.getValue();
-        String nombreUsuario = lblNombreUsuario.getText();
-
-        gestor.actualizarUsuario(usuario.getId(), pathImg,nombre,apellidos,fechaNac,nombreUsuario,pais);
-        //gestor.alertasInformacion("Actualización", "Usuario actualizado exitosamente");
+    public void cargarDatosTarjeta(int idUsuario, int numeroTarjeta) throws SQLException {
+        MetodoPago tarjeta = gestor.getMetodoPagoByIdUsuario(idUsuario, numeroTarjeta);
+        fieldNumeroTarjeta.setText(String.valueOf(tarjeta.getNumeroTarjeta()));
+        fieldFechaVenc.setValue(tarjeta.getFechaVencimiento());
     }
 
-
-    public void datosRecibidos(UsuarioFinal u) {
-        usuario = u;
-        System.out.println(u.toString());
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -274,6 +188,5 @@ public class CtrlMenuUsuario implements Initializable {
 
         //System.out.println("Usuario en menuUsuario "+usuario.toString());
 
-        cargarFields();
     }
 }
