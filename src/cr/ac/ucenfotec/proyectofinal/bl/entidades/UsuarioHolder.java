@@ -2,6 +2,7 @@ package cr.ac.ucenfotec.proyectofinal.bl.entidades;
 
 public class UsuarioHolder {
     private UsuarioFinal usuario;
+    public static UsuarioHolder INSTANCE;
 
     public UsuarioFinal getUsuario() {
         return usuario;
@@ -12,9 +13,8 @@ public class UsuarioHolder {
     }
 
     public UsuarioHolder() {
+        UsuarioHolder.INSTANCE = this;
     }
-
-    private static final UsuarioHolder INSTANCE = new UsuarioHolder();
 
     public static UsuarioHolder getInstance() {
         return INSTANCE;

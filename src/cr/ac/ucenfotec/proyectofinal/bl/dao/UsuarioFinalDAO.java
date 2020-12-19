@@ -4,6 +4,7 @@ import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioFinal;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,4 +76,23 @@ public class UsuarioFinalDAO {
             System.out.println("No se pudo guardar el cliente");
         }
     }
+
+    /**
+     * Actualiza un usuario en la BD
+     * @param idUsuario id del usuario que se actualiza
+     * @param avatar path de la imagen de perfil del usuario
+     * @param nombre nombre del usuario
+     * @param apellidos apellidos del usuario
+     * @param fechaNac fecha de nacimiento del usuario
+     * @param nombreUsuario nombre del usuario en la aplicacion
+     * @param idPais país nacimiento del usuario
+     * @throws SQLException
+     */
+    public void actualizarDatosUsuario (int idUsuario,String avatar, String nombre, String apellidos, LocalDate fechaNac, String nombreUsuario, int idPais) throws SQLException {
+        Statement query = cnx.createStatement();
+        String path = avatar.replace("\\", "\\\\");
+        //System.out.println(path+" avatar en dao");
+        query.executeUpdate("update usuario_final set avatar = '"+path+"', nombre = '"+nombre+"', apellidos = '"+apellidos+"', fechaNacimiento = '"+fechaNac+"', nombreUsuario = '"+nombreUsuario+"', idPais = "+idPais+"  where idusuariofinal = "+idUsuario);
+    }
+
 }

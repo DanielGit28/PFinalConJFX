@@ -1,7 +1,10 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx;
 
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Usuario;
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioFinal;
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioHolder;
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
+import cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.CtrlMenuUsuario;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -80,7 +83,8 @@ public class CtrlLogin implements Initializable {
         boolean sesionAdmin = gestor.verificarSesionAdmin(correo,contrasenna);
         boolean sesionUsuario = gestor.verificarSesionUsuario(correo,contrasenna);
 
-        Usuario usuario = gestor.getUsuario();
+        UsuarioFinal usuario = gestor.getUsuario(correo, contrasenna);
+        System.out.println(usuario.toString());
         gestor.cargarDefaults();
         gestor.cargarPaises();
 
@@ -88,24 +92,20 @@ public class CtrlLogin implements Initializable {
             login = FXMLLoader.load(getClass().getResource("../vistas/vistas_admin/menuAdmin.fxml"));
         } else if(sesionUsuario == true) {
             login = FXMLLoader.load(getClass().getResource("../vistas/vistas_usuario/menuUsuario.fxml"));
+
+            //UsuarioHolder holder = UsuarioHolder.getInstance();
+
+            UsuarioHolder.INSTANCE.setUsuario(usuario);
+            //System.out.println(UsuarioHolder.INSTANCE.getUsuario());
         } else {
             gestor.creacionAlertas("Datos incorrectos. Correo y/o contraseña incorrectos");
         }
-        /*
-        if(gestor.verificarSesionUsuario(correo,contrasenna) == true) {
-            login = FXMLLoader.load(getClass().getResource("../vistas/menuUsuario.fxml"));
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-            alert.setTitle("Sesión");
-            alert.setContentText("Datos incorrectos. Correo y/o contraseña incorrectos");
-            alert.showAndWait();
-        }
-        */
+
         if(login != null) {
             Scene vistaLogin = new Scene(login);
-
             //Esta linea agarra la informacion del escenario (stage o window)
+
+
             window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(vistaLogin);
             window.show();
