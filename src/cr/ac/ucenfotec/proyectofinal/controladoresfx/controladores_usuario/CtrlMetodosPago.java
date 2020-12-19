@@ -182,7 +182,7 @@ public class CtrlMetodosPago implements Initializable {
         //datosRecibidos(usuario);
 
         //UsuarioHolder holder = UsuarioHolder.getInstance();
-        usuario = UsuarioHolder.getInstance().getUsuario();
+        //usuario = UsuarioHolder.getInstance().getUsuario();
 
         //System.out.println(usuario.toString());
 

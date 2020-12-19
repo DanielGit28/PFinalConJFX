@@ -3,11 +3,13 @@ package cr.ac.ucenfotec.proyectofinal.bl.logica;
 import cr.ac.ucenfotec.proyectofinal.PropertiesHandler;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.*;
 import cr.ac.ucenfotec.proyectofinal.bl.dao.*;
+import cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.CtrlMenuUsuario;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,9 +18,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,6 +37,8 @@ import java.util.Locale;
 public class Gestor {
     PropertiesHandler propertiesHandler = new PropertiesHandler();
     Connection connection;
+
+    public UsuarioFinal usuarioSesion;
 
     private PreparedStatement cmdInsertarPaises;
     private PreparedStatement queryPaises;
@@ -52,7 +58,7 @@ public class Gestor {
     private final String TEMPLATE_QRY_CANCIONES = "select * from cancion";
     private final String TEMPLATE_QRY_COMPOSITORES = "select * from compositor";
 
-    private String[] locales = Locale.getISOCountries();
+    private final String[] locales = Locale.getISOCountries();
     private ObservableList<String> listaPaises;
     private String[] listPais;
 
@@ -1012,11 +1018,7 @@ public class Gestor {
         String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,12}";
         String pattern2 = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,12}$";
 
-        if (contrasenna.matches(pattern2)) {
-            verificacion = true;
-        } else {
-            verificacion = false;
-        }
+        verificacion = contrasenna.matches(pattern2);
         return verificacion;
     }
 
@@ -1029,11 +1031,7 @@ public class Gestor {
         boolean verificacion = false;
         Statement stm = connection.createStatement();
         ResultSet rs = stm.executeQuery(query);
-        if (rs.next()) {
-            verificacion = true;
-        } else {
-            verificacion = false;
-        }
+        verificacion = rs.next();
         return verificacion;
     }
 
@@ -1435,6 +1433,60 @@ public class Gestor {
 
     }
 
+
+    public void setUsuarioSesion(UsuarioFinal usuario) {
+        usuarioSesion = usuario;
+        //System.out.println(usuarioSesion.toString()+" set");
+    }
+
+    public UsuarioFinal getUsuarioSesion() {
+        System.out.println(usuarioSesion.toString()+" get");
+        return usuarioSesion;
+    }
+    //--CAMBIO ESCENA LOGIN--
+
+    /**
+     * Cambia la escena del login a usuario o administrador, dependiendo los datos ingresados
+     * @param event evento que se genera cuandose aprieta el boton de login
+     * @param window escenario
+     * @param login FXML que se va a cargar
+     * @param usuario usuario de la sesion
+     * @throws IOException
+     */
+    public void manejoEscenasLogin(ActionEvent event, Stage window, Parent login,UsuarioFinal usuario, String path) throws IOException {
+        //System.out.println(usuario.toString()+ " x");
+        usuarioSesion = usuario;
+
+        URL url = getClass().getResource(path);
+        FXMLLoader loader = new FXMLLoader();
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        loader.setLocation(url);
+        loader.load();
+        Parent p = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(p));
+        stage.show();
+        CtrlMenuUsuario controller = loader.getController();
+        controller.setUsuarioSesion(usuario);
+/*
+        URL url = getClass().getResource(path);
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(url);
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+
+ */
+        //Parent root = loader.load();
+        //((CtrlMenuUsuario)loader.getController()).setUsuarioSesion(usuario);
+/*
+        Scene vistaLogin = new Scene(login);
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
+ */
+    }
+
+
+
     //--CARGA DE ESCENAS ADMIN--
     /**
      * Este método carga el escenario de canciones
@@ -1621,6 +1673,21 @@ public class Gestor {
 
     //--CARGA DE ESCENAS USUARIO--
     /**
+     * Este método carga el escenario de inicio de admin
+     * @param event evento que se genera cuando se aprieta el botón de inicio
+     * @throws IOException
+     */
+    public void escenarioInicioUsuario(ActionEvent event, Stage window) throws IOException {
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/menuUsuario.fxml"));
+        Scene vistaLogin = new Scene(login);
+
+        //Esta linea agarra la informacion del escenario (stage o window)
+        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(vistaLogin);
+        window.show();
+    }
+
+    /**
      * Este método carga el escenario de canciones del usuario
      * @param event evento que se genera cuando se aprieta el botón de canciones
      * @throws IOException
@@ -1702,7 +1769,7 @@ public class Gestor {
      * @throws IOException
      */
     public void escenarioMetodosPago(ActionEvent event, Stage window) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/metodosPago.fxml"));
+        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/metodosPago.fxml"));
         Scene vistaLogin = new Scene(login);
 
         //Esta linea agarra la informacion del escenario (stage o window)

@@ -40,7 +40,7 @@ public class CtrlMenuUsuario implements Initializable {
     Scene escenaRegistro;
     Stage window;
 
-    private String pathImg;
+    String pathImg;
 
     @FXML
     private Button cerrarSesion;
@@ -132,10 +132,19 @@ public class CtrlMenuUsuario implements Initializable {
                 Image image = new Image("file:" + imgFile.getAbsolutePath());
                 ctnAvatar.setImage(image);
                 pathImg = String.valueOf(imgFile);
-                System.out.println(pathImg);
+                //System.out.println(pathImg);
                 //System.out.println("DIR "+pathImg);
             }
         });
+    }
+
+    /**
+     * Este método carga el escenario de cuenta de usuario como inicio
+     * @param event evento que se genera cuando se aprieta el botón de inicio
+     * @throws IOException
+     */
+    public void escenaInicio(ActionEvent event) throws IOException {
+        gestor.escenarioInicioUsuario(event, window);
     }
 
     /**
@@ -212,10 +221,11 @@ public class CtrlMenuUsuario implements Initializable {
      * @throws SQLException
      */
     public void cargarFields(){
-        if(usuario == null) {
+        if(usuario == null || usuario.getNombre() == null) {
             System.out.println("Usuario vacío");
         } else {
             String avatar = usuario.getAvatarUsuario();
+            pathImg = avatar;
             //System.out.println(avatar + ", avatar");
             File file = new File(avatar);
             Image image = new Image(file.toURI().toString());
@@ -252,28 +262,28 @@ public class CtrlMenuUsuario implements Initializable {
         LocalDate fechaNac = lblFechaNac.getValue();
         String pais = lblPais.getValue();
         String nombreUsuario = lblNombreUsuario.getText();
-
+        System.out.println(pathImg);
         gestor.actualizarUsuario(usuario.getId(), pathImg,nombre,apellidos,fechaNac,nombreUsuario,pais);
         //gestor.alertasInformacion("Actualización", "Usuario actualizado exitosamente");
     }
 
-
-    public void datosRecibidos(UsuarioFinal u) {
-        usuario = u;
-        System.out.println(u.toString());
+    public void setUsuarioSesion(UsuarioFinal usuarioSes) {
+        this.usuario = usuarioSes;
+        cargarFields();
+        //System.out.println("setMenu "+usuarioSes.toString());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //datosRecibidos(usuario);
-
+        //usuario = gestor.getUsuarioSesion();
         //UsuarioHolder holder = UsuarioHolder.getInstance();
-        usuario = UsuarioHolder.getInstance().getUsuario();
+        //usuario = UsuarioHolder.getInstance().getUsuario();
 
         //System.out.println(usuario.toString());
 
         //System.out.println("Usuario en menuUsuario "+usuario.toString());
-
-        cargarFields();
+        System.out.println(UsuarioHolder.getInstance().currentUsuario().getNombre()+" instancia");
+        //cargarFields();
     }
 }

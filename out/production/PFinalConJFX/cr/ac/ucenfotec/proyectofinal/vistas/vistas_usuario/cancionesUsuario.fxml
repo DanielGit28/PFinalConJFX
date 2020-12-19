@@ -6,43 +6,38 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="anchorMenuUsuario" prefHeight="900.0" prefWidth="900.0" stylesheets="@../../estilos/estiloUsuario.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.CtrlMenuUsuario">
+<AnchorPane id="anchorMenuUsuario" prefHeight="1000.0" prefWidth="900.0" stylesheets="@../../estilos/estiloUsuario.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.CtrlMenuUsuario">
     <children>
         <Button fx:id="cerrarSesion" layoutX="779.0" layoutY="28.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión" />
         <Pane prefHeight="900.0" prefWidth="210.0" style="-fx-background-color: black;">
             <children>
-                <Button fx:id="btnInicio" mnemonicParsing="false" onAction="#escenaInicio" prefHeight="50.0" prefWidth="210.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
+                <Button fx:id="btnInicio" mnemonicParsing="false" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
                     <font>
                         <Font size="18.0" />
                     </font>
                 </Button>
-                <Button fx:id="btnSubirCancion" layoutX="4.0" layoutY="264.0" mnemonicParsing="false" onAction="#escenaSubirCanciones" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Subir canción" textFill="WHITE">
+                <Button fx:id="btnSubirCancion" layoutX="2.0" layoutY="339.0" mnemonicParsing="false" onAction="#escenaSubirCanciones" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Subir canción" textFill="WHITE">
                     <font>
                         <Font size="18.0" />
                     </font></Button>
-                <Button fx:id="btnComprarCancion" layoutX="3.0" layoutY="383.0" mnemonicParsing="false" onAction="#escenaComprarCancion" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Comprar canción" textFill="WHITE">
+                <Button fx:id="btnComprarCancion" layoutX="1.0" layoutY="458.0" mnemonicParsing="false" onAction="#escenaComprarCancion" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Comprar canción" textFill="WHITE">
                     <font>
                         <Font size="18.0" />
                     </font></Button>
-                <Button fx:id="btnListaReproduccion" layoutX="3.0" layoutY="507.0" mnemonicParsing="false" onAction="#escenaListasReproduccion" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Listas de reproducción" textFill="WHITE">
+                <Button fx:id="btnListaReproduccion" layoutX="1.0" layoutY="582.0" mnemonicParsing="false" onAction="#escenaListasReproduccion" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Listas de reproducción" textFill="WHITE">
                     <font>
                         <Font size="18.0" />
                     </font></Button>
-                <Button fx:id="btnCanciones" layoutX="3.0" layoutY="144.0" mnemonicParsing="false" onAction="#escenaCanciones" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Canciones" textFill="WHITE">
+                <Button fx:id="btnCanciones" layoutX="1.0" layoutY="219.0" mnemonicParsing="false" onAction="#escenaCanciones" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Canciones" textFill="WHITE">
                     <font>
                         <Font size="18.0" />
                     </font></Button>
-                <Button fx:id="btnAlbum" layoutX="3.0" layoutY="623.0" mnemonicParsing="false" onAction="#escenaAlbumes" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Álbumes" textFill="WHITE">
+                <Button fx:id="btnAlbum" layoutX="1.0" layoutY="698.0" mnemonicParsing="false" onAction="#escenaAlbumes" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Álbumes" textFill="WHITE">
                     <font>
                         <Font size="18.0" />
                     </font></Button>
-            <Button fx:id="bntMetodosPago" layoutX="4.0" layoutY="732.0" mnemonicParsing="false" onAction="#escenaMetodosPago" prefHeight="50.0" prefWidth="204.0" style="-fx-background-color: black;" text="Métodos de pago" textFill="WHITE">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Button>
             </children></Pane>
-        <Text fill="WHITE" layoutX="467.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cuenta">
+        <Text fill="WHITE" layoutX="441.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Canciones">
             <font>
                 <Font name="System Bold" size="36.0" />
             </font>
@@ -101,5 +96,19 @@
             <Font size="18.0" />
          </font>
       </Label>
+      <Pane layoutY="900.0" prefHeight="101.0" prefWidth="901.0" style="-fx-background-color: black;">
+         <children>
+            <Label fx:id="cancionReproduccion" layoutX="46.0" layoutY="6.0" prefHeight="30.0" prefWidth="83.0" text="Canción" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="artistaReproduccion" layoutX="54.0" layoutY="51.0" prefHeight="29.0" prefWidth="66.0" text="Canción" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
     </children>
 </AnchorPane>

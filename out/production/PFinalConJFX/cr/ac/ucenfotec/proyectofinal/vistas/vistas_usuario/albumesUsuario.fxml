@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="anchorMenuAdmin" prefHeight="900.0" prefWidth="1000.0" stylesheets="@../../estilos/estiloMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_admin.CtrlAdminAlbumes">
+   <children>
+      <Button fx:id="cerrarSesion" layoutX="847.0" layoutY="27.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <TableView fx:id="tablaAlbumes" editable="true" layoutX="166.0" layoutY="138.0" prefHeight="477.0" prefWidth="833.0" style="-fx-background-color: black;">
+         <columns>
+            <TableColumn fx:id="columnId" editable="false" minWidth="0.0" prefWidth="53.0" text="Id" />
+            <TableColumn fx:id="columnNombre" editable="false" minWidth="7.0" prefWidth="227.0" text="Nombre" />
+            <TableColumn fx:id="columnFechaLanz" editable="false" prefWidth="143.0" text="Fecha lanzamiento" />
+            <TableColumn fx:id="columnArtista" editable="false" prefWidth="156.0" text="Artista" />
+            <TableColumn fx:id="columnImagen" editable="false" prefWidth="253.0" text="Recurso imagen" />
+         </columns></TableView>
+      <Text fill="WHITE" layoutX="534.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Álbumes">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <Pane prefHeight="900.0" prefWidth="166.0" style="-fx-background-color: black;">
+         <children>
+            <Button fx:id="inicio" mnemonicParsing="false" onAction="#inicio" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Inicio" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnCanciones" layoutY="186.0" mnemonicParsing="false" onAction="#canciones" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Canciones" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+            <Button fx:id="btnCompositor" layoutX="4.0" layoutY="282.0" mnemonicParsing="false" onAction="#compositores" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Compositores" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+            <Button fx:id="btnArtista" layoutX="4.0" layoutY="400.0" mnemonicParsing="false" onAction="#artistas" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Artistas" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+            <Button fx:id="btnGenero" layoutX="4.0" layoutY="506.0" mnemonicParsing="false" onAction="#generos" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Generos" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+            <Button fx:id="btnAlbum" layoutX="4.0" layoutY="630.0" mnemonicParsing="false" onAction="#albumes" prefHeight="50.0" prefWidth="158.0" style="-fx-background-color: black;" text="Álbumes" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
+         </children></Pane>
+      <TextField fx:id="fieldBusqueda" layoutX="460.0" layoutY="80.0" prefHeight="29.0" prefWidth="246.0" promptText="Buscar" />
+      <Button fx:id="btnCrearAlbum" layoutX="486.0" layoutY="796.0" mnemonicParsing="false" onAction="#escenaCrearAlbum" prefHeight="50.0" prefWidth="189.0" text="Crear álbum">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnActualizar" layoutX="325.0" layoutY="707.0" mnemonicParsing="false" onAction="#actualizarAlbum" prefHeight="39.0" prefWidth="209.0" text="Agregar canciones a un álbum">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnEliminar" layoutX="626.0" layoutY="707.0" mnemonicParsing="false" onAction="#eliminarAlbum" prefHeight="39.0" prefWidth="209.0" text="Eliminar">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

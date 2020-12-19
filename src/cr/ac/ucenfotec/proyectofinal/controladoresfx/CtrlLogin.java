@@ -83,32 +83,33 @@ public class CtrlLogin implements Initializable {
         boolean sesionAdmin = gestor.verificarSesionAdmin(correo,contrasenna);
         boolean sesionUsuario = gestor.verificarSesionUsuario(correo,contrasenna);
 
-        UsuarioFinal usuario = gestor.getUsuario(correo, contrasenna);
-        System.out.println(usuario.toString());
+        UsuarioFinal usuarioSesion = gestor.getUsuario(correo, contrasenna);
+        //System.out.println(usuario.toString());
         gestor.cargarDefaults();
         gestor.cargarPaises();
-
+        String path = null;
         if(sesionAdmin == true) {
             login = FXMLLoader.load(getClass().getResource("../vistas/vistas_admin/menuAdmin.fxml"));
+            path = "../vistas/vistas_admin/menuAdmin.fxml";
         } else if(sesionUsuario == true) {
             login = FXMLLoader.load(getClass().getResource("../vistas/vistas_usuario/menuUsuario.fxml"));
-
+            path = "../../vistas/vistas_usuario/menuUsuario.fxml";
             //UsuarioHolder holder = UsuarioHolder.getInstance();
 
-            UsuarioHolder.INSTANCE.setUsuario(usuario);
+            UsuarioHolder.getInstance().currentUsuario().setNombre(usuarioSesion.getNombre());
             //System.out.println(UsuarioHolder.INSTANCE.getUsuario());
         } else {
             gestor.creacionAlertas("Datos incorrectos. Correo y/o contraseña incorrectos");
         }
 
         if(login != null) {
+            gestor.manejoEscenasLogin(event, window,login,usuarioSesion, path);
+            /*
             Scene vistaLogin = new Scene(login);
-            //Esta linea agarra la informacion del escenario (stage o window)
-
-
             window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(vistaLogin);
             window.show();
+             */
         }
     }
 
