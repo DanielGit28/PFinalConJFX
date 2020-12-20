@@ -262,27 +262,21 @@ public class CtrlMenuUsuario implements Initializable {
         LocalDate fechaNac = lblFechaNac.getValue();
         String pais = lblPais.getValue();
         String nombreUsuario = lblNombreUsuario.getText();
-        System.out.println(pathImg);
+        //System.out.println(pathImg);
         gestor.actualizarUsuario(usuario.getId(), pathImg,nombre,apellidos,fechaNac,nombreUsuario,pais);
         //gestor.alertasInformacion("Actualización", "Usuario actualizado exitosamente");
     }
 
     public void setUsuarioSesion(UsuarioFinal usuarioSes) {
         this.usuario = usuarioSes;
+        //System.out.println(usuario.toString());
         cargarFields();
-        //System.out.println("setMenu "+usuarioSes.toString());
+        
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //datosRecibidos(usuario);
-        //usuario = gestor.getUsuarioSesion();
-        //UsuarioHolder holder = UsuarioHolder.getInstance();
-        //usuario = UsuarioHolder.getInstance().getUsuario();
 
-        //System.out.println(usuario.toString());
-
-        //System.out.println("Usuario en menuUsuario "+usuario.toString());
         System.out.println(UsuarioHolder.getInstance().currentUsuario().getNombre()+" instancia");
         //cargarFields();
     }

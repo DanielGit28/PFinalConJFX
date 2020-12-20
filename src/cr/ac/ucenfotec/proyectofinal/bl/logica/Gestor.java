@@ -1255,6 +1255,7 @@ public class Gestor {
         ArrayList<Cancion> canciones = new ArrayList<>();
         ArrayList<ListaReproduccion> listasReproduccion = new ArrayList<>();
         if (resultado.next()) {
+            nuevo.setId(resultado.getInt("idusuariofinal"));
             nuevo.setAvatarUsuario(resultado.getString("avatar"));
             nuevo.setNombre(resultado.getString("nombre"));
             nuevo.setApellidosUsuario(resultado.getString("apellidos"));
@@ -1468,21 +1469,7 @@ public class Gestor {
         stage.show();
         CtrlMenuUsuario controller = loader.getController();
         controller.setUsuarioSesion(usuario);
-/*
-        URL url = getClass().getResource(path);
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(url);
-        loader.setBuilderFactory(new JavaFXBuilderFactory());
 
- */
-        //Parent root = loader.load();
-        //((CtrlMenuUsuario)loader.getController()).setUsuarioSesion(usuario);
-/*
-        Scene vistaLogin = new Scene(login);
-        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        window.setScene(vistaLogin);
-        window.show();
- */
     }
 
 

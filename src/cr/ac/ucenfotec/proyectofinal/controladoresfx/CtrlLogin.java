@@ -1,5 +1,7 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx;
 
+import com.mysql.cj.x.protobuf.MysqlxExpect;
+import com.mysql.cj.x.protobuf.MysqlxSession;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Usuario;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioFinal;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioHolder;
@@ -84,7 +86,7 @@ public class CtrlLogin implements Initializable {
         boolean sesionUsuario = gestor.verificarSesionUsuario(correo,contrasenna);
 
         UsuarioFinal usuarioSesion = gestor.getUsuario(correo, contrasenna);
-        //System.out.println(usuario.toString());
+        //System.out.println(usuarioSesion.toString());
         gestor.cargarDefaults();
         gestor.cargarPaises();
         String path = null;
@@ -104,6 +106,7 @@ public class CtrlLogin implements Initializable {
 
         if(login != null) {
             gestor.manejoEscenasLogin(event, window,login,usuarioSesion, path);
+            CloseAction(event);
             /*
             Scene vistaLogin = new Scene(login);
             window = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -112,6 +115,13 @@ public class CtrlLogin implements Initializable {
              */
         }
     }
+
+    @FXML
+    public void CloseAction(ActionEvent event) {
+        Stage stage = (Stage) btnIniciarSesion.getScene().getWindow();
+        stage.close();
+    }
+
 
 /*
     @FXML

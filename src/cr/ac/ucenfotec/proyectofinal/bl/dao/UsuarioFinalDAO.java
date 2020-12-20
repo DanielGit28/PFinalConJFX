@@ -63,7 +63,7 @@ public class UsuarioFinalDAO {
         if(this.cmdInsertar != null) {
             String pathImg = nuevo.getAvatarUsuario().replace("\\", "\\\\");
             this.cmdInsertar.setString(1,pathImg);
-            this.cmdInsertar.setString(2,nuevo.getNombreUsuario());
+            this.cmdInsertar.setString(2,nuevo.getNombre());
             this.cmdInsertar.setString(3, nuevo.getApellidosUsuario());
             this.cmdInsertar.setString(4, nuevo.getCorreoUsuario());
             this.cmdInsertar.setString(5, nuevo.getContrasennaUsuario());
@@ -92,6 +92,8 @@ public class UsuarioFinalDAO {
         Statement query = cnx.createStatement();
         String path = avatar.replace("\\", "\\\\");
         //System.out.println(path+" avatar en dao");
+        System.out.println(nombre);
+        System.out.println(idUsuario);
         query.executeUpdate("update usuario_final set avatar = '"+path+"', nombre = '"+nombre+"', apellidos = '"+apellidos+"', fechaNacimiento = '"+fechaNac+"', nombreUsuario = '"+nombreUsuario+"', idPais = "+idPais+"  where idusuariofinal = "+idUsuario);
     }
 
