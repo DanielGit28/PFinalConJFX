@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class MetodoPago {
     private int id;
-    private int numeroTarjeta;
+    private String numeroTarjeta;
     private LocalDate fechaVencimiento;
     private int codigoSeguridad;
     private UsuarioFinal usuario;
@@ -17,11 +17,11 @@ public class MetodoPago {
         this.id = id;
     }
 
-    public int getNumeroTarjeta() {
+    public String getNumeroTarjeta() {
         return numeroTarjeta;
     }
 
-    public void setNumeroTarjeta(int numeroTarjeta) {
+    public void setNumeroTarjeta(String numeroTarjeta) {
         this.numeroTarjeta = numeroTarjeta;
     }
 
@@ -51,7 +51,7 @@ public class MetodoPago {
 
     public MetodoPago(){}
 
-    public MetodoPago(int id, int numeroTarjeta, LocalDate fechaVencimiento, int codigoSeguridad, UsuarioFinal usuario) {
+    public MetodoPago(int id, String numeroTarjeta, LocalDate fechaVencimiento, int codigoSeguridad, UsuarioFinal usuario) {
         this.id = id;
         this.numeroTarjeta = numeroTarjeta;
         this.fechaVencimiento = fechaVencimiento;

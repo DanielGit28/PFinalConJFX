@@ -83,7 +83,7 @@ public class CtrlMetodosPago implements Initializable {
     private TextField fieldNumeroTarjeta;
 
     @FXML
-    private ComboBox<Integer> fieldTarjeta;
+    private ComboBox<String> fieldTarjeta;
 
 
     UsuarioFinal usuario;
@@ -97,6 +97,7 @@ public class CtrlMetodosPago implements Initializable {
      */
     public void escenaInicio(ActionEvent event) throws IOException {
         gestor.escenarioInicioUsuario(event, window, usuario);
+        CloseAction(event,btnInicio);
     }
 
     /**
@@ -204,22 +205,10 @@ public class CtrlMetodosPago implements Initializable {
     public void cargarTarjetas() throws SQLException {
         if(fieldTarjeta.getItems().size() == 0) {
             gestor.cargarTarjetasComboBox(fieldTarjeta, usuario.getId());
-            if(fieldTarjeta.getValue() != null) {
+            if(fieldTarjeta.getSelectionModel().getSelectedItem() != null) {
                 cargarDatosTarjeta(usuario.getId(), fieldTarjeta.getValue());
             }
-
         }
-    }
-
-    public void cargarDatosTarjeta(int idUsuario, int numeroTarjeta) throws SQLException {
-        MetodoPago tarjeta = gestor.getMetodoPagoByIdUsuario(idUsuario, numeroTarjeta);
-        if (tarjeta.getFechaVencimiento() == null) {
-            System.out.println("No hay tarjeta");
-        } else {
-            fieldNumeroTarjeta.setText(String.valueOf(tarjeta.getNumeroTarjeta()));
-            fieldFechaVenc.setValue(tarjeta.getFechaVencimiento());
-        }
-
     }
 
     /**
@@ -229,20 +218,21 @@ public class CtrlMetodosPago implements Initializable {
     public void registrarTarjeta() throws SQLException {
         String tarjeta = fieldNumeroTarjetaRegistrar.getText();
         String codigo = fieldCodigoSeguridad.getText();
-        //System.out.println(tarjeta+", "+codigo);
-        //System.out.println(usuario.toString());
-        int numTarjeta = 0;
-        int ccv = 0;
-        try {
-            numTarjeta = Integer.parseInt(tarjeta);
-            ccv = Integer.parseInt(codigo);
-        }catch (NumberFormatException e){
-            System.out.println("No se puede convertir la tarjeta a número");
-        }
-        System.out.println(numTarjeta+", "+ccv);
+
         if(fieldNumeroTarjetaRegistrar != null && fieldFechaVencRegistrar != null && fieldCodigoSeguridad != null) {
-            gestor.registrarMetodoPago(usuario.getId(), numTarjeta, fieldFechaVencRegistrar.getValue(), ccv);
+            gestor.registrarMetodoPago(usuario.getId(), tarjeta, fieldFechaVencRegistrar.getValue(), codigo);
         }
+    }
+
+    public void cargarDatosTarjeta(int idUsuario, String numeroTarjeta) throws SQLException {
+        MetodoPago tarjeta = gestor.getMetodoPagoByIdUsuario(idUsuario, numeroTarjeta);
+        if (tarjeta == null) {
+            System.out.println("No hay tarjeta");
+        } else {
+            fieldNumeroTarjeta.setText(String.valueOf(tarjeta.getNumeroTarjeta()));
+            fieldFechaVenc.setValue(tarjeta.getFechaVencimiento());
+        }
+
     }
 
     /**
@@ -259,6 +249,14 @@ public class CtrlMetodosPago implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        fieldTarjeta.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                try {
+                    cargarDatosTarjeta(usuario.getId(), fieldTarjeta.getValue());
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        });
     }
 }

@@ -36,7 +36,7 @@ public class MetodoPagoDAO {
      */
     public void eliminarMetodoPago(MetodoPago metodoPago) throws SQLException {
         Statement query = cnx.createStatement();
-        query.execute("delete from metodo_pago where numeroTarjeta = "+metodoPago.getNumeroTarjeta());
+        query.execute("delete from metodo_pago where numeroTarjeta = '"+metodoPago.getNumeroTarjeta()+"'");
     }
 
     /**
@@ -45,8 +45,9 @@ public class MetodoPagoDAO {
      * @throws SQLException
      */
     public void guardarMetodoPago(MetodoPago nuevo) throws SQLException{
+        //System.out.println(nuevo.getUsuario().toString());
         if(this.cmdInsertar != null) {
-            this.cmdInsertar.setInt(1,nuevo.getNumeroTarjeta());
+            this.cmdInsertar.setString(1,nuevo.getNumeroTarjeta());
             this.cmdInsertar.setDate(2, Date.valueOf(nuevo.getFechaVencimiento()));
             this.cmdInsertar.setInt(3,nuevo.getCodigoSeguridad());
             this.cmdInsertar.setInt(4,nuevo.getUsuario().getId());

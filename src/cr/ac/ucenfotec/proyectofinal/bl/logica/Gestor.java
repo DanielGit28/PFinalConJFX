@@ -3,8 +3,7 @@ package cr.ac.ucenfotec.proyectofinal.bl.logica;
 import cr.ac.ucenfotec.proyectofinal.PropertiesHandler;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.*;
 import cr.ac.ucenfotec.proyectofinal.bl.dao.*;
-import cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.CtrlMenuUsuario;
-import cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.CtrlMetodosPago;
+import cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -283,11 +282,11 @@ public class Gestor {
      * @param combo ComboBox que se desea cargar de tarjetas de crédito
      * @throws SQLException
      */
-    public void cargarTarjetasComboBox(ComboBox<Integer> combo, int idUsuario) throws SQLException {
+    public void cargarTarjetasComboBox(ComboBox<String> combo, int idUsuario) throws SQLException {
         Statement queryTarjetas = connection.createStatement();
         ResultSet resultadoTarjetas = queryTarjetas.executeQuery("select * from metodo_pago where idClientePago = "+idUsuario);
         while (resultadoTarjetas.next()) {
-            combo.getItems().add(resultadoTarjetas.getInt("numeroTarjeta"));
+            combo.getItems().add(resultadoTarjetas.getString("numeroTarjeta"));
         }
     }
 
@@ -360,19 +359,20 @@ public class Gestor {
      * @return
      * @throws SQLException
      */
-    public MetodoPago getMetodoPagoByIdUsuario(int idUsuario, int numeroTarjeta) throws SQLException {
+    public MetodoPago getMetodoPagoByIdUsuario(int idUsuario, String numeroTarjeta) throws SQLException {
         MetodoPago tarjeta = new MetodoPago();
         Statement queryTarjetas = connection.createStatement();
-        ResultSet resultadoTarjetas = queryTarjetas.executeQuery("select * from metodo_pago where idClientePago = "+idUsuario+", and numeroTarjeta = "+numeroTarjeta);
+        ResultSet resultadoTarjetas = queryTarjetas.executeQuery("select * from metodo_pago where idClientePago = "+idUsuario+" and numeroTarjeta = '"+numeroTarjeta+"'");
         if (resultadoTarjetas.next()) {
             tarjeta.setId(resultadoTarjetas.getInt("idMetodoPago"));
-            tarjeta.setNumeroTarjeta(resultadoTarjetas.getInt("numeroTarjeta"));
+            tarjeta.setFechaVencimiento(resultadoTarjetas.getDate("fechaVencimiento").toLocalDate());
+            tarjeta.setNumeroTarjeta(resultadoTarjetas.getString("numeroTarjeta"));
             tarjeta.setCodigoSeguridad(resultadoTarjetas.getInt("codigoSeguridad"));
             tarjeta.setUsuario(getUsuarioById(resultadoTarjetas.getInt("idClientePago")));
         } else {
             System.out.println("No se encontró ninguna tarjeta con ese número o con ese usuario asociado");
         }
-
+        //System.out.println(tarjeta.toString());
         return tarjeta;
     }
 
@@ -859,6 +859,11 @@ public class Gestor {
             }else {
                 cancion.setCompositorCancion(getCompositorById(resultadoCancion.getInt("idCompositorCancion")));
             }
+            if(String.valueOf(resultadoCancion.getInt("precio")) == null ||  resultadoCancion.getInt("precio") == 0) {
+                cancion.setPrecioCancion(0);
+            }  else {
+                cancion.setPrecioCancion(resultadoCancion.getInt("precio"));
+            }
             cancion.setFechaLanzamientoCancion(resultadoCancion.getDate("fechaLanzamiento").toLocalDate());
             cancion.setGeneroCancion(getGeneroById(resultadoCancion.getInt("idGeneroCancion")));
             cancion.setCancionSimple(resultadoCancion.getInt("cancionSimple"));
@@ -1287,6 +1292,7 @@ public class Gestor {
         ArrayList<Cancion> canciones = new ArrayList<>();
         ArrayList<ListaReproduccion> listasReproduccion = new ArrayList<>();
         if (resultado.next()) {
+            nuevo.setId(resultado.getInt("idusuariofinal"));
             nuevo.setAvatarUsuario(resultado.getString("avatar"));
             nuevo.setNombre(resultado.getString("nombre"));
             nuevo.setApellidosUsuario(resultado.getString("apellidos"));
@@ -1391,6 +1397,57 @@ public class Gestor {
     }
 
     /**
+     * Guarda la canción comprada del usuario, en su propia biblioteca de canciones
+     * @param usuario usuario que compró la canción
+     * @param cancion Objeto Cancion comprado
+     */
+    public void guardarCancionUsuarioBiblioteca(UsuarioFinal usuario,Cancion cancion) {
+        try {
+            cancionDAO.guardarCancionBiblioteca(usuario,cancion);
+            alertasInformacion("Canción","Canción comprada exitosamente");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Guarda una canción en la BD
+     * @param idUsuario id del usuario en que se va a guardar la cancion
+     * @param nombre nombre de la canción
+     * @param artista artista de la canción si es el caso
+     * @param compositor compositor de la canción si es el caso
+     * @param fechaLanz fecha de lanzamiento de la canción
+     * @param genero género de la canción
+     * @param album álbum de la canción
+     * @param recurso dirección del archivo de audio
+     * @throws SQLException
+     */
+    public void guardarCancionUsuario(int idUsuario,String nombre,String artista, String compositor,LocalDate fechaLanz, String genero,String album,String recurso) throws SQLException {
+        Artista artis = getArtista(artista);
+        Compositor compos = getCompositor(compositor);
+        Genero gen = getGenero(genero);
+        Album albumCancion = getAlbum(album);
+        int cancionSimple = 0;
+        int cancionCompra = 1;
+
+        if(albumCancion.getNombreAlbum().equals("Default")) {
+            cancionSimple = 2;
+        } else {
+            cancionSimple = 1;
+        }
+
+        Cancion cancion = new Cancion(1,nombre,artis,compos,fechaLanz,gen,cancionSimple,cancionCompra,0,albumCancion, recurso);
+        if(siExiste("select * from cancion where nombreCancion = '"+nombre+"'") == false) {
+            cancionDAO.guardarCancionUsuario(idUsuario,cancion);
+            alertasInformacion("Canción", "Canción agregada exitosamente");
+        } else {
+            creacionAlertas("Canción ya existente");
+        }
+
+    }
+
+    /**
      * Guarda un género musical en la base de datos
      * @param nombre nombre del género
      * @param descripcion descripción del género
@@ -1445,12 +1502,13 @@ public class Gestor {
      * @param ccv codigo de seguridad de la tarjeta
      * @throws SQLException
      */
-    public void registrarMetodoPago(int idUsuario, int numeroTarjeta, LocalDate fechaVencimiento, int ccv) throws SQLException {
+    public void registrarMetodoPago(int idUsuario, String numeroTarjeta, LocalDate fechaVencimiento, String ccv) throws SQLException {
         MetodoPago metodo = new MetodoPago();
         metodo.setUsuario(getUsuarioById(idUsuario));
         metodo.setNumeroTarjeta(numeroTarjeta);
         metodo.setFechaVencimiento(fechaVencimiento);
-        metodo.setCodigoSeguridad(ccv);
+        metodo.setCodigoSeguridad(Integer.valueOf(ccv));
+        //System.out.println(metodo.toString());
         metodoPagoDAO.guardarMetodoPago(metodo);
         alertasInformacion("Método de pago", "Método de pago (tarjeta) guardado exitosamente");
     }
@@ -1461,7 +1519,7 @@ public class Gestor {
      * @param numeroTarjeta numero de la tarjeta que se eliminara
      * @throws SQLException
      */
-    public void eliminarTarjeta(int idUsuario, int numeroTarjeta) throws SQLException {
+    public void eliminarTarjeta(int idUsuario, String numeroTarjeta) throws SQLException {
         metodoPagoDAO.eliminarMetodoPago(getMetodoPagoByIdUsuario(idUsuario,numeroTarjeta));
         alertasInformacion("Método de pago", "Método de pago (tarjeta) eliminado exitosamente");
     }
@@ -1734,8 +1792,9 @@ public class Gestor {
         Stage stage = new Stage();
         stage.setScene(new Scene(p));
         stage.show();
-        CtrlMenuUsuario controller = loader.getController();
-        controller.setUsuarioSesion(usuario);
+        CtrlCanciones controller = loader.getController();
+        //controller.setUsuarioSesion(usuario);
+
         /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/cancionesUsuario.fxml"));
         Scene vistaLogin = new Scene(login);
@@ -1761,7 +1820,7 @@ public class Gestor {
         Stage stage = new Stage();
         stage.setScene(new Scene(p));
         stage.show();
-        CtrlMenuUsuario controller = loader.getController();
+        CtrlSubirCancion controller = loader.getController();
         controller.setUsuarioSesion(usuario);
         /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/subirCancion.fxml"));
@@ -1788,7 +1847,7 @@ public class Gestor {
         Stage stage = new Stage();
         stage.setScene(new Scene(p));
         stage.show();
-        CtrlMenuUsuario controller = loader.getController();
+        CtrlComprarCancion controller = loader.getController();
         controller.setUsuarioSesion(usuario);
         /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/comprarCancion.fxml"));

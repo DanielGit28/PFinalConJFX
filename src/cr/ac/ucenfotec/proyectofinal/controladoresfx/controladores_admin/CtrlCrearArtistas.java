@@ -90,7 +90,7 @@ public class CtrlCrearArtistas {
         String descripcion = areaDescripcion.getText();
         if(nombre != null && apellidos != null && pais != null && fechaNac != null && nomArtistico != null && generoMusical != null && descripcion != null) {
             gestor.guardarArtista(nombre,apellidos,nomArtistico,fechaNac,fechaFa,pais,generoMusical,descripcion);
-            gestor.alertasInformacion("Artista","Artista registrado con éxito");
+            //gestor.alertasInformacion("Artista","Artista registrado con éxito");
         } else {
             gestor.creacionAlertas("Debe rellenar todos los campos menos el de fallecimiento, si fuera el caso");
         }

@@ -65,7 +65,7 @@ public class CtrlCrearGeneros {
         String descripcion = areaDescripcion.getText();
         if(nombre != null && descripcion != null ) {
             gestor.guardarGenero(nombre, descripcion);
-            gestor.alertasInformacion("Género","Género registrado con éxito");
+            //gestor.alertasInformacion("Género","Género registrado con éxito");
         } else {
             gestor.creacionAlertas("Debe rellenar todos los campos");
         }

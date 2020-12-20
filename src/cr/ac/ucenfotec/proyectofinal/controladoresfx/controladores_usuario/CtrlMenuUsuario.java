@@ -147,6 +147,7 @@ public class CtrlMenuUsuario implements Initializable {
      */
     public void escenaInicio(ActionEvent event) throws IOException {
         gestor.escenarioInicioUsuario(event, window, usuario);
+        CloseAction(event, btnInicio);
     }
 
     /**

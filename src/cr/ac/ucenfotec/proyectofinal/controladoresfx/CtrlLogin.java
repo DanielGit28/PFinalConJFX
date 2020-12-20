@@ -93,9 +93,15 @@ public class CtrlLogin implements Initializable {
         if(sesionAdmin == true) {
             login = FXMLLoader.load(getClass().getResource("../vistas/vistas_admin/menuAdmin.fxml"));
             path = "../vistas/vistas_admin/menuAdmin.fxml";
+            Scene vistaLogin = new Scene(login);
+            window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            window.setScene(vistaLogin);
+            window.show();
         } else if(sesionUsuario == true) {
             login = FXMLLoader.load(getClass().getResource("../vistas/vistas_usuario/menuUsuario.fxml"));
             path = "../../vistas/vistas_usuario/menuUsuario.fxml";
+            gestor.manejoEscenasLogin(event, window,login,usuarioSesion, path);
+            CloseAction(event);
             //UsuarioHolder holder = UsuarioHolder.getInstance();
 
             UsuarioHolder.getInstance().currentUsuario().setNombre(usuarioSesion.getNombre());
@@ -104,16 +110,6 @@ public class CtrlLogin implements Initializable {
             gestor.creacionAlertas("Datos incorrectos. Correo y/o contraseña incorrectos");
         }
 
-        if(login != null) {
-            gestor.manejoEscenasLogin(event, window,login,usuarioSesion, path);
-            CloseAction(event);
-            /*
-            Scene vistaLogin = new Scene(login);
-            window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-            window.setScene(vistaLogin);
-            window.show();
-             */
-        }
     }
 
     @FXML
