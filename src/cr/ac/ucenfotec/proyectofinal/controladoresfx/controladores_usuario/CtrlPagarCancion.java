@@ -112,7 +112,7 @@ public class CtrlPagarCancion implements Initializable {
      * Compra la canción seleccionada y la guarda en la biblioteca del usuario respectivo
      * @param event evento del botón
      */
-    public void comprarCancion(ActionEvent event) {
+    public void comprarCancion(ActionEvent event) throws SQLException {
         if(fieldTarjeta.getValue() == null) {
             gestor.creacionAlertas("Debe seleccionar una tarjeta para pagar primero");
         } else {

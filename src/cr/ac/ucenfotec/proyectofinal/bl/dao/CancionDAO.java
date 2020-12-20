@@ -147,6 +147,7 @@ public class CancionDAO {
         Statement query = cnx.createStatement();
         Statement queryBibliotecaAlbum = cnx.createStatement();
         ResultSet resultado = query.executeQuery("select * from cancion where idCancion = "+cancion.getId());
+
         if(resultado.next()) {
             queryBibliotecaAlbum.execute("insert into biblioteca_canciones_usuario (idUsuarioBiblioteca,idCancionBiblioteca) values ("+usuario.getId()+","+resultado.getInt("idCancion")+")") ;
         } else {

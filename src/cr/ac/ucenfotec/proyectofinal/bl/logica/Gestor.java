@@ -1401,13 +1401,20 @@ public class Gestor {
      * @param usuario usuario que compró la canción
      * @param cancion Objeto Cancion comprado
      */
-    public void guardarCancionUsuarioBiblioteca(UsuarioFinal usuario,Cancion cancion) {
-        try {
-            cancionDAO.guardarCancionBiblioteca(usuario,cancion);
-            alertasInformacion("Canción","Canción comprada exitosamente");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+    public void guardarCancionUsuarioBiblioteca(UsuarioFinal usuario,Cancion cancion) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet resultado = query.executeQuery("select * from biblioteca_canciones_usuario where idUsuarioBiblioteca = "+usuario.getId()+" and idCancionBiblioteca = "+cancion.getId());
+        if(resultado.next()) {
+            creacionAlertas("La canción ya ha sido comprada");
+        } else {
+            try {
+                cancionDAO.guardarCancionBiblioteca(usuario,cancion);
+                alertasInformacion("Canción","Canción comprada exitosamente");
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
+
 
     }
 
