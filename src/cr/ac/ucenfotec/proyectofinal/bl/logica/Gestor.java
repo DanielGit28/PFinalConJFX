@@ -4,6 +4,7 @@ import cr.ac.ucenfotec.proyectofinal.PropertiesHandler;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.*;
 import cr.ac.ucenfotec.proyectofinal.bl.dao.*;
 import cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.CtrlMenuUsuario;
+import cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.CtrlMetodosPago;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -70,6 +71,7 @@ public class Gestor {
     GeneroDAO generoDAO;
     ListaReproduccionDAO listaReproduccionDAO;
     UsuarioFinalDAO usuarioFinalDAO;
+    MetodoPagoDAO metodoPagoDAO;
 
     //VARIABLES QUE PROXIMAMENTE SE ELIMINARAN
     Admin administrador = new Admin();
@@ -97,6 +99,7 @@ public class Gestor {
             this.generoDAO = new GeneroDAO(this.connection);
             this.listaReproduccionDAO = new ListaReproduccionDAO(this.connection);
             this.usuarioFinalDAO = new UsuarioFinalDAO(this.connection);
+            this.metodoPagoDAO = new MetodoPagoDAO(this.connection);
 
             //--ESTA SECCION CARGA LOS PAISES EN LA BASE DE DATOS CUANDO SE INICIALICE EL CONSTRUCTOR DEL GESTOR--
             this.cmdInsertarPaises = connection.prepareStatement(TEMPLATE_CMD_INSERTAR);
@@ -1434,6 +1437,35 @@ public class Gestor {
 
     }
 
+    /**
+     * Registra un método de pago de la BD
+     * @param idUsuario id del usuario de la tarjeta que se guarda
+     * @param numeroTarjeta numero de la tarjeta que se guarda
+     * @param fechaVencimiento fecha de vencimiento de la tarjeta
+     * @param ccv codigo de seguridad de la tarjeta
+     * @throws SQLException
+     */
+    public void registrarMetodoPago(int idUsuario, int numeroTarjeta, LocalDate fechaVencimiento, int ccv) throws SQLException {
+        MetodoPago metodo = new MetodoPago();
+        metodo.setUsuario(getUsuarioById(idUsuario));
+        metodo.setNumeroTarjeta(numeroTarjeta);
+        metodo.setFechaVencimiento(fechaVencimiento);
+        metodo.setCodigoSeguridad(ccv);
+        metodoPagoDAO.guardarMetodoPago(metodo);
+        alertasInformacion("Método de pago", "Método de pago (tarjeta) guardado exitosamente");
+    }
+
+    /**
+     * Elimina un método de pago de la BD
+     * @param idUsuario id del usuario de la tarjeta
+     * @param numeroTarjeta numero de la tarjeta que se eliminara
+     * @throws SQLException
+     */
+    public void eliminarTarjeta(int idUsuario, int numeroTarjeta) throws SQLException {
+        metodoPagoDAO.eliminarMetodoPago(getMetodoPagoByIdUsuario(idUsuario,numeroTarjeta));
+        alertasInformacion("Método de pago", "Método de pago (tarjeta) eliminado exitosamente");
+    }
+
 
     public void setUsuarioSesion(UsuarioFinal usuario) {
         usuarioSesion = usuario;
@@ -1444,6 +1476,7 @@ public class Gestor {
         System.out.println(usuarioSesion.toString()+" get");
         return usuarioSesion;
     }
+
     //--CAMBIO ESCENA LOGIN--
 
     /**
@@ -1664,14 +1697,26 @@ public class Gestor {
      * @param event evento que se genera cuando se aprieta el botón de inicio
      * @throws IOException
      */
-    public void escenarioInicioUsuario(ActionEvent event, Stage window) throws IOException {
+    public void escenarioInicioUsuario(ActionEvent event, Stage window, UsuarioFinal usuario) throws IOException {
+        URL url = getClass().getResource("../../vistas/vistas_usuario/menuUsuario.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        loader.setLocation(url);
+        loader.load();
+        Parent p = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(p));
+        stage.show();
+        CtrlMenuUsuario controller = loader.getController();
+        controller.setUsuarioSesion(usuario);
+        /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/menuUsuario.fxml"));
         Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
         window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
         window.show();
+
+         */
     }
 
     /**
@@ -1679,14 +1724,26 @@ public class Gestor {
      * @param event evento que se genera cuando se aprieta el botón de canciones
      * @throws IOException
      */
-    public void escenarioCancionesUsuario(ActionEvent event, Stage window) throws IOException {
+    public void escenarioCancionesUsuario(ActionEvent event, Stage window,UsuarioFinal usuario) throws IOException {
+        URL url = getClass().getResource("../../vistas/vistas_usuario/cancionesUsuario.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        loader.setLocation(url);
+        loader.load();
+        Parent p = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(p));
+        stage.show();
+        CtrlMenuUsuario controller = loader.getController();
+        controller.setUsuarioSesion(usuario);
+        /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/cancionesUsuario.fxml"));
         Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
         window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
         window.show();
+
+         */
     }
 
     /**
@@ -1694,14 +1751,26 @@ public class Gestor {
      * @param event evento que se genera cuando se aprieta el botón de registrar canciones
      * @throws IOException
      */
-    public void escenarioSubirCancionesUsuario(ActionEvent event, Stage window) throws IOException {
+    public void escenarioSubirCancionesUsuario(ActionEvent event, Stage window, UsuarioFinal usuario) throws IOException {
+        URL url = getClass().getResource("../../vistas/vistas_usuario/subirCancion.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        loader.setLocation(url);
+        loader.load();
+        Parent p = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(p));
+        stage.show();
+        CtrlMenuUsuario controller = loader.getController();
+        controller.setUsuarioSesion(usuario);
+        /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/subirCancion.fxml"));
         Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
         window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
         window.show();
+
+         */
     }
 
     /**
@@ -1709,14 +1778,26 @@ public class Gestor {
      * @param event evento que se genera cuando se aprieta el botón de comprar canción
      * @throws IOException
      */
-    public void escenarioComprarCancionUsuario(ActionEvent event, Stage window) throws IOException {
+    public void escenarioComprarCancionUsuario(ActionEvent event, Stage window, UsuarioFinal usuario) throws IOException {
+        URL url = getClass().getResource("../../vistas/vistas_usuario/comprarCancion.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        loader.setLocation(url);
+        loader.load();
+        Parent p = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(p));
+        stage.show();
+        CtrlMenuUsuario controller = loader.getController();
+        controller.setUsuarioSesion(usuario);
+        /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/comprarCancion.fxml"));
         Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
         window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
         window.show();
+
+         */
     }
 
     /**
@@ -1724,14 +1805,26 @@ public class Gestor {
      * @param event evento que se genera cuando se aprieta el botón de listas de reproduccion
      * @throws IOException
      */
-    public void escenarioListasReproduccionUsuario(ActionEvent event, Stage window) throws IOException {
+    public void escenarioListasReproduccionUsuario(ActionEvent event, Stage window, UsuarioFinal usuario) throws IOException {
+        URL url = getClass().getResource("../../vistas/vistas_usuario/listasReproduccionUsuario.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        loader.setLocation(url);
+        loader.load();
+        Parent p = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(p));
+        stage.show();
+        CtrlMenuUsuario controller = loader.getController();
+        controller.setUsuarioSesion(usuario);
+        /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/listasReproduccionUsuario.fxml"));
         Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
         window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
         window.show();
+
+         */
     }
 
 
@@ -1740,14 +1833,26 @@ public class Gestor {
      * @param event evento que se genera cuando se aprieta el botón de álbumes
      * @throws IOException
      */
-    public void escenarioAlbumesUsuario(ActionEvent event, Stage window) throws IOException {
+    public void escenarioAlbumesUsuario(ActionEvent event, Stage window, UsuarioFinal usuario) throws IOException {
+        URL url = getClass().getResource("../../vistas/vistas_usuario/albumesUsuario.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        loader.setLocation(url);
+        loader.load();
+        Parent p = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(p));
+        stage.show();
+        CtrlMenuUsuario controller = loader.getController();
+        controller.setUsuarioSesion(usuario);
+        /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/albumesUsuario.fxml"));
         Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
         window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
         window.show();
+
+         */
     }
 
     /**
@@ -1755,14 +1860,26 @@ public class Gestor {
      * @param event evento que se genera cuando se aprieta el botón de métodos de pago
      * @throws IOException
      */
-    public void escenarioMetodosPago(ActionEvent event, Stage window) throws IOException {
+    public void escenarioMetodosPago(ActionEvent event, Stage window, UsuarioFinal usuario) throws IOException {
+        URL url = getClass().getResource("../../vistas/vistas_usuario/metodosPago.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        loader.setLocation(url);
+        loader.load();
+        Parent p = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(p));
+        stage.show();
+        CtrlMetodosPago controller = loader.getController();
+        controller.setUsuarioSesion(usuario);
+        /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/metodosPago.fxml"));
         Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
         window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
         window.show();
+
+         */
     }
 
     /**

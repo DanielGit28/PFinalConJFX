@@ -89,13 +89,24 @@ public class CtrlMetodosPago implements Initializable {
     UsuarioFinal usuario;
 
 
+
+    /**
+     * Este método carga el escenario de cuenta de usuario como inicio
+     * @param event evento que se genera cuando se aprieta el botón de inicio
+     * @throws IOException
+     */
+    public void escenaInicio(ActionEvent event) throws IOException {
+        gestor.escenarioInicioUsuario(event, window, usuario);
+    }
+
     /**
      * Este método carga el escenario de canciones
      * @param event evento que se genera cuando se aprieta el botón de canciones
      * @throws IOException
      */
     public void escenaCanciones(ActionEvent event) throws IOException {
-        gestor.escenarioCancionesUsuario(event, window);
+        gestor.escenarioCancionesUsuario(event, window, usuario);
+        CloseAction(event, btnCanciones);
     }
 
     /**
@@ -104,7 +115,8 @@ public class CtrlMetodosPago implements Initializable {
      * @throws IOException
      */
     public void escenaSubirCanciones(ActionEvent event) throws IOException {
-        gestor.escenarioSubirCancionesUsuario(event, window);
+        gestor.escenarioSubirCancionesUsuario(event, window, usuario);
+        CloseAction(event, btnSubirCancion);
     }
 
     /**
@@ -113,7 +125,8 @@ public class CtrlMetodosPago implements Initializable {
      * @throws IOException
      */
     public void escenaComprarCancion(ActionEvent event) throws IOException {
-        gestor.escenarioComprarCancionUsuario(event, window);
+        gestor.escenarioComprarCancionUsuario(event, window, usuario);
+        CloseAction(event, btnComprarCancion);
     }
 
     /**
@@ -122,7 +135,8 @@ public class CtrlMetodosPago implements Initializable {
      * @throws IOException
      */
     public void escenaListasReproduccion(ActionEvent event) throws IOException {
-        gestor.escenarioListasReproduccionUsuario(event,window);
+        gestor.escenarioListasReproduccionUsuario(event,window,usuario);
+        CloseAction(event, btnListaReproduccion);
     }
 
     /**
@@ -131,7 +145,8 @@ public class CtrlMetodosPago implements Initializable {
      * @throws IOException
      */
     public void escenaAlbumes(ActionEvent event) throws IOException {
-        gestor.escenarioAlbumesUsuario(event, window);
+        gestor.escenarioAlbumesUsuario(event, window, usuario);
+        CloseAction(event, btnAlbum);
     }
 
     /**
@@ -140,7 +155,8 @@ public class CtrlMetodosPago implements Initializable {
      * @throws IOException
      */
     public void escenaMetodosPago(ActionEvent event) throws IOException {
-        gestor.escenarioMetodosPago(event, window);
+        gestor.escenarioMetodosPago(event, window, usuario);
+        CloseAction(event, bntMetodosPago);
     }
 
     /**
@@ -158,6 +174,28 @@ public class CtrlMetodosPago implements Initializable {
         window.show();
     }
 
+    /**
+     * Cierra la venta previa cuando se inicializa el evento de la ventana nueva
+     * @param event evento que se inicializa para abrir otra ventana
+     * @param btn boton que genera el evento
+     */
+    @FXML
+    public void CloseAction(ActionEvent event, Button btn) {
+        Stage stage = (Stage) btn.getScene().getWindow();
+        stage.close();
+    }
+
+
+    /**
+     * Establece el usuario que el controlador va a utilizar para manejar la aplicación
+     * @param usuarioSes usuario que inicio sesión
+     */
+    public void setUsuarioSesion(UsuarioFinal usuarioSes) {
+        this.usuario = usuarioSes;
+        //System.out.println(usuario.toString());
+
+    }
+
 
     /**
      * Esta función carga los paises de la BD en el ComboBox paisNacimiento
@@ -166,27 +204,61 @@ public class CtrlMetodosPago implements Initializable {
     public void cargarTarjetas() throws SQLException {
         if(fieldTarjeta.getItems().size() == 0) {
             gestor.cargarTarjetasComboBox(fieldTarjeta, usuario.getId());
-            cargarDatosTarjeta(usuario.getId(), fieldTarjeta.getValue());
+            if(fieldTarjeta.getValue() != null) {
+                cargarDatosTarjeta(usuario.getId(), fieldTarjeta.getValue());
+            }
+
         }
     }
 
     public void cargarDatosTarjeta(int idUsuario, int numeroTarjeta) throws SQLException {
         MetodoPago tarjeta = gestor.getMetodoPagoByIdUsuario(idUsuario, numeroTarjeta);
-        fieldNumeroTarjeta.setText(String.valueOf(tarjeta.getNumeroTarjeta()));
-        fieldFechaVenc.setValue(tarjeta.getFechaVencimiento());
+        if (tarjeta.getFechaVencimiento() == null) {
+            System.out.println("No hay tarjeta");
+        } else {
+            fieldNumeroTarjeta.setText(String.valueOf(tarjeta.getNumeroTarjeta()));
+            fieldFechaVenc.setValue(tarjeta.getFechaVencimiento());
+        }
+
     }
 
+    /**
+     * Registra el método de pago en la BD
+     * @throws SQLException
+     */
+    public void registrarTarjeta() throws SQLException {
+        String tarjeta = fieldNumeroTarjetaRegistrar.getText();
+        String codigo = fieldCodigoSeguridad.getText();
+        //System.out.println(tarjeta+", "+codigo);
+        //System.out.println(usuario.toString());
+        int numTarjeta = 0;
+        int ccv = 0;
+        try {
+            numTarjeta = Integer.parseInt(tarjeta);
+            ccv = Integer.parseInt(codigo);
+        }catch (NumberFormatException e){
+            System.out.println("No se puede convertir la tarjeta a número");
+        }
+        System.out.println(numTarjeta+", "+ccv);
+        if(fieldNumeroTarjetaRegistrar != null && fieldFechaVencRegistrar != null && fieldCodigoSeguridad != null) {
+            gestor.registrarMetodoPago(usuario.getId(), numTarjeta, fieldFechaVencRegistrar.getValue(), ccv);
+        }
+    }
+
+    /**
+     * Elimina la tarjeta seleccionada
+     */
+    public void eliminarTarjeta() throws SQLException {
+        if(fieldTarjeta.getValue() != null) {
+            gestor.eliminarTarjeta(usuario.getId(), fieldTarjeta.getValue());
+        } else {
+            gestor.creacionAlertas("Debe seleccionar una tarjeta para eliminar");
+        }
+
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //datosRecibidos(usuario);
-
-        //UsuarioHolder holder = UsuarioHolder.getInstance();
-        //usuario = UsuarioHolder.getInstance().getUsuario();
-
-        //System.out.println(usuario.toString());
-
-        //System.out.println("Usuario en menuUsuario "+usuario.toString());
 
     }
 }

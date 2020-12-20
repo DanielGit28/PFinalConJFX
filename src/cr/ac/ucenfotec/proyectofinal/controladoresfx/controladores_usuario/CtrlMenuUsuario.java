@@ -1,5 +1,6 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario;
 
+import com.mysql.cj.x.protobuf.MysqlxExpect;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioFinal;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioHolder;
@@ -42,6 +43,7 @@ public class CtrlMenuUsuario implements Initializable {
 
     String pathImg;
 
+
     @FXML
     private Button cerrarSesion;
 
@@ -56,6 +58,9 @@ public class CtrlMenuUsuario implements Initializable {
 
     @FXML
     private TextField lblNombre;
+
+    @FXML
+    private Button bntMetodosPago;
 
     @FXML
     private TextField lblNombreUsuario;
@@ -92,9 +97,6 @@ public class CtrlMenuUsuario implements Initializable {
 
     @FXML
     private Button btnActualizar;
-
-    @FXML
-    private Button bntMetodosPago;
 
 
     UsuarioFinal usuario;
@@ -144,7 +146,7 @@ public class CtrlMenuUsuario implements Initializable {
      * @throws IOException
      */
     public void escenaInicio(ActionEvent event) throws IOException {
-        gestor.escenarioInicioUsuario(event, window);
+        gestor.escenarioInicioUsuario(event, window, usuario);
     }
 
     /**
@@ -153,7 +155,8 @@ public class CtrlMenuUsuario implements Initializable {
      * @throws IOException
      */
     public void escenaCanciones(ActionEvent event) throws IOException {
-        gestor.escenarioCancionesUsuario(event, window);
+        gestor.escenarioCancionesUsuario(event, window, usuario);
+        CloseAction(event, btnCanciones);
     }
 
     /**
@@ -162,7 +165,8 @@ public class CtrlMenuUsuario implements Initializable {
      * @throws IOException
      */
     public void escenaSubirCanciones(ActionEvent event) throws IOException {
-        gestor.escenarioSubirCancionesUsuario(event, window);
+        gestor.escenarioSubirCancionesUsuario(event, window, usuario);
+        CloseAction(event, btnSubirCancion);
     }
 
     /**
@@ -171,7 +175,8 @@ public class CtrlMenuUsuario implements Initializable {
      * @throws IOException
      */
     public void escenaComprarCancion(ActionEvent event) throws IOException {
-        gestor.escenarioComprarCancionUsuario(event, window);
+        gestor.escenarioComprarCancionUsuario(event, window, usuario);
+        CloseAction(event, btnComprarCancion);
     }
 
     /**
@@ -180,7 +185,8 @@ public class CtrlMenuUsuario implements Initializable {
      * @throws IOException
      */
     public void escenaListasReproduccion(ActionEvent event) throws IOException {
-        gestor.escenarioListasReproduccionUsuario(event,window);
+        gestor.escenarioListasReproduccionUsuario(event,window,usuario);
+        CloseAction(event, btnListaReproduccion);
     }
 
     /**
@@ -189,7 +195,8 @@ public class CtrlMenuUsuario implements Initializable {
      * @throws IOException
      */
     public void escenaAlbumes(ActionEvent event) throws IOException {
-        gestor.escenarioAlbumesUsuario(event, window);
+        gestor.escenarioAlbumesUsuario(event, window, usuario);
+        CloseAction(event, btnAlbum);
     }
 
     /**
@@ -198,7 +205,8 @@ public class CtrlMenuUsuario implements Initializable {
      * @throws IOException
      */
     public void escenaMetodosPago(ActionEvent event) throws IOException {
-        gestor.escenarioMetodosPago(event, window);
+        gestor.escenarioMetodosPago(event, window, usuario);
+        CloseAction(event, bntMetodosPago);
     }
 
     /**
@@ -214,6 +222,17 @@ public class CtrlMenuUsuario implements Initializable {
         window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(vistaLogin);
         window.show();
+    }
+
+    /**
+     * Cierra la venta previa cuando se inicializa el evento de la ventana nueva
+     * @param event evento que se inicializa para abrir otra ventana
+     * @param btn boton que genera el evento
+     */
+    @FXML
+    public void CloseAction(ActionEvent event, Button btn) {
+        Stage stage = (Stage) btn.getScene().getWindow();
+        stage.close();
     }
 
     /**
@@ -267,12 +286,17 @@ public class CtrlMenuUsuario implements Initializable {
         //gestor.alertasInformacion("Actualización", "Usuario actualizado exitosamente");
     }
 
+    /**
+     * Establece el usuario que el controlador va a utilizar para manejar la aplicación
+     * @param usuarioSes usuario que inicio sesión
+     */
     public void setUsuarioSesion(UsuarioFinal usuarioSes) {
         this.usuario = usuarioSes;
         //System.out.println(usuario.toString());
         cargarFields();
-        
+
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

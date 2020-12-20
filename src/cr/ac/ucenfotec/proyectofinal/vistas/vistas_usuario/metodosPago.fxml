@@ -63,7 +63,7 @@
                 <Font size="18.0" />
             </font>
         </Label>
-        <TextField fx:id="fieldNumeroTarjetaRegistrar" editable="false" layoutX="300.0" layoutY="568.0" prefHeight="29.0" prefWidth="173.0" />
+        <TextField fx:id="fieldNumeroTarjetaRegistrar" layoutX="300.0" layoutY="568.0" prefHeight="29.0" prefWidth="173.0" />
         <Button fx:id="btnRegistrarTarjeta" layoutX="463.0" layoutY="766.0" mnemonicParsing="false" onAction="#registrarTarjeta" prefHeight="37.0" prefWidth="125.0" text="Registrar tarjeta">
             <font>
                 <Font size="14.0" />
