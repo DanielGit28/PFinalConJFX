@@ -2044,8 +2044,8 @@ public class Gestor {
         Stage stage = new Stage();
         stage.setScene(new Scene(p));
         stage.show();
-        CtrlMenuUsuario controller = loader.getController();
-        controller.setUsuarioSesion(usuario);
+        //CtrlMenuUsuario controller = loader.getController();
+        //controller.setUsuarioSesion(usuario);
         /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/albumesUsuario.fxml"));
         Scene vistaLogin = new Scene(login);
@@ -2082,96 +2082,7 @@ public class Gestor {
 
          */
     }
-
-    /**
-     * Este método carga el escenario de agregar artistas
-     * @param event evento que se genera cuando se aprieta el botón de crear artista
-     * @throws IOException
-     */
-    public void aescenarioCrearArtistas(ActionEvent event, Stage window) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/crearArtistas.fxml"));
-        Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
-        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        window.setScene(vistaLogin);
-        window.show();
-    }
-
-    /**
-     * Este método carga el escenario de géneros
-     * @param event evento que se genera cuando se aprieta el botón de géneros
-     * @throws IOException
-     */
-    public void aescenarioGeneros(ActionEvent event, Stage window) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/menuAdminGeneros.fxml"));
-        Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
-        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        window.setScene(vistaLogin);
-        window.show();
-    }
-
-    /**
-     * Este método carga el escenario de crear géneros
-     * @param event evento que se genera cuando se aprieta el botón de registrar géneros
-     * @throws IOException
-     */
-    public void aescenarioCrearGeneros(ActionEvent event, Stage window) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/crearGeneros.fxml"));
-        Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
-        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        window.setScene(vistaLogin);
-        window.show();
-    }
-
-    /**
-     * Este método carga el escenario de álbumes
-     * @param event evento que se genera cuando se aprieta el botón de álbumes
-     * @throws IOException
-     */
-    public void aescenarioAlbumes(ActionEvent event, Stage window) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/menuAdminAlbumes.fxml"));
-        Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
-        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        window.setScene(vistaLogin);
-        window.show();
-    }
-
-    /**
-     * Este método carga el escenario de crear álbumes
-     * @param event evento que se genera cuando se aprieta el botón de crear álbumes
-     * @throws IOException
-     */
-    public void aescenarioCrearAlbumes(ActionEvent event, Stage window) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/crearAlbumes.fxml"));
-        Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
-        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        window.setScene(vistaLogin);
-        window.show();
-    }
-
-    /**
-     * Este método carga el escenario de actualizar álbumes
-     * @param event evento que se genera cuando se aprieta el botón de actualizar álbum
-     * @throws IOException
-     */
-    public void aescenarioActualizarAlbumes(ActionEvent event, Stage window) throws IOException {
-        Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_admin/agregarCancionesAlbum.fxml"));
-        Scene vistaLogin = new Scene(login);
-
-        //Esta linea agarra la informacion del escenario (stage o window)
-        window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        window.setScene(vistaLogin);
-        window.show();
-    }
+    
 
     //--FIN CARGA DE ESCENAS USUARIO--
 }
