@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -11,7 +12,7 @@
             <Font size="36.0" />
          </font>
       </Text>
-      <TextField fx:id="fiedlCorreo" layoutX="294.0" layoutY="220.0" prefHeight="38.0" prefWidth="210.0" promptText="Correo" style="-fx-background-radius: 5;" />
+      <TextField fx:id="fiedlCorreo" layoutX="300.0" layoutY="221.0" prefHeight="38.0" prefWidth="210.0" promptText="Correo" style="-fx-background-radius: 5;" />
       <TextField fx:id="fiedlContrasenna" layoutX="300.0" layoutY="346.0" prefHeight="38.0" prefWidth="210.0" promptText="Contraseña" style="-fx-background-radius: 5;" />
       <Button fx:id="btnIniciarSesion" layoutX="300.0" layoutY="434.0" mnemonicParsing="false" onAction="#cambiarEscenaLogin" prefHeight="29.0" prefWidth="210.0" style="-fx-background-radius: 10; -fx-background-color: #26a8d4;" text="Iniciar sesión" textFill="WHITE">
          <font>
@@ -19,7 +20,7 @@
          </font>
       </Button>
       <Button fx:id="inicio" layoutX="359.0" layoutY="511.0" mnemonicParsing="false" onAction="#cambiarEscena" text="Volver al inicio" />
-      <Label layoutX="300.0" layoutY="180.0" text="Correo">
+      <Label layoutX="300.0" layoutY="179.0" text="Correo">
          <font>
             <Font size="14.0" />
          </font>

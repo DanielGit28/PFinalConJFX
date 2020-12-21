@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * @author Daniel
- * @version 1.3
+ * @version 1.4
  */
 
 public class ListaReproduccion {
@@ -14,6 +14,7 @@ public class ListaReproduccion {
     private LocalDate fechaCreacionListaReproduccion;
     private String nombreListaReproduccion;
     private int calificacionReproduccion;
+    private UsuarioFinal autorLista;
 
     public int getId() {
         return id;
@@ -55,17 +56,26 @@ public class ListaReproduccion {
         this.calificacionReproduccion = calificacionReproduccion;
     }
 
+    public UsuarioFinal getAutorLista() {
+        return autorLista;
+    }
+
+    public void setAutorLista(UsuarioFinal autorLista) {
+        this.autorLista = autorLista;
+    }
+
     public ListaReproduccion(){}
 
     public ListaReproduccion(int id, ArrayList<Cancion> cancionesListaReproduccion,
                              LocalDate fechaCreacionListaReproduccion,
                              String nombreListaReproduccion,
-                             int calificacionReproduccion) {
+                             int calificacionReproduccion, UsuarioFinal usuario) {
         this.id = id;
         this.cancionesListaReproduccion = cancionesListaReproduccion;
         this.fechaCreacionListaReproduccion = fechaCreacionListaReproduccion;
         this.nombreListaReproduccion = nombreListaReproduccion;
         this.calificacionReproduccion = calificacionReproduccion;
+        this.autorLista = usuario;
     }
 
     /**
@@ -80,8 +90,12 @@ public class ListaReproduccion {
                 ", fechaCreacionListaReproduccion='" + fechaCreacionListaReproduccion + '\'' +
                 ", nombreListaReproduccion='" + nombreListaReproduccion + '\'' +
                 ", calificacionReproduccion='" + calificacionReproduccion + '\'' +
+                ", usuarioFinal='" + autorLista + '\'' +
                 '}';
     }
 
+    public String getNombreUsuario() {
+        return autorLista.getNombreUsuario();
+    }
 
 }

@@ -1,6 +1,8 @@
 package cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario;
 
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.Album;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Cancion;
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.ListaReproduccion;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.UsuarioFinal;
 import cr.ac.ucenfotec.proyectofinal.bl.logica.Gestor;
 import javafx.collections.transformation.FilteredList;
@@ -8,7 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,17 +21,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-
-import static java.lang.Integer.parseInt;
 
 /**
  * @author Daniel Zúñiga Rojas
  * @version 1.0
  */
 
-public class CtrlCanciones implements Initializable {
+public class CtrlCrearListaReproduccion implements Initializable {
 
     Gestor gestor = new Gestor();
 
@@ -48,6 +48,7 @@ public class CtrlCanciones implements Initializable {
 
     @FXML
     private TableColumn<Cancion, Integer> columnPrecio;
+
 
     @FXML
     private Button btnArtista;
@@ -80,6 +81,9 @@ public class CtrlCanciones implements Initializable {
     private TextField fieldBusqueda;
 
     @FXML
+    private TextField fieldNombreLista;
+
+    @FXML
     private TableColumn<Cancion, String> columnArtista;
 
     @FXML
@@ -100,9 +104,16 @@ public class CtrlCanciones implements Initializable {
     @FXML
     private Button bntMetodosPago;
 
+    @FXML
+    private Button bntAgregarCancion;
+
+    @FXML
+    private Button btnCrearLista;
 
     UsuarioFinal usuario;
     Cancion cancionSeleccionada;
+
+    ArrayList<Cancion> cancionesSeleccionadas = new ArrayList<>();
 
     private FilteredList<Cancion> cancionFilt;
 
@@ -261,10 +272,65 @@ public class CtrlCanciones implements Initializable {
         };
     }
 
-
-    public void reproducirCancion(){
-        gestor.alertasInformacion("Reproducción", "Canción reproduciendose (simulación)");
+    /**
+     * Esta función quita la canción seleccionada, en la tabla, del ArrayList de canciones local del controlador
+     */
+    public void quitarCancionArray() {
+        if(tablaCanciones.getSelectionModel().selectedItemProperty() == null) {
+            gestor.creacionAlertas("Debe seleccionar una canción para poder quitarla de la lista");
+        } else {
+            if(cancionSeleccionada != null) {
+                cancionesSeleccionadas.remove(cancionSeleccionada);
+                gestor.alertasInformacion("Canción", "Canción removida");
+            }
+        }
     }
+
+    /**
+     * Esta función agrega la canción seleccionada, en la tabla al ArrayList de canciones local del controlador
+     */
+    public void agregarCancionArray() {
+        if(tablaCanciones.getSelectionModel().selectedItemProperty() != null) {
+            System.out.println(cancionSeleccionada.toString());
+            if(cancionSeleccionada.getNombreCancion() != null) {
+                    //VERIFICA QUE LA CANCIÓN NO ESTE REPETIDA EN EL ARRAYLIST LOCAL
+                    for(Cancion cancion : cancionesSeleccionadas) {
+                        if(cancion.getId() == cancionSeleccionada.getId()) {
+                            gestor.creacionAlertas("Canción ya añadida");
+                        } else {
+                            cancionesSeleccionadas.add(cancionSeleccionada);
+                            gestor.alertasInformacion("Canción", "Canción añadida");
+                        }
+                    }
+                    if(cancionesSeleccionadas.size() == 0) {
+                        cancionesSeleccionadas.add(cancionSeleccionada);
+                        gestor.alertasInformacion("Canción", "Canción añadida");
+                    }
+                }
+            } else {
+                gestor.creacionAlertas("Debe seleccionar una canción para poder añadirla a la lista de reproducción");
+            }
+    }
+
+    /**
+     * Guarda la lista de reproducción en la BD
+     * @throws SQLException
+     */
+    public void finalizarCanciones() throws SQLException {
+        ListaReproduccion lista = new ListaReproduccion();
+        if(fieldNombreLista.getText() != null && cancionesSeleccionadas.size() > 0) {
+            lista.setNombreListaReproduccion(fieldNombreLista.getText());
+            lista.setFechaCreacionListaReproduccion(LocalDate.now());
+            lista.setCalificacionReproduccion(0);
+            lista.setAutorLista(gestor.getUsuarioById(usuario.getId()));
+            lista.setCancionesListaReproduccion(cancionesSeleccionadas);
+            gestor.guardarListaReproduccion(lista);
+        } else {
+            gestor.creacionAlertas("Debe seleccionar mínimo una canción y rellenar el espacio de nombre de lista");
+        }
+
+    }
+
 
 
     @Override

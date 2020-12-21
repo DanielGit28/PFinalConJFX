@@ -1,12 +1,10 @@
 package cr.ac.ucenfotec.proyectofinal.bl.dao;
 
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.Admin;
+import cr.ac.ucenfotec.proyectofinal.bl.entidades.Cancion;
 import cr.ac.ucenfotec.proyectofinal.bl.entidades.ListaReproduccion;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +16,27 @@ import java.util.List;
 public class ListaReproduccionDAO {
     Connection cnx;
 
+    private PreparedStatement cmdInsertar;
+    private PreparedStatement queryListaReproduccion;
+
+    private final String TEMPLATE_CMD_INSERTAR = "insert into lista_reproduccion_usuario (nombreLista,fechaCreacion,calificacion,idUsuarioLista)" +
+            " values (?,?,?,?)";
+    private final String TEMPLATE_QRY_LISTASREPRODUCCION = "select * from lista_reproduccion_usuario";
+
     /**
      *
      * @param conexion conexión de la clase con la base de datos
      */
     public ListaReproduccionDAO(Connection conexion){
         this.cnx = conexion;
+        try {
+            this.cmdInsertar = cnx.prepareStatement(TEMPLATE_CMD_INSERTAR);
+            this.queryListaReproduccion = cnx.prepareStatement(TEMPLATE_QRY_LISTASREPRODUCCION);
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 
     public Admin encontrarPorId(String cedula){
@@ -51,18 +64,26 @@ public class ListaReproduccionDAO {
      * @throws SQLException
      */
     public void guardarListaReproduccion(ListaReproduccion nuevo) throws SQLException{
-        Statement insert = cnx.createStatement();
-        //insert into tcliente(cedula,nombre,puntos) values ('10000','Silvana',0)
-        String insertar = "insert into lista_reproduccion_usuario" +
-                "(idLista,fechaCreacion,nombreLista) values ('";
-        insertar += nuevo.getId();
-        insertar += ",";
-        insertar += nuevo.getFechaCreacionListaReproduccion();
-        insertar += "','";
-        insertar += nuevo.getNombreListaReproduccion();
-        insertar += "',";
-        insertar += nuevo.getCalificacionReproduccion();
-        insertar += ")";
-        insert.execute(insertar);
+        if(this.cmdInsertar != null) {
+            this.cmdInsertar.setString(1,nuevo.getNombreListaReproduccion());
+            this.cmdInsertar.setDate(2, Date.valueOf(nuevo.getFechaCreacionListaReproduccion()));
+            this.cmdInsertar.setInt(3,nuevo.getCalificacionReproduccion());
+            this.cmdInsertar.setInt(4,nuevo.getAutorLista().getId());
+            this.cmdInsertar.execute();
+
+            Statement queryLista = cnx.createStatement();
+            ResultSet resultadoLista = queryLista.executeQuery("select * from lista_reproduccion_usuario where idUsuarioLista = "+nuevo.getAutorLista().getId()+" and nombreLista = '"+nuevo.getNombreListaReproduccion()+"'");
+            if(resultadoLista.next()) {
+                for (Cancion cancion: nuevo.getCancionesListaReproduccion()) {
+                    Statement queryBiblioteca = cnx.createStatement();
+                    queryBiblioteca.execute("insert into biblioteca_lista_reproduccion (idListaReproduccionUsuario,idCancionBibliotecaLista) values("+resultadoLista.getInt("idListaUsuario")+", "+cancion.getId()+")");
+                }
+            } else {
+                System.out.println("No se encontró la lista recién creada");
+            }
+
+        } else {
+            System.out.println("No se pudo guardar la lista de reproducción");
+        }
     }
 }

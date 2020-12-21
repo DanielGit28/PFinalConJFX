@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="anchorMenuUsuario" prefHeight="600.0" prefWidth="610.0" stylesheets="@../../estilos/estiloUsuario.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.ucenfotec.proyectofinal.controladoresfx.controladores_usuario.CtrlPagarCancion">
+    <children>
+        <Text fill="WHITE" layoutX="188.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pagar canción">
+            <font>
+                <Font name="System Bold" size="36.0" />
+            </font>
+        </Text>
+        <TextField fx:id="fieldNumeroTarjeta" editable="false" layoutX="81.0" layoutY="272.0" prefHeight="29.0" prefWidth="173.0" />
+        <Label layoutX="81.0" layoutY="231.0" text="Número tarjeta" textFill="WHITE">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <Label layoutX="81.0" layoutY="349.0" text="Canción" textFill="WHITE">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <TextField fx:id="fieldNombreCancion" layoutX="81.0" layoutY="390.0" prefHeight="29.0" prefWidth="173.0" />
+        <Button fx:id="btnComprarCancion" layoutX="242.0" layoutY="519.0" mnemonicParsing="false" onAction="#comprarCancion" prefHeight="37.0" prefWidth="139.0" text="Comprar cancion">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+      <Label layoutX="368.0" layoutY="231.0" text="Fecha de vencimiento" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <DatePicker fx:id="fieldFechaVenc" editable="false" layoutX="368.0" layoutY="272.0" prefHeight="29.0" prefWidth="173.0" />
+      <Label layoutX="232.0" layoutY="121.0" text="Seleccione la tarjeta" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="fieldTarjeta" layoutX="225.0" layoutY="166.0" onAction="#cargarTarjetas" onMouseClicked="#cargarTarjetas" prefHeight="29.0" prefWidth="173.0" />
+      <TextField fx:id="fieldPrecioCancion" layoutX="368.0" layoutY="390.0" prefHeight="29.0" prefWidth="173.0" />
+      <Label layoutX="368.0" layoutY="349.0" text="Precion canción" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

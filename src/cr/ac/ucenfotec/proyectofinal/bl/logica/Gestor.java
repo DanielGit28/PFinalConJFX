@@ -48,6 +48,7 @@ public class Gestor {
     private PreparedStatement queryAlbumes;
     private PreparedStatement queryCanciones;
     private PreparedStatement queryCompositores;
+    private PreparedStatement queryListas;
 
     private final String TEMPLATE_CMD_INSERTAR = "insert into pais (nombrePais, codigoPais) values (?,?)";
     private final String TEMPLATE_QRY_TODOSLOSPAISES = "select * from pais";
@@ -57,6 +58,7 @@ public class Gestor {
     private final String TEMPLATE_QRY_ALBUMES = "select * from album";
     private final String TEMPLATE_QRY_CANCIONES = "select * from cancion";
     private final String TEMPLATE_QRY_COMPOSITORES = "select * from compositor";
+    private final String TEMPLATE_QRY_LISTAS = "select * from lista_reproduccion_usuario";
 
     private final String[] locales = Locale.getISOCountries();
     private ObservableList<String> listaPaises;
@@ -109,6 +111,7 @@ public class Gestor {
             this.queryAlbumes = connection.prepareStatement(TEMPLATE_QRY_ALBUMES);
             this.queryCanciones = connection.prepareStatement(TEMPLATE_QRY_CANCIONES);
             this.queryCompositores = connection.prepareStatement(TEMPLATE_QRY_COMPOSITORES);
+            this.queryListas = connection.prepareStatement(TEMPLATE_QRY_LISTAS);
 
         } catch (Exception e) {
             System.out.println("Cant connect to db");
@@ -882,6 +885,140 @@ public class Gestor {
     }
 
     /**
+     * Devuelve un FilteredList para cargar una tabla del tipo Cancion para un usuario específico
+     * @param idUsuario id del usuario que se van a cargar las canciones
+     * @return FilteredList del tipo de objeto Cancion
+     * @throws SQLException
+     */
+    public FilteredList<Cancion> cargaCancionesUsuario(int idUsuario) throws SQLException {
+        Statement queryCancUsr = connection.createStatement();
+        ResultSet resCancionesUsr = queryCancUsr.executeQuery("select * from biblioteca_canciones_usuario where idUsuarioBiblioteca = "+idUsuario);
+
+        ObservableList<Cancion> canciones = FXCollections.observableArrayList();
+        Compositor compositor = new Compositor();
+        Artista artista = new Artista();
+        Album album = new Album();
+        while(resCancionesUsr.next()) {
+            System.out.println("Pasa la primera condicion");
+            Statement queryCancion = connection.createStatement();
+            ResultSet resultadoCancion = queryCancion.executeQuery("select * from cancion where idCancion = "+resCancionesUsr.getInt("idCancionBiblioteca"));
+            if(resultadoCancion.next()) {
+                Cancion cancion = new Cancion();
+                cancion.setId(resultadoCancion.getInt("idCancion"));
+                cancion.setNombreCancion(resultadoCancion.getString("nombreCancion"));
+                if(resultadoCancion.getInt("idArtistaCancion") == 0) {
+                    cancion.setArtistaCancion(artista);
+                } else {
+                    cancion.setArtistaCancion(getArtistaById(resultadoCancion.getInt("idArtistaCancion")));
+                }
+                if(resultadoCancion.getInt("idCompositorCancion") == 0) {
+                    cancion.setCompositorCancion(compositor);
+                }else {
+                    cancion.setCompositorCancion(getCompositorById(resultadoCancion.getInt("idCompositorCancion")));
+                }
+                if(String.valueOf(resultadoCancion.getInt("precio")) == null ||  resultadoCancion.getInt("precio") == 0) {
+                    cancion.setPrecioCancion(0);
+                }  else {
+                    cancion.setPrecioCancion(resultadoCancion.getInt("precio"));
+                }
+                cancion.setFechaLanzamientoCancion(resultadoCancion.getDate("fechaLanzamiento").toLocalDate());
+                cancion.setGeneroCancion(getGeneroById(resultadoCancion.getInt("idGeneroCancion")));
+                cancion.setCancionSimple(resultadoCancion.getInt("cancionSimple"));
+                if(resultadoCancion.getInt("idAlbumCancion") == 0) {
+                    cancion.setAlbumCancion(album);
+                } else {
+                    cancion.setAlbumCancion(getAlbumById(resultadoCancion.getInt("idAlbumCancion")));
+                }
+                cancion.setRecurso(resultadoCancion.getString("recurso"));
+                cancion.setCancionCompra(resultadoCancion.getInt("cancionCompra"));
+                canciones.add(cancion);
+            } else {
+                System.out.println("Ninguna canción para cargar del usuario");
+            }
+
+        }
+        FilteredList<Cancion> cancionesFilt = new FilteredList<>(FXCollections.observableList(canciones));
+        //System.out.println(generosFiltrado);
+        return cancionesFilt;
+    }
+
+
+    /**
+     * Devuelve un FilteredList para cargar una tabla del tipo ListaReproduccion
+     * @return FilteredList del tipo de objeto ListaReproduccion
+     * @throws SQLException
+     */
+    public FilteredList<ListaReproduccion> cargaListasReproduccion() throws SQLException {
+        ResultSet resultadoListas = queryListas.executeQuery();
+
+        ObservableList<ListaReproduccion> listas = FXCollections.observableArrayList();
+        ArrayList<Cancion> canciones = new ArrayList<>();
+
+        Compositor compositor = new Compositor();
+        Artista artista = new Artista();
+        Album album = new Album();
+
+        //AQUÍ SE CARGAN LAS LISTAS
+        while(resultadoListas.next()) {
+            //System.out.println("Entra en lista de reproduccion");
+            ListaReproduccion lista = new ListaReproduccion();
+            lista.setId(resultadoListas.getInt("idListaUsuario"));
+            lista.setNombreListaReproduccion(resultadoListas.getString("nombreLista"));
+            lista.setFechaCreacionListaReproduccion(resultadoListas.getDate("fechaCreacion").toLocalDate());
+            lista.setCalificacionReproduccion(resultadoListas.getInt("calificacion"));
+            lista.setAutorLista(getUsuarioById(resultadoListas.getInt("idUsuarioLista")));
+
+            Statement queryCancBiblioteca = connection.createStatement();
+            ResultSet resultadoCancBiblioteca = queryCancBiblioteca.executeQuery("select * from biblioteca_lista_reproduccion where idListaReproduccionUsuario = "+resultadoListas.getInt("idListaUsuario") );
+            //AQUI SE CARGAN LAS CANCIONES EN LA BIBLIOTECA
+            while(resultadoCancBiblioteca.next()) {
+                //System.out.println("Entra en biblioteca");
+                Statement queryCanciones = connection.createStatement();
+                ResultSet resultadoCancion = queryCanciones.executeQuery("select * from cancion where idCancion = "+resultadoCancBiblioteca.getInt("idCancionBibliotecaLista") );
+                //AQUI SE BUSCAN LAS CANCIONES GUARDADAS EN LA BIBLIOTECA
+                while(resultadoCancion.next()) {
+                    //System.out.println("Entra en canciones");
+                    Cancion cancion = new Cancion();
+                    cancion.setId(resultadoCancion.getInt("idCancion"));
+                    cancion.setNombreCancion(resultadoCancion.getString("nombreCancion"));
+                    if(resultadoCancion.getInt("idArtistaCancion") == 0) {
+                        cancion.setArtistaCancion(artista);
+                    } else {
+                        cancion.setArtistaCancion(getArtistaById(resultadoCancion.getInt("idArtistaCancion")));
+                    }
+                    if(resultadoCancion.getInt("idCompositorCancion") == 0) {
+                        cancion.setCompositorCancion(compositor);
+                    }else {
+                        cancion.setCompositorCancion(getCompositorById(resultadoCancion.getInt("idCompositorCancion")));
+                    }
+                    if(String.valueOf(resultadoCancion.getInt("precio")) == null ||  resultadoCancion.getInt("precio") == 0) {
+                        cancion.setPrecioCancion(0);
+                    }  else {
+                        cancion.setPrecioCancion(resultadoCancion.getInt("precio"));
+                    }
+                    cancion.setFechaLanzamientoCancion(resultadoCancion.getDate("fechaLanzamiento").toLocalDate());
+                    cancion.setGeneroCancion(getGeneroById(resultadoCancion.getInt("idGeneroCancion")));
+                    cancion.setCancionSimple(resultadoCancion.getInt("cancionSimple"));
+                    if(resultadoCancion.getInt("idAlbumCancion") == 0) {
+                        cancion.setAlbumCancion(album);
+                    } else {
+                        cancion.setAlbumCancion(getAlbumById(resultadoCancion.getInt("idAlbumCancion")));
+                    }
+                    cancion.setRecurso(resultadoCancion.getString("recurso"));
+                    cancion.setCancionCompra(resultadoCancion.getInt("cancionCompra"));
+                    canciones.add(cancion);
+                }
+
+            }
+            lista.setCancionesListaReproduccion(canciones);
+            listas.add(lista);
+        }
+        FilteredList<ListaReproduccion> listasFilt = new FilteredList<>(FXCollections.observableList(listas));
+        //System.out.println(generosFiltrado);
+        return listasFilt;
+    }
+
+    /**
      * Devuelve un FilteredList para cargar una tabla del tipo Album
      * @return FilteredList del tipo de objeto Album
      * @throws SQLException
@@ -1482,7 +1619,6 @@ public class Gestor {
         } else {
             creacionAlertas("Álbum existente");
         }
-
     }
 
 
@@ -1531,15 +1667,14 @@ public class Gestor {
         alertasInformacion("Método de pago", "Método de pago (tarjeta) eliminado exitosamente");
     }
 
-
-    public void setUsuarioSesion(UsuarioFinal usuario) {
-        usuarioSesion = usuario;
-        //System.out.println(usuarioSesion.toString()+" set");
-    }
-
-    public UsuarioFinal getUsuarioSesion() {
-        System.out.println(usuarioSesion.toString()+" get");
-        return usuarioSesion;
+    /**
+     * Guarda una lista de reproducción de un usuario específico en la base de datos
+     * @param lista lista de reproduccion que se va a guardar en la BD
+     * @throws SQLException
+     */
+    public void guardarListaReproduccion(ListaReproduccion lista) throws SQLException {
+        listaReproduccionDAO.guardarListaReproduccion(lista);
+        alertasInformacion("Lista de reproducción", "Lista de reproducción añadida exitosamente");
     }
 
     //--CAMBIO ESCENA LOGIN--
@@ -1800,7 +1935,7 @@ public class Gestor {
         stage.setScene(new Scene(p));
         stage.show();
         CtrlCanciones controller = loader.getController();
-        //controller.setUsuarioSesion(usuario);
+        controller.setUsuarioSesion(usuario);
 
         /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/cancionesUsuario.fxml"));
@@ -1881,7 +2016,7 @@ public class Gestor {
         Stage stage = new Stage();
         stage.setScene(new Scene(p));
         stage.show();
-        CtrlMenuUsuario controller = loader.getController();
+        CtrlListasReproduccion controller = loader.getController();
         controller.setUsuarioSesion(usuario);
         /*
         Parent login = FXMLLoader.load(getClass().getResource("../../vistas/vistas_usuario/listasReproduccionUsuario.fxml"));
