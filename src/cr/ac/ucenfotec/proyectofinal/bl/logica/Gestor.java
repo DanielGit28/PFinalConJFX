@@ -958,7 +958,7 @@ public class Gestor {
         Artista artista = new Artista();
         Album album = new Album();
 
-        //AQUÍ SE CARGAN LAS LISTAS
+        //AQUI SE CARGAN LAS LISTAS
         while(resultadoListas.next()) {
             //System.out.println("Entra en lista de reproduccion");
             ListaReproduccion lista = new ListaReproduccion();

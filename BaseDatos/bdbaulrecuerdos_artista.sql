@@ -25,18 +25,22 @@ DROP TABLE IF EXISTS `artista`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `artista` (
-  `idArtista` varchar(20) NOT NULL,
+  `idArtista` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   `apellido` varchar(45) NOT NULL,
   `nombreArtistico` varchar(60) NOT NULL,
-  `fechaNacimiento` varchar(45) NOT NULL,
-  `fechaFallecimiento` varchar(45) NOT NULL,
-  `paisNacimiento` varchar(45) NOT NULL,
-  `generoMusical` varchar(45) NOT NULL,
+  `fechaNacimiento` date NOT NULL,
+  `fechaFallecimiento` date DEFAULT NULL,
+  `idPaisArtista` int NOT NULL,
+  `idGeneroArtista` int NOT NULL,
   `edadArtista` varchar(45) NOT NULL,
-  `descripcion` varchar(100) NOT NULL,
-  PRIMARY KEY (`idArtista`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `descripcion` varchar(150) NOT NULL,
+  PRIMARY KEY (`idArtista`),
+  KEY `idPaisArtista_idx` (`idPaisArtista`),
+  KEY `idGeneroArtista_idx` (`idGeneroArtista`),
+  CONSTRAINT `idGeneroArtista` FOREIGN KEY (`idGeneroArtista`) REFERENCES `genero` (`idGenero`),
+  CONSTRAINT `idPaisArtista` FOREIGN KEY (`idPaisArtista`) REFERENCES `pais` (`idPais`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,6 +49,7 @@ CREATE TABLE `artista` (
 
 LOCK TABLES `artista` WRITE;
 /*!40000 ALTER TABLE `artista` DISABLE KEYS */;
+INSERT INTO `artista` VALUES (4,'Def','def','Default','2020-12-15','2020-12-16',51,10,'-1','artista default'),(5,'Benito','Martinez','Bad Bunny','1994-03-10',NULL,183,11,'26','El mejor latinoamericano'),(6,'José','Osorio Balvin','J Balvin','1985-05-07',NULL,50,11,'35','Artista latinoamericano más visto'),(7,'Juan Carlos','Ozuna Rosado','Ozuna','1992-03-13',NULL,183,11,'28','Artista latinoamericano reconocido a nivel mundial');
 /*!40000 ALTER TABLE `artista` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +62,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-04 22:32:44
+-- Dump completed on 2020-12-20 23:43:51

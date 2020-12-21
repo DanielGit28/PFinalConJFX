@@ -56,7 +56,7 @@ public class AlbumDAO {
     }
 
     /**
-     * Elimina un Álbum en la BD
+     * Elimina un Album en la BD
      * @param idAlbum id del álbum que se va a eliminar
      * @throws SQLException
      */

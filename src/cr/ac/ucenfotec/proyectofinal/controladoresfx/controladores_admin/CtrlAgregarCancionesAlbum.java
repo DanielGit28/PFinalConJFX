@@ -62,7 +62,7 @@ public class CtrlAgregarCancionesAlbum implements Initializable {
 
 
     @FXML
-    private Button btnCrearCanción;
+    private Button btnCrearCancion;
 
 
     @FXML

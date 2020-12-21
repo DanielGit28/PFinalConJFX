@@ -25,12 +25,15 @@ DROP TABLE IF EXISTS `lista_reproduccion_usuario`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lista_reproduccion_usuario` (
-  `idLista` varchar(10) NOT NULL,
-  `fechaCreacion` varchar(20) NOT NULL,
-  `calificacion` varchar(45) DEFAULT NULL,
+  `idListaUsuario` int NOT NULL AUTO_INCREMENT,
   `nombreLista` varchar(60) NOT NULL,
-  PRIMARY KEY (`idLista`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `fechaCreacion` date NOT NULL,
+  `calificacion` int DEFAULT '0',
+  `idUsuarioLista` int NOT NULL,
+  PRIMARY KEY (`idListaUsuario`),
+  KEY `idUsuarioLista_idx` (`idUsuarioLista`),
+  CONSTRAINT `idUsuarioLista` FOREIGN KEY (`idUsuarioLista`) REFERENCES `usuario_final` (`idusuariofinal`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +42,7 @@ CREATE TABLE `lista_reproduccion_usuario` (
 
 LOCK TABLES `lista_reproduccion_usuario` WRITE;
 /*!40000 ALTER TABLE `lista_reproduccion_usuario` DISABLE KEYS */;
+INSERT INTO `lista_reproduccion_usuario` VALUES (3,'El pepe','2020-12-20',0,1);
 /*!40000 ALTER TABLE `lista_reproduccion_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-04 22:32:45
+-- Dump completed on 2020-12-20 23:43:51

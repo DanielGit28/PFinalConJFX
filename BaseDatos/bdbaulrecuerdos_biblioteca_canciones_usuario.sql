@@ -18,32 +18,32 @@ USE `bdbaulrecuerdos`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `admin`
+-- Table structure for table `biblioteca_canciones_usuario`
 --
 
-DROP TABLE IF EXISTS `admin`;
+DROP TABLE IF EXISTS `biblioteca_canciones_usuario`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `admin` (
-  `idAdmin` int NOT NULL DEFAULT '1',
-  `avatar` varchar(100) NOT NULL,
-  `nombre` varchar(30) NOT NULL,
-  `apellidos` varchar(45) NOT NULL,
-  `correo` varchar(45) NOT NULL,
-  `contrasenna` varchar(45) NOT NULL,
-  `nombreUsuario` varchar(45) NOT NULL,
-  PRIMARY KEY (`idAdmin`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `biblioteca_canciones_usuario` (
+  `idBibliotecaCancionesUsuario` int NOT NULL AUTO_INCREMENT,
+  `idUsuarioBiblioteca` int NOT NULL,
+  `idCancionBiblioteca` int NOT NULL,
+  PRIMARY KEY (`idBibliotecaCancionesUsuario`),
+  KEY `idUsuarioBiblioteca_idx` (`idUsuarioBiblioteca`),
+  KEY `idCancionBiblioteca_idx` (`idCancionBiblioteca`),
+  CONSTRAINT `idCancionBiblioteca` FOREIGN KEY (`idCancionBiblioteca`) REFERENCES `cancion` (`idCancion`),
+  CONSTRAINT `idUsuarioBiblioteca` FOREIGN KEY (`idUsuarioBiblioteca`) REFERENCES `usuario_final` (`idusuariofinal`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `admin`
+-- Dumping data for table `biblioteca_canciones_usuario`
 --
 
-LOCK TABLES `admin` WRITE;
-/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
-INSERT INTO `admin` VALUES (1,'C:\\Users\\Daniel\\Pictures\\roman.jpg','Daniel','Zúñiga','duniel12','Admin#123','Peptobismol');
-/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
+LOCK TABLES `biblioteca_canciones_usuario` WRITE;
+/*!40000 ALTER TABLE `biblioteca_canciones_usuario` DISABLE KEYS */;
+INSERT INTO `biblioteca_canciones_usuario` VALUES (1,1,14),(2,1,13);
+/*!40000 ALTER TABLE `biblioteca_canciones_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-20 23:43:51
+-- Dump completed on 2020-12-20 23:43:52

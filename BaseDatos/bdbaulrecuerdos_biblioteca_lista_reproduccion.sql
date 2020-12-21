@@ -25,10 +25,15 @@ DROP TABLE IF EXISTS `biblioteca_lista_reproduccion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `biblioteca_lista_reproduccion` (
-  `idListaIntermedia` varchar(20) NOT NULL,
-  `idCancion` varchar(20) NOT NULL,
-  `id` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `idBibliotecaLista` int NOT NULL AUTO_INCREMENT,
+  `idListaReproduccionUsuario` int NOT NULL,
+  `idCancionBibliotecaLista` int NOT NULL,
+  PRIMARY KEY (`idBibliotecaLista`),
+  KEY `idListaReproduccionUsuario_idx` (`idListaReproduccionUsuario`),
+  KEY `idCancionBibliotecaLista_idx` (`idCancionBibliotecaLista`),
+  CONSTRAINT `idCancionBibliotecaLista` FOREIGN KEY (`idCancionBibliotecaLista`) REFERENCES `cancion` (`idCancion`),
+  CONSTRAINT `idListaReproduccionUsuario` FOREIGN KEY (`idListaReproduccionUsuario`) REFERENCES `lista_reproduccion_usuario` (`idListaUsuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,6 +42,7 @@ CREATE TABLE `biblioteca_lista_reproduccion` (
 
 LOCK TABLES `biblioteca_lista_reproduccion` WRITE;
 /*!40000 ALTER TABLE `biblioteca_lista_reproduccion` DISABLE KEYS */;
+INSERT INTO `biblioteca_lista_reproduccion` VALUES (1,3,14),(2,3,13);
 /*!40000 ALTER TABLE `biblioteca_lista_reproduccion` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-04 22:32:45
+-- Dump completed on 2020-12-20 23:43:51

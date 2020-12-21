@@ -26,19 +26,20 @@ DROP TABLE IF EXISTS `usuario_final`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario_final` (
   `idusuariofinal` int NOT NULL AUTO_INCREMENT,
-  `avatar` varchar(45) NOT NULL,
+  `avatar` varchar(150) NOT NULL,
   `nombre` varchar(45) NOT NULL,
-  `apellidos` varchar(45) NOT NULL,
-  `correo` varchar(45) NOT NULL,
+  `apellidos` varchar(80) NOT NULL,
+  `correo` varchar(55) NOT NULL,
   `contrasenna` varchar(45) NOT NULL,
-  `fechaNacimiento` varchar(45) NOT NULL,
-  `pais` varchar(45) NOT NULL,
+  `fechaNacimiento` date NOT NULL,
+  `idPais` int NOT NULL,
+  `identificacion` varchar(20) NOT NULL,
   `nombreUsuario` varchar(45) NOT NULL,
-  `otp` int DEFAULT NULL,
-  `listasReproduccion` varchar(45) DEFAULT NULL,
-  `cancionesUsuario` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idusuariofinal`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `otp` int DEFAULT '0',
+  PRIMARY KEY (`idusuariofinal`),
+  KEY `idPais_idx` (`idPais`),
+  CONSTRAINT `idPais` FOREIGN KEY (`idPais`) REFERENCES `pais` (`idPais`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,6 +48,7 @@ CREATE TABLE `usuario_final` (
 
 LOCK TABLES `usuario_final` WRITE;
 /*!40000 ALTER TABLE `usuario_final` DISABLE KEYS */;
+INSERT INTO `usuario_final` VALUES (1,'C:\\Users\\Daniel\\Pictures\\Foto de Dani Zúñiga.jpg','Daniel','Zúñiga Rojas','duniel12@gmail.com','Usuario#123','2001-05-19',51,'118110097','Pepto',NULL);
 /*!40000 ALTER TABLE `usuario_final` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -59,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-04 22:32:45
+-- Dump completed on 2020-12-20 23:43:51

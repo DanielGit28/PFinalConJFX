@@ -27,12 +27,13 @@ DROP TABLE IF EXISTS `album`;
 CREATE TABLE `album` (
   `idAlbum` int NOT NULL AUTO_INCREMENT,
   `nombreAlbum` varchar(60) NOT NULL,
-  `fechaLanzamiento` varchar(20) NOT NULL,
-  `artista` varchar(45) NOT NULL,
-  `imagenAlbum` varchar(60) NOT NULL,
-  `idAlbumCanciones` int NOT NULL,
-  PRIMARY KEY (`idAlbum`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `fechaLanzamiento` date NOT NULL,
+  `idArtistaAlbum` int NOT NULL,
+  `imagenAlbum` varchar(200) NOT NULL,
+  PRIMARY KEY (`idAlbum`),
+  KEY `idArtista_idx` (`idArtistaAlbum`),
+  CONSTRAINT `idArtistaAlbum` FOREIGN KEY (`idArtistaAlbum`) REFERENCES `artista` (`idArtista`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +42,7 @@ CREATE TABLE `album` (
 
 LOCK TABLES `album` WRITE;
 /*!40000 ALTER TABLE `album` DISABLE KEYS */;
+INSERT INTO `album` VALUES (1,'Default','2020-12-16',4,'def'),(2,'Oasis','2019-06-29',5,'C:\\Users\\Daniel\\Pictures\\FotosPruebaPOO\\Ooasis-J-Balvin-Bad-Bunny.jpg');
 /*!40000 ALTER TABLE `album` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-04 22:32:44
+-- Dump completed on 2020-12-20 23:43:50

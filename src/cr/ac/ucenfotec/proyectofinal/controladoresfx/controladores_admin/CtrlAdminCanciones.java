@@ -61,7 +61,7 @@ public class CtrlAdminCanciones implements Initializable {
     private ComboBox<String> fieldCompositor;
 
     @FXML
-    private Button btnCrearCanción;
+    private Button btnCrearCancion;
 
     @FXML
     private ComboBox<String> fieldArtista;
